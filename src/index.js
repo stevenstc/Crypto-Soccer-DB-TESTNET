@@ -534,7 +534,7 @@ app.post('/api/v1/coinsalmarket/:wallet',async(req,res) => {
         await delay(Math.floor(Math.random() * 12000));
 
 
-        if(await monedasAlMarket(req.body.coins, wallet,1)){
+        if(await monedasAlMarket(req.body.coins, req.params.wallet,1)){
             console.log("Coins TO MARKET: "+req.body.coins+" # "+req.params.wallet);
             res.send("true");
 
