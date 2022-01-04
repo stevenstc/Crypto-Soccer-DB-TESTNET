@@ -45,6 +45,8 @@ const addressContractToken = "0x038987095f309d3640f51644430dc6c7c4e2e409";
 let web3 = new Web3(RED);
 let cuenta = web3.eth.accounts.privateKeyToAccount(PEKEY);
 
+var nonceGlobal = 0;
+
 web3.eth.accounts.wallet.add(PEKEY);
 
 const contractMarket = new web3.eth.Contract(abiMarket,addressContract);
@@ -63,7 +65,10 @@ const contractToken = new web3.eth.Contract(abiToken,addressContractToken);
 //console.log(web3.eth.accounts.wallet);
 const options = { useNewUrlParser: true, useUnifiedTopology: true };
 mongoose.connect(uri, options).then(
-    () => { console.log("Conectado Exitodamente!");},
+    async() => { console.log("Conectado Exitodamente!");
+    console.log("nonce: "+await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address));
+    nonceGlobal = await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address);
+},
     err => { console.log(err); }
   );
 
@@ -422,8 +427,9 @@ app.post('/api/v1/coinsaljuego/:wallet',async(req,res) => {
 
         await delay(Math.floor(Math.random() * 12000));
 
+        coins = new BigNumber(req.body.coins).multipliedBy(10**18);
 
-        if(await monedasAlJuego(req.body.coins, req.params.wallet,1)){
+        if(await monedasAlJuego(coins, req.params.wallet,1)){
             console.log("Coins TO GAME: "+req.body.coins+" # "+req.params.wallet);
             res.send("true");
 
@@ -440,8 +446,6 @@ app.post('/api/v1/coinsaljuego/:wallet',async(req,res) => {
 });
 
 async function monedasAlJuego(coins,wallet,intentos){
-
-    coins = new BigNumber(coins).multipliedBy(10**18);
 
     var usuario = await contractMarket.methods
     .investors(wallet)
@@ -531,10 +535,9 @@ app.post('/api/v1/coinsalmarket/:wallet',async(req,res) => {
 
     if(req.body.token == TOKEN && web3.utils.isAddress(req.params.wallet)){
 
-        await delay(Math.floor(Math.random() * 12000));
+        coins = new BigNumber(req.body.coins).multipliedBy(10**18);
 
-
-        if(await monedasAlMarket(req.body.coins, req.params.wallet,1)){
+        if(await monedasAlMarket(coins, req.params.wallet,1)){
             console.log("Coins TO MARKET: "+req.body.coins+" # "+req.params.wallet);
             res.send("true");
 
@@ -552,11 +555,7 @@ app.post('/api/v1/coinsalmarket/:wallet',async(req,res) => {
 
 async function monedasAlMarket(coins,wallet,intentos){
 
-    coins = new BigNumber(coins).multipliedBy(10**18);
-
     var gases = await web3.eth.getGasPrice(); 
-
-    await delay(Math.floor(Math.random() * 12000));
 
     var paso = false;
 
@@ -564,16 +563,16 @@ async function monedasAlMarket(coins,wallet,intentos){
 
     if (usuario.length >= 1) {
         var datos = usuario[0];
-        if(Date.now() < datos.payAt+1 * 86400*1000)return false ;
+        //if(Date.now() < datos.payAt+1 * 86400*1000)return false ;
     }else{
         return false;
     }
-    
 
     await contractMarket.methods
         .asignarCoinsTo(coins, wallet)
-        .send({ from: web3.eth.accounts.wallet[0].address, gas: COMISION, gasPrice: gases })
-        .then(result => {
+        .send({ from: web3.eth.accounts.wallet[0].address, gas: COMISION, gasPrice: gases , nonce: nonceGlobal+1+intentos})
+        .then(async result => {
+            nonceGlobal = await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address);
             console.log("Monedas ENVIADAS A MARKET en "+intentos+" intentos");
             console.log(explorador+result.transactionHash);
             
@@ -589,7 +588,7 @@ async function monedasAlMarket(coins,wallet,intentos){
                         update = user.updateOne({ wallet: uc.upperCase(wallet) }, datos)
                         .then(console.log("Coins SEND: "+coins.dividedBy(10**18)+" # "+wallet))
                         .catch(console.error())
-                        
+                    
                     }
             
                 }else{
@@ -617,9 +616,11 @@ async function monedasAlMarket(coins,wallet,intentos){
             paso = true;
         })
 
-        .catch(async() => {
+        .catch(async err => {
+            console.log(err);
             intentos++;
-            console.log(coins.dividedBy(10**18)+" ->  "+wallet+" : "+intentos)
+            nonceGlobal++;
+            console.log(coins.dividedBy(10**18)+" ->  "+wallet+" : "+intentos+" Nonce: "+nonceGlobal+"/"+await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address))
             await delay(Math.floor(Math.random() * 12000));
             paso = await monedasAlMarket(coins,wallet,intentos);
         })
