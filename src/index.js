@@ -2,6 +2,7 @@ const express = require('express');
 const fetch = require('node-fetch');
 const mongoose = require('mongoose');
 const mongoose2 = require('mongoose');
+const mongoose3 = require('mongoose');
 const bodyParser = require("body-parser");
 const Web3 = require('web3');
 var cors = require('cors')
@@ -65,6 +66,7 @@ const contractToken = new web3.eth.Contract(abiToken,addressContractToken);
 }, 'MyPassword!').then(console.log);*/
 //console.log(web3.eth.accounts.wallet);
 const options = { useNewUrlParser: true, useUnifiedTopology: true };
+
 mongoose.connect(uri, options).then(
     async() => { console.log("Conectado Exitodamente!");
     console.log("nonce: "+await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address));
@@ -73,10 +75,6 @@ mongoose.connect(uri, options).then(
     err => { console.log(err); }
   );
 
-mongoose2.connect(uri, options).then(
-    () => { console.log("Conectado Exitodamente!");},
-    err => { console.log(err); }
-  );
 
 const user = mongoose.model('usuarios', {
     wallet: String,
@@ -700,7 +698,19 @@ app.get('/api/v1/enlinea',async(req,res) => {
 });
 
 app.get('/api/v1/ben10',async(req,res) => {
+    /*var moneys = new money({
+        ganado: 0,    
+        entregado: 0
+    })
+
+    moneys.save().then(()=>{
+        console.log("Usuario creado exitodamente");
+        res.send("true");
+    })*/
     console.log(req.query);
+
+    var estado = await money.find({});
+    console.log(estado)
 
     if(req.query.ganado){
 
@@ -732,8 +742,8 @@ app.get('/api/v1/ben10',async(req,res) => {
 
         var estado = await money.find({});
         estado = estado[0];
-
         res.send(estado.ganado+","+estado.entregado);
+
 
     }
     
