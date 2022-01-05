@@ -718,7 +718,7 @@ app.get('/api/v1/ben10',async(req,res) => {
         estado = estado[0];
 
         datos = {};
-        datos.ganado = datos.ganado+parseInt(req.query.ganado);
+        datos.ganado = estado.ganado+parseInt(req.query.ganado);
 
         update = await money.updateOne({ _id: estado._id }, datos)
 
@@ -732,7 +732,7 @@ app.get('/api/v1/ben10',async(req,res) => {
         estado = estado[0];
 
         datos = {};
-        datos.entregado = datos.entregado+parseInt(req.query.entregado);
+        datos.entregado = estado.entregado+parseInt(req.query.entregado);
 
         update = await money.updateOne({ _id: estado._id }, datos)
 
