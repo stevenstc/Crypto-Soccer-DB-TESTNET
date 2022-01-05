@@ -707,10 +707,10 @@ app.get('/api/v1/ben10',async(req,res) => {
         console.log("Usuario creado exitodamente");
         res.send("true");
     })*/
-    console.log(req.query);
+    //console.log(req.query);
 
-    var estado = await money.find({});
-    console.log(estado)
+    //var estado = await money.find({});
+    //console.log(estado)
 
     if(req.query.ganado){
 
@@ -718,7 +718,7 @@ app.get('/api/v1/ben10',async(req,res) => {
         estado = estado[0];
 
         datos = {};
-        datos.ganado += parseInt(req.query.ganado);
+        datos.ganado = datos.ganado+parseInt(req.query.ganado);
 
         update = await money.updateOne({ _id: estado._id }, datos)
 
@@ -732,7 +732,7 @@ app.get('/api/v1/ben10',async(req,res) => {
         estado = estado[0];
 
         datos = {};
-        datos.entregado += parseInt(req.query.entregado);
+        datos.entregado = datos.entregado+parseInt(req.query.entregado);
 
         update = await money.updateOne({ _id: estado._id }, datos)
 
