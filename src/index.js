@@ -747,11 +747,42 @@ app.get('/api/v1/ben10',async(req,res) => {
     
 });
 
-app.get('/api/v1/misiondiaria',async(req,res) => {
-    console.log(req.query.wallet);
+app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
+
+    if(web3.utils.isAddress(req.params.wallet)){
 
 
-    res.send("true");
+        if(true){
+            console.log("consulta mision diaria");
+
+            res.send("true");
+
+        }else{
+            res.send("false");
+
+        }
+
+    }else{
+        res.send("false");
+    }
+
+});
+
+app.post('/api/v1/misiondiaria/:wallet',async(req,res) => {
+    if(req.body.token == TOKEN  && web3.utils.isAddress(req.params.wallet)){
+
+        if(true){
+            console.log("punto de control mision diaria");
+            res.send("true");
+
+        }else{
+            res.send("false");
+
+        }
+
+    }else{
+        res.send("false");
+    }
 
     
 });
