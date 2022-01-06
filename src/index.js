@@ -1,8 +1,6 @@
 const express = require('express');
 const fetch = require('node-fetch');
 const mongoose = require('mongoose');
-const mongoose2 = require('mongoose');
-const mongoose3 = require('mongoose');
 const bodyParser = require("body-parser");
 const Web3 = require('web3');
 var cors = require('cors')
@@ -52,7 +50,7 @@ var used = false;
 web3.eth.accounts.wallet.add(PEKEY);
 
 const contractMarket = new web3.eth.Contract(abiMarket,addressContract);
-const contractToken = new web3.eth.Contract(abiToken,addressContractToken);
+//const contractToken = new web3.eth.Contract(abiToken,addressContractToken);
 
 //console.log(web3.eth.accounts.wallet);
 //tx web3.eth.accounts.signTransaction(tx, privateKey);
@@ -749,8 +747,8 @@ app.get('/api/v1/ben10',async(req,res) => {
     
 });
 
-app.get('/api/v1/misiondiaria:wallet',async(req,res) => {
-    console.log(req.query);
+app.get('/api/v1/misiondiaria',async(req,res) => {
+    console.log(req.query.wallet);
 
 
     res.send("true");
