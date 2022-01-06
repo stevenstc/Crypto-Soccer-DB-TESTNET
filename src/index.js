@@ -752,7 +752,7 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
     if(web3.utils.isAddress(req.params.wallet)){
 
 
-        if(true){
+        if(false){
             console.log("consulta mision diaria");
 
             res.send("true");
