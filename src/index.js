@@ -771,11 +771,12 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
 app.post('/api/v1/misiondiaria/:wallet',async(req,res) => {
     if(req.body.token == TOKEN  && web3.utils.isAddress(req.params.wallet)){
 
-        if(true){
+        if(req.body.control == "true"){
             console.log("punto de control mision diaria");
             res.send("true");
 
         }else{
+            console.log("no se envio mision diaria");
             res.send("false");
 
         }
