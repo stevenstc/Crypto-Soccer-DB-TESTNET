@@ -41,6 +41,8 @@ const TOKEN = process.env.APP_TOKEN;
 const cryptr = new Cryptr(process.env.APP_MAIL);
 const uri = process.env.APP_URI;
 
+const testNet = true;
+
 const COMISION = process.env.APP_COMISION || 60000;
 
 const explorador = "https://testnet.bscscan.com/tx/";
@@ -204,7 +206,7 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
   
     var inventario = [];
 
-    var cantidad = 44;
+    var cantidad = 43;
 
     for (let index = 0; index < cantidad; index++) {
         inventario[index] = 0;
@@ -216,21 +218,23 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
         }
         
     }
-  
-    for (let index = 0; index < result; index++) {
 
-        var item = await contractMarket.methods
-        .inventario(wallet, index)
-        .call({ from: cuenta.address });
+    if (!testNet) {
+        for (let index = 0; index < result; index++) {
 
-        if(item.nombre.indexOf("t") === 0){
-
-            inventario[parseInt(item.nombre.slice(item.nombre.indexOf("t")+1,item.nombre.indexOf("-")))-1] =  1;
-
+            var item = await contractMarket.methods
+            .inventario(wallet, index)
+            .call({ from: cuenta.address });
+    
+            if(item.nombre.indexOf("t") === 0){
+    
+                inventario[parseInt(item.nombre.slice(item.nombre.indexOf("t")+1,item.nombre.indexOf("-")))-1] =  1;
+    
+            }
+    
         }
-
     }
-
+  
     res.send(inventario.toString());
 });
 
@@ -247,20 +251,23 @@ app.get('/api/v1/formations/:wallet',async(req,res) => {
     for (let index = 0; index < 4; index++) {
         inventario[index] = 0;
     }
+
+    if (!testNet) {
   
-    for (let index = 0; index < result; index++) {
+        for (let index = 0; index < result; index++) {
 
-        var item = await contractMarket.methods
-            .inventario(wallet, index)
-            .call({ from: cuenta.address });
+            var item = await contractMarket.methods
+                .inventario(wallet, index)
+                .call({ from: cuenta.address });
 
 
-        if(item.nombre.indexOf("f") === 0){
+            if(item.nombre.indexOf("f") === 0){
 
-            inventario[parseInt(item.nombre.slice(item.nombre.indexOf("f")+1,item.nombre.indexOf("-")))-1] =  1;
+                inventario[parseInt(item.nombre.slice(item.nombre.indexOf("f")+1,item.nombre.indexOf("-")))-1] =  1;
+
+            }
 
         }
-
     }
 
     res.send("1,"+inventario.toString());
