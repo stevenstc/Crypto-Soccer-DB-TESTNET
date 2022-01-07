@@ -113,7 +113,7 @@ const user = mongoose.model('usuarios', {
 
 const server = mongoose.model('servers', {linea: [Number]});
 
-const money = mongoose.model('estatus', {ganado: Number, entregado: Number});
+const money = mongoose.model('estatuses', {ganado: Number, entregado: Number});
 
 app.get('/',async(req,res) => {
 
@@ -691,7 +691,19 @@ app.get('/api/v1/sendmail',async(req,res) => {
 
 app.get('/api/v1/enlinea',async(req,res) => {
     console.log(req.query);
+    /*
+    var cantidadserv = []
+    for (let index = 0; index < 14; index++) {
+        cantidadserv[index] = 0;
+    }
 
+    var servers = new server({
+        linea:cantidadserv
+    })
+
+    await servers.save();
+        res.send("true");
+    */
     if(req.query.rango){
 
         var estado = await server.find({});
@@ -700,8 +712,10 @@ app.get('/api/v1/enlinea',async(req,res) => {
         for (let index = 0; index < estado.linea.length; index++) {
 
             if(parseInt(req.query.rango) == index){
-                if (req.query.activo) {
+                if (parseInt(req.query.activo) >= 0 ) {
                     estado.linea[index] = parseInt(req.query.activo);
+                }else{
+                    estado.linea[index] = 0;
                 }
                 
             }
