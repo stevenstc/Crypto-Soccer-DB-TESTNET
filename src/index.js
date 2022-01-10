@@ -30,7 +30,8 @@ var testers = ["0x11134Bd1dd0219eb9B4Ab931c508834EA29C0F8d","0xe7064D523fD9f95ce
     "0x454E6E0c65593d6cDe42dE4f02eF11EA1156c804","0x53b66cCD02d280d0b52fb3486f9Fc547C0e7f78f",
     "0x0e4aD10F1170573D2ec94352749b09f31d40ADea","0xd4507F14AB5494D796eD35577cf456fDbaf42852",
     "0x3e04C5ED31220EC5e48EeAAE3202958b6bE73f3A","0xC67EaaA52342188AFe897108Bba3b71707f3BCBe",
-    "0xd26d7AcB0210a0C031B1fcF1A7F403Acdfb4ABe5"
+    "0xd26d7AcB0210a0C031B1fcF1A7F403Acdfb4ABe5","0x743eD748673C6F40d2b9793A8554Ecdb010Eb618",
+    "0x0e0a924d7F103B647EC7aE512b39f3B83bCeEd2F"
 ]
 
 const app = express();
@@ -277,7 +278,6 @@ app.get('/api/v1/formations/:wallet',async(req,res) => {
     res.send("1,"+inventario.toString());
 });
 
-
 app.get('/api/v1/coins/:wallet',async(req,res) => {
 
     let wallet = req.params.wallet;
@@ -319,7 +319,6 @@ app.get('/api/v1/coins/:wallet',async(req,res) => {
 
     
 });
-
 
 app.post('/api/v1/asignar/:wallet',async(req,res) => {
 
@@ -560,7 +559,6 @@ async function monedasAlJuego(coins,wallet,intentos){
 
 }
 
-
 app.post('/api/v1/coinsalmarket/:wallet',async(req,res) => {
 
     if(req.body.token == TOKEN && web3.utils.isAddress(req.params.wallet)){
@@ -593,7 +591,7 @@ async function monedasAlMarket(coins,wallet,intentos){
 
     if (usuario.length >= 1) {
         var datos = usuario[0];
-        //if(Date.now() < datos.payAt+1 * 86400*1000)return false ;
+        //if(Date.now() < datos.payAt + 86400*1000)return false ;
     }else{
         return false;
     }
@@ -674,6 +672,137 @@ async function monedasAlMarket(coins,wallet,intentos){
     return paso;
 
 }
+
+async function recompensaDiaria(wallet){
+
+    var result = await contractMarket.methods
+        .largoInventario(wallet)
+        .call({ from: cuenta.address });
+  
+    var inventario = [];
+
+    var cantidad = 43;
+
+    var coins = 48; // CSC coins
+    var bono = false;
+
+    for (let index = 0; index < cantidad; index++) {
+        inventario[index] = 0;
+        for (let t = 0; t < testers.length; t++) {
+            if(testers[t] == wallet){
+                inventario[cantidad] = 1;
+            }
+            
+        }
+        
+    }
+
+    if (false) { // solo testers // all
+            
+        for (let index = 0; index < result; index++) {
+
+            var item = await contractMarket.methods
+            .inventario(wallet, index)
+            .call({ from: cuenta.address });
+
+            if(item.nombre.indexOf("t") === 0){
+
+                inventario[parseInt(item.nombre.slice(item.nombre.indexOf("t")+1,item.nombre.indexOf("-")))-1] =  1;
+
+            }
+
+        }
+    }
+    
+
+    if (false) { // solo legendarios
+        for (let index = 0; index < 3; index++) {
+
+
+            if(inventario[index]){
+
+                coins += 20;
+                bono = true;
+                break;
+
+            }
+
+        }
+    }
+
+    if (false) { // solo epico
+
+        if(!bono){
+
+            for (let index = 3; index < 10; index++) {
+
+
+                if(inventario[index]){
+
+                    coins += 10;
+                    break;
+
+                }
+
+            }
+        }
+    }
+
+    console.log(coins);
+    return coins;
+
+}
+
+app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
+
+    if(req.body.token == TOKEN  && web3.utils.isAddress(req.params.wallet)){
+
+        if(req.body.control == "true"){
+
+            var usuario = await user.find({ wallet: uc.upperCase(req.params.wallet) });
+
+            if (usuario.length >= 1) {
+                var datos = usuario[0];
+
+                //if(datos.active && usuario.checkpoint + 86400*1000 >= Date.now()){
+
+                if(datos.active && usuario.checkpoint + 300*1000 >= Date.now()){
+
+                    var coins = await recompensaDiaria(req.params.wallet);
+                    datos.checkpoint = Date.now();
+
+                    datos.balance = datos.balance + coins;
+                    datos.ingresado = datos.ingresado + coins;
+                    datos.deposit.push({amount: coins,
+                        date: Date.now(),
+                        finalized: true,
+                        txhash: "Daily mision coins: "+coins+" # "+req.params.wallet
+                    })
+                    
+                    update = await user.updateOne({ wallet: uc.upperCase(req.params.wallet) }, datos);
+
+                    console.log("Daily mision coins: "+coins+" # "+req.params.wallet);
+                    res.send(coins+"");
+                }else{
+                    res.send("0");
+                }
+
+            
+            }else{
+                res.send("0");
+            }
+
+        }else{
+            console.log("no se envio mision diaria");
+            res.send("0");
+
+        }
+
+    }else{
+        res.send("0");
+    }
+
+});
 
 app.get('/api/v1/sendmail',async(req,res) => {
     console.log(req.query);
@@ -816,25 +945,6 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
 
 });
 
-app.post('/api/v1/misiondiaria/:wallet',async(req,res) => {
-    if(req.body.token == TOKEN  && web3.utils.isAddress(req.params.wallet)){
-
-        if(req.body.control == "true"){
-            console.log("punto de control mision diaria");
-            res.send("true");
-
-        }else{
-            console.log("no se envio mision diaria");
-            res.send("false");
-
-        }
-
-    }else{
-        res.send("false");
-    }
-
-    
-});
 
 
 app.get('/', (req, res, next) => {
