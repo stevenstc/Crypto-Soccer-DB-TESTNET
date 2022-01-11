@@ -942,6 +942,10 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
 
                 res.send("true");
 
+            }else{
+
+                res.send("false");
+
             }
 
 
