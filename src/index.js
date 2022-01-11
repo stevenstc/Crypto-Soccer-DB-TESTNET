@@ -929,11 +929,23 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
 
     if(web3.utils.isAddress(req.params.wallet)){
 
+        var usuario = await user.find({ wallet: uc.upperCase(req.params.wallet) });
 
-        if(true){
-            console.log("consulta mision diaria");
+        if (usuario.length >= 1) {
+            var datos = usuario[0];
 
-            res.send("true");
+            //if(datos.active && usuario.checkpoint + 86400*1000 >= Date.now()){
+
+            if(datos.active && usuario.checkpoint + 300*1000 >= Date.now()){
+
+                console.log("consulta mision diaria");
+
+                res.send("true");
+
+            }
+
+
+            
 
         }else{
             res.send("false");
