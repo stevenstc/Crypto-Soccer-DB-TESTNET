@@ -765,9 +765,9 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
             if (usuario.length >= 1) {
                 var datos = usuario[0];
 
-                //if(datos.active && usuario.checkpoint + 86400*1000 >= Date.now()){
+                //if(datos.active && (datos.checkpoint + 86400*1000 >= Date.now() || datos.checkpoint === 0)){
 
-                if(datos.active && usuario.checkpoint + 300*1000 >= Date.now()){
+                if(datos.active && (datos.checkpoint + 300*1000 >= Date.now() || datos.checkpoint === 0) ){
 
                     var coins = await recompensaDiaria(req.params.wallet);
                     datos.checkpoint = Date.now();
@@ -937,7 +937,6 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
             console.log(usuario.active)
 
             console.log(usuario.checkpoint)
-
 
             //if(usuario.active && (usuario.checkpoint + 86400*1000 >= Date.now() || usuario.checkpoint === 0)){
 
