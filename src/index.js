@@ -934,9 +934,13 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
         if (usuario.length >= 1) {
             usuario = usuario[0];
 
-            console.log(usuario.active)
-
             console.log(usuario.checkpoint)
+
+            console.log(usuario.checkpoint + 300*1000 >= Date.now() )
+
+            console.log(usuario.checkpoint + 300*1000 )
+
+            console.log( Date.now() )
 
             //if(usuario.active && (usuario.checkpoint + 86400*1000 >= Date.now() || usuario.checkpoint === 0)){
 
