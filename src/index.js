@@ -48,6 +48,8 @@ const cryptr = new Cryptr(process.env.APP_MAIL);
 const uri = process.env.APP_URI;
 const DaylyTime = process.env.APP_DAYTIME || 86400;
 
+const TimeToMarket = process.env.APP_TIMEMARKET || 86400;
+
 const testNet = true;
 
 const COMISION = process.env.APP_COMISION || 60000;
@@ -593,7 +595,7 @@ async function monedasAlMarket(coins,wallet,intentos){
 
     if (usuario.length >= 1) {
         var datos = usuario[0];
-        //if(Date.now() < datos.payAt + 86400*1000)return false ;
+        //if(Date.now() >= datos.payAt + TimeToMarket*1000)return false ;
     }else{
         return false;
     }
