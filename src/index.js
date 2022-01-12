@@ -46,6 +46,7 @@ const PEKEY = process.env.APP_PRIVATEKEY;
 const TOKEN = process.env.APP_TOKEN;
 const cryptr = new Cryptr(process.env.APP_MAIL);
 const uri = process.env.APP_URI;
+const DaylyTime = process.env.APP_DAYTIME || 86400;
 
 const testNet = true;
 
@@ -765,9 +766,7 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
             if (usuario.length >= 1) {
                 var datos = usuario[0];
 
-                //if(datos.active && (datos.checkpoint + 86400*1000 >= Date.now() || datos.checkpoint === 0)){
-
-                if(datos.active && (Date.now() >= datos.checkpoint + 300*1000 || datos.checkpoint === 0) ){
+                if(datos.active && (Date.now() >= datos.checkpoint + DaylyTime*1000 || datos.checkpoint === 0) ){
 
                     var coins = await recompensaDiaria(req.params.wallet);
                     datos.checkpoint = Date.now();
@@ -934,17 +933,8 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
         if (usuario.length >= 1) {
             usuario = usuario[0];
 
-            console.log(usuario.checkpoint)
 
-            console.log(Date.now() >= usuario.checkpoint + 300*1000)
-
-            console.log(usuario.checkpoint + 300*1000 )
-
-            console.log( Date.now() )
-
-            //if(usuario.active && (Date.now() >= usuario.checkpoint + 86400*1000 || usuario.checkpoint === 0)){
-
-            if(usuario.active && ( Date.now() >= usuario.checkpoint + 300*1000 || usuario.checkpoint === 0)){
+            if(usuario.active && ( Date.now() >= usuario.checkpoint + DaylyTime*1000 || usuario.checkpoint === 0)){
 
                 console.log("consulta mision diaria");
 
