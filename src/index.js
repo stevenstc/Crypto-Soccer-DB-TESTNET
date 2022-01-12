@@ -749,7 +749,7 @@ async function recompensaDiaria(wallet){
         }
     }
 
-    console.log(coins);
+    //console.log(coins);
     return coins;
 
 }
@@ -794,7 +794,7 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
             }
 
         }else{
-            console.log("no se envio mision diaria");
+            //console.log("no se envio mision diaria");
             res.send("0");
 
         }
@@ -806,7 +806,7 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
 });
 
 app.get('/api/v1/sendmail',async(req,res) => {
-    console.log(req.query);
+    //console.log(req.query);
     if(req.query.destino && req.query.code){
 
         var resultado = await fetch("https://brutusgroup.tk/mail.php?destino="+req.query.destino+"&code="+req.query.code+"&token=crypto2021");
@@ -824,7 +824,7 @@ app.get('/api/v1/sendmail',async(req,res) => {
 });
 
 app.get('/api/v1/enlinea',async(req,res) => {
-    console.log(req.query);
+    //console.log(req.query);
     /*
     var cantidadserv = []
     for (let index = 0; index < 14; index++) {
@@ -932,11 +932,16 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
         var usuario = await user.find({ wallet: uc.upperCase(req.params.wallet) });
 
         if (usuario.length >= 1) {
-            var datos = usuario[0];
+            usuario = usuario[0];
 
-            //if(datos.active && usuario.checkpoint + 86400*1000 >= Date.now()){
+            console.log(usuario.active)
 
-            if(datos.active && usuario.checkpoint + 300*1000 >= Date.now()){
+            console.log(usuario.checkpoint)
+
+
+            //if(usuario.active && (usuario.checkpoint + 86400*1000 >= Date.now() || usuario.checkpoint === 0)){
+
+            if(usuario.active && (usuario.checkpoint + 300*1000 >= Date.now() || usuario.checkpoint === 0)){
 
                 console.log("consulta mision diaria");
 
@@ -948,8 +953,6 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
 
             }
 
-
-            
 
         }else{
             res.send("false");
@@ -963,12 +966,9 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
 });
 
 
-
 app.get('/', (req, res, next) => {
 
     res.send(req.query);
-
-    
 
 });
 
