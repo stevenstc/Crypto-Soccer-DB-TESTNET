@@ -569,6 +569,8 @@ app.post('/api/v1/coinsalmarket/:wallet',async(req,res) => {
 
         coins = new BigNumber(req.body.coins).multipliedBy(10**18);
 
+        await delay(Math.floor(Math.random() * 12000));
+
         if(await monedasAlMarket(coins, req.params.wallet,1)){
             console.log("Coins TO MARKET: "+req.body.coins+" # "+req.params.wallet);
             res.send("true");
@@ -593,6 +595,8 @@ async function monedasAlMarket(coins,wallet,intentos){
 
     var usuario = await user.find({ wallet: uc.upperCase(wallet) });
 
+    await delay(Math.floor(Math.random() * 12000));
+
     if (usuario.length >= 1) {
         var datos = usuario[0];
         //if(Date.now() >= datos.payAt + TimeToMarket*1000)return false ;
@@ -600,7 +604,7 @@ async function monedasAlMarket(coins,wallet,intentos){
         return false;
     }
 
-    var noNce = await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address);
+    /*var noNce = await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address);
     if (nonceGlobal == noNce && used) {
 
         intentos++;
@@ -611,14 +615,11 @@ async function monedasAlMarket(coins,wallet,intentos){
     }else{
         nonceGlobal = noNce;
         used = true;
-    }
-    
-    console.log(noNce);
-    console.log(nonceGlobal);
+    }*/
 
     await contractMarket.methods
         .asignarCoinsTo(coins, wallet)
-        .send({ from: web3.eth.accounts.wallet[0].address, gas: COMISION, gasPrice: gases , nonce:noNce })
+        .send({ from: web3.eth.accounts.wallet[0].address, gas: COMISION, gasPrice: gases })
         .then(result => {
             nonceGlobal = nonceGlobal+1;
             console.log("Monedas ENVIADAS A MARKET en "+intentos+" intentos");
@@ -668,8 +669,8 @@ async function monedasAlMarket(coins,wallet,intentos){
         .catch(async err => {
             console.log(err);
             intentos++;
-            console.log(coins.dividedBy(10**18)+" ->  "+wallet+" : "+intentos+" Nonce:"+await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address))
-            //await delay(Math.floor(Math.random() * 12000));
+            console.log(coins.dividedBy(10**18)+" ->  "+wallet+" : "+intentos)
+            await delay(Math.floor(Math.random() * 12000));
             paso = await monedasAlMarket(coins,wallet,intentos);
         })
 
