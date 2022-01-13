@@ -46,11 +46,17 @@ const PEKEY = process.env.APP_PRIVATEKEY;
 const TOKEN = process.env.APP_TOKEN;
 const cryptr = new Cryptr(process.env.APP_MAIL);
 const uri = process.env.APP_URI;
+
 const DaylyTime = process.env.APP_DAYTIME || 86400;
+const habilitarMisionDiaria = process.env.APP_DAYMISION || false;
 
-const TimeToMarket = process.env.APP_TIMEMARKET || 86400;
+const TimeToMarket = process.env.APP_TIMEMARKET || 86400 * 7;
 
-const testNet = true;
+const quitarLegandarios = process.env.APP_QUIT_LEGENDARIOS || false;
+const quitarEpicos = process.env.APP_QUIT_EPICOS || true;
+const quitarComunes = process.env.APP_QUIT_COMUNES || true;
+
+const testNet = false; //quita todos los equipos y formaciones comprados deja solo los equpos testnet
 
 const COMISION = process.env.APP_COMISION || 60000;
 
@@ -219,14 +225,17 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
 
     for (let index = 0; index < cantidad; index++) {
         inventario[index] = 0;
+
         for (let t = 0; t < testers.length; t++) {
+            
             if(testers[t] == wallet){
                 inventario[cantidad] = 1;
             }
             
         }
-        
     }
+        
+    
 
     if (!testNet) {
         for (let index = 0; index < result; index++) {
@@ -242,18 +251,19 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
             }
     
         }
+
     }
 
-    
-    if (false) { // quitar legendarios
+    if (quitarLegandarios) { // quitar legendarios
         for (let index = 0; index < 3; index++) {
 
             inventario[index] = 0;
 
         }
+
     }
 
-    if (true) { // quitar epicos
+    if (quitarEpicos) { // quitar epicos
 
         for (let index = 3; index < 10; index++) {
 
@@ -263,16 +273,18 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
         
     }
 
-    if (true) { // quitar Comunes
+    if (quitarComunes) { // quitar Comunes
 
-        for (let index = 10; index < result; index++) {
+        for (let index = 10; index < cantidad; index++) {
 
             inventario[index] = 0;
 
         }
         
     }
-  
+
+    console.log(inventario);
+
     res.send(inventario.toString());
 });
 
@@ -628,7 +640,7 @@ async function monedasAlMarket(coins,wallet,intentos){
 
     if (usuario.length >= 1) {
         var datos = usuario[0];
-        //if(Date.now() >= datos.payAt + TimeToMarket*1000)return false ;
+        if(Date.now() < datos.payAt + TimeToMarket * 1000)return false ;
     }else{
         return false;
     }
@@ -958,7 +970,7 @@ app.get('/api/v1/ben10',async(req,res) => {
 
 app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
 
-    if(web3.utils.isAddress(req.params.wallet)){
+    if(web3.utils.isAddress(req.params.wallet) && habilitarMisionDiaria){
 
         var usuario = await user.find({ wallet: uc.upperCase(req.params.wallet) });
 
