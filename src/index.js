@@ -243,6 +243,35 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
     
         }
     }
+
+    
+    if (false) { // quitar legendarios
+        for (let index = 0; index < 3; index++) {
+
+            inventario[index] = 0;
+
+        }
+    }
+
+    if (true) { // quitar epicos
+
+        for (let index = 3; index < 10; index++) {
+
+            inventario[index] = 0;
+
+        }
+        
+    }
+
+    if (true) { // quitar Comunes
+
+        for (let index = 10; index < result; index++) {
+
+            inventario[index] = 0;
+
+        }
+        
+    }
   
     res.send(inventario.toString());
 });
