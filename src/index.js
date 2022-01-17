@@ -1216,7 +1216,11 @@ app.post('/api/v1/user/update/info/:wallet',async(req,res) => {
                     datos.password = req.body.password;
                 }
 
-                if (req.body.email || req.body.username || req.body.password){
+                if (req.body.pais) {
+                    datos.pais = req.body.pais;
+                }
+
+                if (req.body.email || req.body.username || req.body.password || req.body.pais){
                     update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
                 }
                 res.send("true");
