@@ -1,3 +1,4 @@
+
 const express = require('express');
 const fetch = require('node-fetch');
 const mongoose = require('mongoose');
@@ -8,9 +9,9 @@ require('dotenv').config();
 var moment = require('moment');
 const BigNumber = require('bignumber.js');
 const uc = require('upper-case');
-const lc = require('lower-case');
 
-
+console.log(("HolA Que Haze").toUpperCase())
+console.log(("HolA Que Haze").toLowerCase())
 
 const Cryptr = require('cryptr');
 
@@ -18,10 +19,15 @@ const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 moment().format(); 
 
-const abiMarket = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"admin","type":"address"}],"name":"AdminRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"admin","type":"address"}],"name":"NewAdmin","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[{"internalType":"address","name":"_tokenERC20","type":"address"}],"name":"ChangePrincipalToken","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_tokenERC20","type":"address"}],"name":"ChangeTokenOTRO","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_nombre","type":"string"},{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"bool","name":"_acumulable","type":"bool"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"addItem","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"addOption","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"admin","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"adminWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"address","name":"_user","type":"address"}],"name":"asignarCoinsTo","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"buyCoins","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"}],"name":"buyItem","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"},{"internalType":"string","name":"_nombre","type":"string"},{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"bool","name":"_acumulable","type":"bool"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"editItem","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"},{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"editOption","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"gastarCoins","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"address","name":"_user","type":"address"}],"name":"gastarCoinsfrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"inventario","outputs":[{"internalType":"string","name":"nombre","type":"string"},{"internalType":"string","name":"tipo","type":"string"},{"internalType":"uint256","name":"valor","type":"uint256"},{"internalType":"bool","name":"acumulable","type":"bool"},{"internalType":"bool","name":"ilimitado","type":"bool"},{"internalType":"uint256","name":"cantidad","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"investors","outputs":[{"internalType":"bool","name":"registered","type":"bool"},{"internalType":"string","name":"correo","type":"string"},{"internalType":"uint256","name":"balance","type":"uint256"},{"internalType":"uint256","name":"gastado","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"items","outputs":[{"internalType":"string","name":"nombre","type":"string"},{"internalType":"string","name":"tipo","type":"string"},{"internalType":"uint256","name":"valor","type":"uint256"},{"internalType":"bool","name":"acumulable","type":"bool"},{"internalType":"bool","name":"ilimitado","type":"bool"},{"internalType":"uint256","name":"cantidad","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"largoInventario","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"largoItems","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"largoOptions","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address payable","name":"_newadmin","type":"address"}],"name":"makeNewAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"_oldadmin","type":"address"}],"name":"makeRemoveAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"opciones","outputs":[{"internalType":"string","name":"tipo","type":"string"},{"internalType":"bool","name":"ilimitados","type":"bool"},{"internalType":"uint256","name":"cantidad","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address payable","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"redimETH","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"redimOTRO","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"redimTokenPrincipal01","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"redimTokenPrincipal02","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_correo","type":"string"}],"name":"registro","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"sellCoins","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"token","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address payable","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_correo","type":"string"}],"name":"updateRegistro","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"string","name":"_correo","type":"string"}],"name":"updateRegistroMaster","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"ventaPublica","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]
-const abiToken = [{"inputs":[{"internalType":"string","name":"name_","type":"string"},{"internalType":"string","name":"symbol_","type":"string"},{"internalType":"uint256","name":"decimals_","type":"uint256"},{"internalType":"uint256","name":"initialBalance_","type":"uint256"},{"internalType":"address","name":"tokenOwner_","type":"address"},{"internalType":"address payable","name":"feeReceiver_","type":"address"}],"stateMutability":"payable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}]
+const abiMarket = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"admin","type":"address"}],"name":"AdminRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"admin","type":"address"}],"name":"NewAdmin","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[{"internalType":"address","name":"_tokenERC20","type":"address"}],"name":"ChangePrincipalToken","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_tokenERC20","type":"address"}],"name":"ChangeTokenOTRO","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_nombre","type":"string"},{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"bool","name":"_acumulable","type":"bool"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"addItem","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"addOption","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"admin","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"adminWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"address","name":"_user","type":"address"}],"name":"asignarCoinsTo","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"buyCoins","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"}],"name":"buyItem","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"},{"internalType":"string","name":"_nombre","type":"string"},{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"bool","name":"_acumulable","type":"bool"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"editItem","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"},{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"editOption","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"gastarCoins","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"address","name":"_user","type":"address"}],"name":"gastarCoinsfrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"inventario","outputs":[{"internalType":"string","name":"nombre","type":"string"},{"internalType":"string","name":"tipo","type":"string"},{"internalType":"uint256","name":"valor","type":"uint256"},{"internalType":"bool","name":"acumulable","type":"bool"},{"internalType":"bool","name":"ilimitado","type":"bool"},{"internalType":"uint256","name":"cantidad","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"investors","outputs":[{"internalType":"bool","name":"registered","type":"bool"},{"internalType":"string","name":"correo","type":"string"},{"internalType":"uint256","name":"balance","type":"uint256"},{"internalType":"uint256","name":"gastado","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"items","outputs":[{"internalType":"string","name":"nombre","type":"string"},{"internalType":"string","name":"tipo","type":"string"},{"internalType":"uint256","name":"valor","type":"uint256"},{"internalType":"bool","name":"acumulable","type":"bool"},{"internalType":"bool","name":"ilimitado","type":"bool"},{"internalType":"uint256","name":"cantidad","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"largoInventario","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"largoItems","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"largoOptions","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address payable","name":"_newadmin","type":"address"}],"name":"makeNewAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"_oldadmin","type":"address"}],"name":"makeRemoveAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"opciones","outputs":[{"internalType":"string","name":"tipo","type":"string"},{"internalType":"bool","name":"ilimitados","type":"bool"},{"internalType":"uint256","name":"cantidad","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address payable","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"redimETH","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"redimOTRO","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"redimTokenPrincipal01","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"redimTokenPrincipal02","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_correo","type":"string"}],"name":"registro","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"sellCoins","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"token","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address payable","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_correo","type":"string"}],"name":"updateRegistro","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"string","name":"_correo","type":"string"}],"name":"updateRegistroMaster","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"ventaPublica","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
 
-var testers = ["0x11134Bd1dd0219eb9B4Ab931c508834EA29C0F8d","0xe7064D523fD9f95ce9E66274E8ca77B4AA505aC1","0xe605646007FFd2851744fa65c7116a3a995ED287","0x48fC3f756d15ca6aB00e45B5c2fD4613C0781611","0x39e3c49De002E05b4F64bB3F33E4d92e3990a9D1",
+
+var superUser = [
+    "0x11134Bd1dd0219eb9B4Ab931c508834EA29C0F8d",
+    "0x306A75c3E33603f69F4178C2c40EAF0734DE4F64"
+];
+
+var testers = ["0x11134Bd1dd0219eb9B4Ab931c508834EA29C0F8d","0xe7064D523fD9f95ce9E66274E8ca77B4AA505aC1","0xe605646007FFd2851744fa65c7116a3a995ED287","0x48fC3f756d15ca6aB00e45B5c2fD4613C0781611","0x39e3c49De002E05b4F64bB3F33E4d92e3990a9D1","0x306A75c3E33603f69F4178C2c40EAF0734DE4F64",
     "0x211eF420C5aec2476Fa17E323474373fcC0229Fe","0x1180868C4BA7391118122d6B2d8152354Bce7D75",
     "0x43e3B4631d8F9850135759304Ee8AAbF241a6cd8","0x15c1eEA37a0B87Af59175c0159264b42A0E2E744",
     "0x621132D2b308Fc5898201ef133290dB0E0BA5BDC","0x4437C517F1ddaEb22Bff670eD31f02E4Ec585930",
@@ -45,6 +51,8 @@ const port = process.env.PORT || 3004;
 const PEKEY = process.env.APP_PRIVATEKEY;
 const TOKEN = process.env.APP_TOKEN;
 const cryptr = new Cryptr(process.env.APP_MAIL);
+
+const TokenEmail = "nuevo123";
 const uri = process.env.APP_URI;
 
 const DaylyTime = process.env.APP_DAYTIME || 86400;
@@ -52,19 +60,18 @@ const habilitarMisionDiaria = process.env.APP_DAYMISION || false;
 
 const TimeToMarket = process.env.APP_TIMEMARKET || 86400 * 7;
 
-const quitarLegandarios = process.env.APP_QUIT_LEGENDARIOS || false;
-const quitarEpicos = process.env.APP_QUIT_EPICOS || true;
-const quitarComunes = process.env.APP_QUIT_COMUNES || true;
+const quitarLegandarios = process.env.APP_QUIT_LEGENDARIOS || "false";
+const quitarEpicos = process.env.APP_QUIT_EPICOS || "true";
+const quitarComunes = process.env.APP_QUIT_COMUNES || "true";
 
 const testNet = false; //quita todos los equipos y formaciones comprados deja solo los equpos testnet
 
 const COMISION = process.env.APP_COMISION || 60000;
 
-const explorador = "https://testnet.bscscan.com/tx/";
+const explorador = "https://bscscan.com/tx/";
 
-const RED = "https://data-seed-prebsc-1-s1.binance.org:8545/";
+const RED = "https://bsc-dataseed.binance.org/";
 const addressContract = process.env.APP_CONTRACT || "0xfF7009EF7eF85447F6A5b3f835C81ADd60a321C9";
-const addressContractToken = "0x038987095f309d3640f51644430dc6c7c4e2e409";
 
 let web3 = new Web3(RED);
 let cuenta = web3.eth.accounts.privateKeyToAccount(PEKEY);
@@ -77,7 +84,9 @@ web3.eth.accounts.wallet.add(PEKEY);
 const contractMarket = new web3.eth.Contract(abiMarket,addressContract);
 //const contractToken = new web3.eth.Contract(abiToken,addressContractToken);
 
-//console.log(web3.eth.accounts.wallet);
+//console.log(web3.eth.accounts.wallet[0].address);
+
+//console.log(await web3.eth.accounts.wallet);
 //tx web3.eth.accounts.signTransaction(tx, privateKey);
 /*web3.eth.sendTransaction({
     from: "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0",
@@ -90,6 +99,8 @@ const contractMarket = new web3.eth.Contract(abiMarket,addressContract);
 //console.log(web3.eth.accounts.wallet);
 const options = { useNewUrlParser: true, useUnifiedTopology: true };
 
+var formatoliga = 'MDYYYY';
+
 mongoose.connect(uri, options).then(
     async() => { console.log("Conectado Exitodamente!");
     console.log("nonce: "+await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address));
@@ -98,9 +109,11 @@ mongoose.connect(uri, options).then(
     err => { console.log(err); }
   );
 
-
 const user = mongoose.model('usuarios', {
     wallet: String,
+    email: String,
+    password: String,
+    username: String,
     active: Boolean,
     payAt: Number,
     checkpoint: Number,
@@ -122,13 +135,60 @@ const user = mongoose.model('usuarios', {
       txhash: String
 
     }],
-    txs: [String]
+    txs: [String],
+    pais: String
 
 });
 
-const server = mongoose.model('servers', {linea: [Number]});
+const appstatuses = mongoose.model('appstatuses', {
+    version: String,
+    torneo: String,
+    duelo: String,
+    liga: String,
+    mantenimiento: String,
+    link: String,
+    entregado: Number,
+    ganado: Number, 
+    entregado: Number,
+    linea: [Number],
+    updates: [String]
+    
+});
 
-const money = mongoose.model('estatuses', {ganado: Number, entregado: Number});
+const playerData = mongoose.model('playerdatas', {
+    wallet: String,
+    BallonSet: String,
+    CupsWin: Number,
+    DificultConfig: String,
+    DiscountMomment: String,
+    DuelsOnlineWins: String,
+    DuelsPlays: String,
+    FriendLyWins: String,
+    FriendlyTiming: String,
+    LastDate: String,
+    LeagueDate: String,
+    LeagueOpport: String,
+    LeagueTimer: String,
+    LeaguesOnlineWins: String,
+    MatchLose: String,
+    MatchWins: String,
+    MatchesOnlineWins: String,
+    Music: String,
+    PhotonDisconnected: String,
+    PlaysOnlineTotal: String,
+    PlaysTotal: String,
+    QualityConfig: String,
+    StadiumSet: String,
+    TournamentsPlays: String,
+    Version: String,
+    VolumeConfig: String,
+    Plataforma: String,
+    GolesEnContra: String,
+    GolesAFavor: String,
+    FirstTime: String
+
+});
+
 
 app.get('/',async(req,res) => {
 
@@ -146,7 +206,7 @@ app.get('/api',async(req,res) => {
 
 app.get('/api/v1',async(req,res) => {
 
-    res.send("Conectado y funcionando");
+    res.send("true");
 });
 
 app.get('/api/v1/tiempo',async(req,res) => {
@@ -182,38 +242,41 @@ app.get('/api/v1/datefuture',async(req,res) => {
 
 app.get('/api/v1/user/:wallet',async(req,res) => {
 
-    let wallet = req.params.wallet;
-    let emailApp = req.query.email;
+    let wallet = req.params.wallet.toLowerCase();
+    let emailApp = req.query.email.toLowerCase();
 
-    emailApp = lc.lowerCase(emailApp);
-
-
-    var investor =
-      await  contractMarket.methods
-        .investors(wallet)
-        .call({ from: cuenta.address });
-
-    var email = investor.correo;
-
-
-    if (email === "") {
+    if(!web3.utils.isAddress(wallet)){
+        console.log("wallet incorrecta: "+wallet+ " email: "+emailApp )
         res.send("false");
     }else{
-        email = lc.lowerCase(cryptr.decrypt(email));
 
-        if(emailApp === email){
-            res.send("true");
-        }else{
+        var investor =
+        await  contractMarket.methods
+            .investors(wallet)
+            .call({ from: cuenta.address });
+
+        var email = investor.correo;
+
+
+        if (email === "" || email.length < 100) {
             res.send("false");
+        }else{
+            email = cryptr.decrypt(email).toLowerCase();
+
+            if(emailApp === email){
+                res.send("true");
+            }else{
+                res.send("false");
+            }
+        
         }
-      
     }
 
 });
 
 app.get('/api/v1/user/teams/:wallet',async(req,res) => {
 
-    let wallet = req.params.wallet;
+    var wallet =  req.params.wallet.toLowerCase();
 
     var result = await contractMarket.methods
         .largoInventario(wallet)
@@ -225,17 +288,8 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
 
     for (let index = 0; index < cantidad; index++) {
         inventario[index] = 0;
-
-        for (let t = 0; t < testers.length; t++) {
-            
-            if(testers[t] == wallet){
-                inventario[cantidad] = 1;
-            }
-            
-        }
     }
         
-    
 
     if (!testNet) {
         for (let index = 0; index < result; index++) {
@@ -254,7 +308,7 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
 
     }
 
-    if (quitarLegandarios) { // quitar legendarios
+    if (quitarLegandarios === "true") { // quitar legendarios
         for (let index = 0; index < 3; index++) {
 
             inventario[index] = 0;
@@ -263,7 +317,7 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
 
     }
 
-    if (quitarEpicos) { // quitar epicos
+    if (quitarEpicos === "true") { // quitar epicos
 
         for (let index = 3; index < 10; index++) {
 
@@ -273,7 +327,7 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
         
     }
 
-    if (quitarComunes) { // quitar Comunes
+    if (quitarComunes === "true") { // quitar Comunes
 
         for (let index = 10; index < cantidad; index++) {
 
@@ -283,14 +337,30 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
         
     }
 
-    console.log(inventario);
+    for (let t = 0; t < testers.length; t++) {
+            
+        if(testers[t].toLowerCase() == wallet){
+            inventario[cantidad] = 1;
+        }
+    }
+
+    for (let t = 0; t < superUser.length; t++) {
+        if(superUser[t].toLowerCase() == wallet){
+            for (let index = 0; index < cantidad; index++) {
+                inventario[index] = 1;
+            }
+        }
+        
+    }
+
+    //console.log(inventario);
 
     res.send(inventario.toString());
 });
 
 app.get('/api/v1/formations/:wallet',async(req,res) => {
 
-    let wallet = req.params.wallet;
+    var wallet =  req.params.wallet.toLowerCase();
 
     var result = await contractMarket.methods
         .largoInventario(wallet)
@@ -325,10 +395,10 @@ app.get('/api/v1/formations/:wallet',async(req,res) => {
 
 app.get('/api/v1/coins/:wallet',async(req,res) => {
 
-    let wallet = req.params.wallet;
+    let wallet =  req.params.wallet.toLowerCase();
 
     if(!web3.utils.isAddress(wallet)){
-        console.log("wallet incorrecta")
+        console.log("wallet incorrecta: "+wallet)
         res.send("0");
     }else{
             usuario = await user.find({ wallet: uc.upperCase(wallet) });
@@ -338,9 +408,12 @@ app.get('/api/v1/coins/:wallet',async(req,res) => {
             res.send(usuario.balance+"");
 
         }else{
-            console.log("creado USUARIO al consultar monedas"+wallet)
+            console.log("creado USUARIO al consultar monedas: "+wallet)
             var users = new user({
-                wallet: uc.upperCase(wallet),    
+                wallet: uc.upperCase(wallet),   
+                email: "",
+                password: "",
+                username: "", 
                 active: true,
                 payAt: Date.now(),
                 checkpoint: 0,
@@ -349,7 +422,8 @@ app.get('/api/v1/coins/:wallet',async(req,res) => {
                 retirado: 0,
                 deposit: [],
                 retiro: [],
-                txs: []
+                txs: [],
+                pais: "null"
             });
 
             users.save().then(()=>{
@@ -367,7 +441,7 @@ app.get('/api/v1/coins/:wallet',async(req,res) => {
 
 app.post('/api/v1/asignar/:wallet',async(req,res) => {
 
-    let wallet = req.params.wallet;
+    var wallet =  req.params.wallet.toLowerCase();
 
     req.body.coins = parseInt(req.body.coins);
     
@@ -395,7 +469,10 @@ app.post('/api/v1/asignar/:wallet',async(req,res) => {
         }else{
             console.log("creado USUARIO al Asignar"+wallet)
             var users = new user({
-                wallet: uc.upperCase(wallet),    
+                wallet: uc.upperCase(wallet),
+                email: "",
+                password: "",
+                username: "", 
                 active: true,
                 payAt: Date.now(),
                 checkpoint: 0,
@@ -408,7 +485,8 @@ app.post('/api/v1/asignar/:wallet',async(req,res) => {
                     txhash: "Win coins: "+req.body.coins+" # "+req.params.wallet
                 }],
                 retiro: [],
-                txs: []
+                txs: [],
+                pais: "null"
             });
     
             users.save().then(()=>{
@@ -428,7 +506,7 @@ app.post('/api/v1/asignar/:wallet',async(req,res) => {
 
 app.post('/api/v1/quitar/:wallet',async(req,res) => {
 
-    let wallet = req.params.wallet;
+    var wallet =  req.params.wallet.toLowerCase();
 
     req.body.coins = parseInt(req.body.coins);
 
@@ -466,7 +544,10 @@ app.post('/api/v1/quitar/:wallet',async(req,res) => {
         }else{
             console.log("usuario creado al retirar monedas"+wallet)
             var users = new user({
-                wallet: uc.upperCase(wallet),    
+                wallet: uc.upperCase(wallet),  
+                email: "",
+                password: "",
+                username: "",   
                 active: true,
                 payAt: Date.now(),
                 checkpoint: 0,
@@ -475,7 +556,8 @@ app.post('/api/v1/quitar/:wallet',async(req,res) => {
                 retirado: 0,
                 deposit: [],
                 retiro: [],
-                txs: []
+                txs: [],
+                pais: "null"
             });
     
             users.save().then(()=>{
@@ -495,15 +577,15 @@ app.post('/api/v1/quitar/:wallet',async(req,res) => {
 
 app.post('/api/v1/coinsaljuego/:wallet',async(req,res) => {
 
+    var wallet =  req.params.wallet.toLowerCase();
 
-    if(req.body.token == TOKEN  && web3.utils.isAddress(req.params.wallet)){
+    if(req.body.token == TOKEN  && web3.utils.isAddress(wallet)){
 
         await delay(Math.floor(Math.random() * 12000));
 
         coins = new BigNumber(req.body.coins).multipliedBy(10**18);
 
-        if(await monedasAlJuego(coins, req.params.wallet,1)){
-            console.log("Coins TO GAME: "+req.body.coins+" # "+req.params.wallet);
+        if(await monedasAlJuego(coins,wallet,1)){
             res.send("true");
 
         }else{
@@ -520,6 +602,8 @@ app.post('/api/v1/coinsaljuego/:wallet',async(req,res) => {
 
 async function monedasAlJuego(coins,wallet,intentos){
 
+    await delay(Math.floor(Math.random() * 12000));
+
     var usuario = await contractMarket.methods
     .investors(wallet)
     .call({ from: web3.eth.accounts.wallet[0].address });
@@ -530,8 +614,6 @@ async function monedasAlJuego(coins,wallet,intentos){
 
     var gases = await web3.eth.getGasPrice(); 
 
-    await delay(Math.floor(Math.random() * 12000));
-
     var paso = true;
 
     var gasLimit = await contractMarket.methods.gastarCoinsfrom(coins, wallet).estimateGas({from: web3.eth.accounts.wallet[0].address});
@@ -541,8 +623,8 @@ async function monedasAlJuego(coins,wallet,intentos){
             .gastarCoinsfrom(coins, wallet)
             .send({ from: web3.eth.accounts.wallet[0].address, gas: gasLimit, gasPrice: gases })
             .then(result => {
-                console.log("Monedas ENVIADAS AL JUEGO en "+intentos+" intentos");
-                console.log(explorador+result.transactionHash);
+                console.log("Monedas ENVIADAS en "+intentos+" intentos");
+                //console.log(explorador+result.transactionHash);
                 
                 user.find({ wallet: uc.upperCase(wallet) }).then(usuario =>{
 
@@ -551,17 +633,26 @@ async function monedasAlJuego(coins,wallet,intentos){
                         if(datos.active){
                             datos.balance = coins.dividedBy(10**18).plus(datos.balance).decimalPlaces(0).toNumber();
                             datos.ingresado = coins.dividedBy(10**18).plus(datos.ingresado).decimalPlaces(0).toNumber();
+                            datos.deposit.push({
+                                amount: coins.dividedBy(10**18).decimalPlaces(0).toNumber(),
+                                date: Date.now(),
+                                finalized: true,
+                                txhash: "FROM MARKET: "+coins.dividedBy(10**18).decimalPlaces(0).toString()+" # wallet: "+uc.upperCase(wallet)+" # Hash: "+explorador+result.transactionHash
+                            })
                             datos.txs.push(explorador+result.transactionHash)
                             update = user.updateOne({ wallet: uc.upperCase(wallet) }, datos)
-                            .then(console.log("Coins SEND: "+coins.dividedBy(10**18)+" # "+wallet))
+                            .then(console.log("Coins SEND TO GAME: "+coins.dividedBy(10**18)+" # "+wallet))
                             .catch(console.error())
                             
                         }
                 
                     }else{
-                        console.log("creado USUARIO monedas al juego"+wallet)
+                        console.log("creado USUARIO monedas al juego: "+wallet)
                         var users = new user({
                             wallet: uc.upperCase(wallet),    
+                            email: "",
+                            password: "",
+                            username: "", 
                             active: true,
                             payAt: Date.now(),
                             checkpoint: 0,
@@ -571,7 +662,7 @@ async function monedasAlJuego(coins,wallet,intentos){
                             deposit: [{amount: coins.dividedBy(10**18).decimalPlaces(0).toNumber(),
                                 date: Date.now(),
                                 finalized: true,
-                                txhash: "SEND: "+coins.dividedBy(10**18).decimalPlaces(0).toString()+" # "+req.params.wallet+" Hash: "+explorador+result.transactionHash
+                                txhash: "FROM MARKET: "+coins.dividedBy(10**18).decimalPlaces(0).toString()+" # "+uc.upperCase(wallet)+" # Hash: "+explorador+result.transactionHash
                             }],
                             retiro: [],
                             txs: [explorador+result.transactionHash]
@@ -606,14 +697,15 @@ async function monedasAlJuego(coins,wallet,intentos){
 
 app.post('/api/v1/coinsalmarket/:wallet',async(req,res) => {
 
-    if(req.body.token == TOKEN && web3.utils.isAddress(req.params.wallet)){
+    var wallet =  req.params.wallet.toLowerCase();
+
+    if(req.body.token == TOKEN && web3.utils.isAddress(wallet)){
 
         coins = new BigNumber(req.body.coins).multipliedBy(10**18);
 
         await delay(Math.floor(Math.random() * 12000));
 
-        if(await monedasAlMarket(coins, req.params.wallet,1)){
-            console.log("Coins TO MARKET: "+req.body.coins+" # "+req.params.wallet);
+        if(await monedasAlMarket(coins, wallet,1)){
             res.send("true");
 
         }else{
@@ -630,17 +722,21 @@ app.post('/api/v1/coinsalmarket/:wallet',async(req,res) => {
 
 async function monedasAlMarket(coins,wallet,intentos){
 
-    var gases = await web3.eth.getGasPrice(); 
+    await delay(Math.floor(Math.random() * 12000));
 
     var paso = false;
 
-    var usuario = await user.find({ wallet: uc.upperCase(wallet) });
+    var gases = await web3.eth.getGasPrice(); 
 
-    await delay(Math.floor(Math.random() * 12000));
+    var usuario = await user.find({ wallet: uc.upperCase(wallet) });
 
     if (usuario.length >= 1) {
         var datos = usuario[0];
-        if(Date.now() < datos.payAt + TimeToMarket * 1000)return false ;
+        console.log(Date.now())
+        console.log(datos.payAt)
+        console.log(datos.payAt + (TimeToMarket * 1000))
+
+        if(Date.now() < datos.payAt + (TimeToMarket * 1000))return false ;
     }else{
         return false;
     }
@@ -663,8 +759,7 @@ async function monedasAlMarket(coins,wallet,intentos){
         .send({ from: web3.eth.accounts.wallet[0].address, gas: COMISION, gasPrice: gases })
         .then(result => {
             nonceGlobal = nonceGlobal+1;
-            console.log("Monedas ENVIADAS A MARKET en "+intentos+" intentos");
-            console.log(explorador+result.transactionHash);
+            console.log("Monedas ENVIADAS en "+intentos+" intentos");
             
             user.find({ wallet: uc.upperCase(wallet) }).then(usuario =>{
 
@@ -674,9 +769,15 @@ async function monedasAlMarket(coins,wallet,intentos){
                         datos.payAt = Date.now();
                         datos.balance = BigNumber(datos.balance).minus(coins.dividedBy(10**18));
                         datos.retirado = coins.dividedBy(10**18).plus(datos.retirado);
+                        datos.retiro.push({
+                            amount: coins.dividedBy(10**18).decimalPlaces(0).toNumber(),
+                            date: Date.now(),
+                            finalized: true,
+                            txhash: "TO MARKET: "+coins.dividedBy(10**18).decimalPlaces(0).toString()+" # wallet: "+uc.upperCase(wallet)+" # Hash: "+explorador+result.transactionHash
+                        })
                         datos.txs.push(explorador+result.transactionHash)
                         update = user.updateOne({ wallet: uc.upperCase(wallet) }, datos)
-                        .then(console.log("Coins SEND: "+coins.dividedBy(10**18)+" # "+wallet))
+                        .then(console.log("Coins SEND TO MARKET: "+coins.dividedBy(10**18)+" # "+wallet))
                         .catch(console.error())
                     
                     }
@@ -684,7 +785,10 @@ async function monedasAlMarket(coins,wallet,intentos){
                 }else{
                     console.log("creado USUARIO monedas al Market"+wallet)
                     var users = new user({
-                        wallet: uc.upperCase(wallet),    
+                        wallet: uc.upperCase(wallet),
+                        email: "",
+                        password: "",
+                        username: "", 
                         active: true,
                         payAt: Date.now(),
                         checkpoint: 0,
@@ -801,18 +905,20 @@ async function recompensaDiaria(wallet){
 
 app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
 
-    if(req.body.token == TOKEN  && web3.utils.isAddress(req.params.wallet)){
+    var wallet =  req.params.wallet.toLowerCase();
+
+    if(req.body.token == TOKEN  && web3.utils.isAddress(wallet)){
 
         if(req.body.control == "true"){
 
-            var usuario = await user.find({ wallet: uc.upperCase(req.params.wallet) });
+            var usuario = await user.find({ wallet: uc.upperCase(wallet) });
 
             if (usuario.length >= 1) {
                 var datos = usuario[0];
 
                 if(datos.active && (Date.now() >= datos.checkpoint + DaylyTime*1000 || datos.checkpoint === 0) ){
 
-                    var coins = await recompensaDiaria(req.params.wallet);
+                    var coins = await recompensaDiaria(wallet);
                     datos.checkpoint = Date.now();
 
                     datos.balance = datos.balance + coins;
@@ -820,12 +926,12 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
                     datos.deposit.push({amount: coins,
                         date: Date.now(),
                         finalized: true,
-                        txhash: "Daily mision coins: "+coins+" # "+req.params.wallet
+                        txhash: "Daily mision coins: "+coins+" # "+wallet
                     })
                     
-                    update = await user.updateOne({ wallet: uc.upperCase(req.params.wallet) }, datos);
+                    update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
 
-                    console.log("Daily mision coins: "+coins+" # "+req.params.wallet);
+                    console.log("Daily mision coins: "+coins+" # "+wallet);
                     res.send(coins+"");
                 }else{
                     res.send("0");
@@ -867,32 +973,19 @@ app.get('/api/v1/sendmail',async(req,res) => {
 });
 
 app.get('/api/v1/enlinea',async(req,res) => {
-    //console.log(req.query);
-    /*
-    var cantidadserv = []
-    for (let index = 0; index < 14; index++) {
-        cantidadserv[index] = 0;
-    }
 
-    var servers = new server({
-        linea:cantidadserv
-    })
+    var appstatus = await appstatuses.find({});
+        appstatus = appstatus[0]
 
-    await servers.save();
-        res.send("true");
-    */
     if(req.query.rango){
 
-        var estado = await server.find({});
-        estado = estado[0]
-
-        for (let index = 0; index < estado.linea.length; index++) {
+        for (let index = 0; index < appstatus.linea.length; index++) {
 
             if(parseInt(req.query.rango) == index){
                 if (parseInt(req.query.activo) >= 0 ) {
-                    estado.linea[index] = parseInt(req.query.activo);
+                    appstatus.linea[index] = parseInt(req.query.activo);
                 }else{
-                    estado.linea[index] = 0;
+                    appstatus.linea[index] = 0;
                 }
                 
             }
@@ -900,46 +993,31 @@ app.get('/api/v1/enlinea',async(req,res) => {
         }
 
         datos = {};
-        datos.linea = estado.linea;
+        datos.linea = appstatus.linea;
 
-        update = await server.updateOne({ _id: estado._id }, datos)
+        update = await appstatuses.updateOne({ _id: appstatus._id }, datos)
 
         res.send("true");
 
     }else{
-        var estado = await server.find({});
-        estado = estado[0];
 
-        res.send((estado.linea).toString());
+        res.send((appstatus.linea).toString());
 
     }   
     
 });
 
 app.get('/api/v1/ben10',async(req,res) => {
-    /*var moneys = new money({
-        ganado: 0,    
-        entregado: 0
-    })
 
-    moneys.save().then(()=>{
-        console.log("Usuario creado exitodamente");
-        res.send("true");
-    })*/
-    //console.log(req.query);
-
-    //var estado = await money.find({});
-    //console.log(estado)
+    var aplicacion = await appstatuses.find({ });
+    aplicacion = aplicacion[0];
 
     if(req.query.ganado){
 
-        var estado = await money.find({});
-        estado = estado[0];
-
         datos = {};
-        datos.ganado = estado.ganado+parseInt(req.query.ganado);
+        datos.ganado = aplicacion.ganado+parseInt(req.query.ganado);
 
-        update = await money.updateOne({ _id: estado._id }, datos)
+        update = await appstatuses.updateOne({ _id: aplicacion._id }, datos)
 
         res.send("true");
 
@@ -947,21 +1025,16 @@ app.get('/api/v1/ben10',async(req,res) => {
 
     if(req.query.entregado){
 
-        var estado = await money.find({});
-        estado = estado[0];
-
         datos = {};
-        datos.entregado = estado.entregado+parseInt(req.query.entregado);
+        datos.entregado = aplicacion.entregado+parseInt(req.query.entregado);
 
-        update = await money.updateOne({ _id: estado._id }, datos)
+        update = await appstatuses.updateOne({ _id: estado._id }, datos)
 
         res.send("true");
 
     }else{
-
-        var estado = await money.find({});
-        estado = estado[0];
-        res.send(estado.ganado+","+estado.entregado);
+        
+        res.send(appstatus.ganado+","+appstatus.entregado);
 
 
     }
@@ -970,9 +1043,11 @@ app.get('/api/v1/ben10',async(req,res) => {
 
 app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
 
-    if(web3.utils.isAddress(req.params.wallet) && habilitarMisionDiaria){
+    var wallet =  req.params.wallet.toLowerCase();
 
-        var usuario = await user.find({ wallet: uc.upperCase(req.params.wallet) });
+    if(web3.utils.isAddress(wallet) && habilitarMisionDiaria){
+
+        var usuario = await user.find({ wallet: uc.upperCase(wallet) });
 
         if (usuario.length >= 1) {
             usuario = usuario[0];
@@ -1000,6 +1075,801 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
         res.send("false");
     }
 
+});
+
+app.get('/api/v1/user/exist/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet.toLowerCase();
+     
+    if(web3.utils.isAddress(wallet)){
+
+        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+
+        if (usuario.length >= 1) {
+            res.send("true");
+        }else{
+            res.send("false");
+        }
+    }else{
+        res.send("false");
+    }
+});
+
+app.get('/api/v1/user/active/:wallet',async(req,res) => {
+    
+    var wallet =  req.params.wallet.toLowerCase();
+     
+    if(web3.utils.isAddress(wallet)){
+
+        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+
+        if (usuario.length >= 1) {
+            usuario = usuario[0];
+            res.send(""+usuario.active);
+        }else{
+            res.send("false");
+        }
+    }else{
+        res.send("false");
+    }
+});
+
+app.get('/api/v1/user/username/:wallet',async(req,res) => {
+    var wallet =  req.params.wallet.toLowerCase();
+     
+    if(web3.utils.isAddress(wallet)){
+
+        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+
+        if (usuario.length >= 1) {
+            usuario = usuario[0];
+
+            res.send(usuario.username);
+        }else{
+            res.send("false");
+        }
+    }else{
+        res.send("false");
+    }
+});
+
+app.get('/api/v1/user/email/:wallet',async(req,res) => {
+    var wallet =  req.params.wallet.toLowerCase();
+     
+    if( req.query.tokenemail === TokenEmail && web3.utils.isAddress(wallet)){
+
+        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+
+        if (usuario.length >= 1) {
+            usuario = usuario[0];
+
+            res.send(usuario.email);
+        }else{
+            res.send("false");
+        }
+    }else{
+        res.send("false");
+    }
+});
+
+app.get('/api/v1/user/pais/:wallet',async(req,res) => {
+    var wallet =  req.params.wallet.toLowerCase();
+     
+    if(web3.utils.isAddress(wallet)){
+
+        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+
+        if (usuario.length >= 1) {
+            usuario = usuario[0];
+
+            res.send(usuario.pais);
+        }else{
+            res.send("false");
+        }
+    }else{
+        res.send("false");
+    }
+});
+
+app.get('/api/v1/user/ban/:wallet',async(req,res) => {
+    var wallet =  req.params.wallet.toLowerCase();
+     
+    if(web3.utils.isAddress(wallet)){
+
+        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+
+        if (usuario.length >= 1) {
+            usuario = usuario[0];
+
+
+
+            res.send(!usuario.active+"");
+        }else{
+            res.send("true");
+        }
+    }else{
+        res.send("true");
+    }
+});
+
+app.post('/api/v1/user/update/info/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet.toLowerCase();
+    
+    if(req.body.token == TOKEN && web3.utils.isAddress(wallet)){
+
+        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+
+        if (usuario.length >= 1) {
+            var datos = usuario[0];
+            if(datos.active){
+                if (req.body.email) {
+                    req.body.email =  req.body.email.toLowerCase();
+                    datos.email = req.body.email;
+                }
+
+                if (req.body.username) {
+                    datos.username = req.body.username;
+                }
+
+                if (req.body.password) {
+                    datos.password = req.body.password;
+                }
+
+                if (req.body.email || req.body.username || req.body.password){
+                    update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+                }
+                res.send("true");
+            }else{
+                res.send("false");
+            }
+    
+        }else{
+            console.log("creado USUARIO al actualizar info: "+wallet)
+            var email = "";
+            var username = "";
+            var password = "";
+
+            if (req.body.email) {
+                email = req.body.email;
+            }
+
+            if (req.body.username) {
+                username = req.body.username;
+            }
+
+            if (req.body.password) {
+                password = req.body.password;
+            }
+            var users = new user({
+                wallet: uc.upperCase(wallet),
+                email: email,
+                password: password,
+                username: username, 
+                active: true,
+                payAt: Date.now(),
+                checkpoint: 0,
+                balance: 0,
+                ingresado: 0,
+                retirado: 0,
+                deposit: [{amount: req.body.coins,
+                    date: Date.now(),
+                    finalized: true,
+                    txhash: "Acount Creation "
+                }],
+                retiro: [],
+                txs: [],
+                pais: "null"
+            });
+    
+            users.save().then(()=>{
+                console.log("Usuario creado exitodamente");
+                res.send("true");
+            })
+                
+            
+        }
+
+
+    }else{
+        res.send("false");
+    }
+		
+});
+
+app.post('/api/v1/user/auth/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet.toLowerCase();
+
+    req.body.email =  req.body.email.toLowerCase();
+    
+    if(req.body.token == TOKEN && web3.utils.isAddress(wallet)){
+
+        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+
+        if (usuario.length >= 1) {
+            var usuario = usuario[0];
+
+            if(usuario.password === req.body.password && req.body.password != "" && req.body.password.length >= 8){
+
+                if(usuario.active && usuario.email === req.body.email){
+
+                    res.send("true");
+                    
+                    
+                }else{
+                    res.send("false");
+                }
+            }else{
+                res.send("false");
+            }
+    
+        }else{
+           
+            res.send("false");
+            
+        }
+
+
+    }else{
+        res.send("false");
+    }
+		
+});
+
+
+app.get('/api/v1/username/disponible/',async(req,res) => {
+
+    var username =  req.query.username;
+
+    console.log(username)
+    usuario = await user.find({ username: username });
+
+    //console.log(usuario)
+
+    if (usuario.length >= 1) {
+        res.send("false");
+    }else{
+        res.send("true");
+    }
+
+});
+
+
+app.get('/api/v1/email/disponible/',async(req,res) => {
+
+    var email =  req.query.email;
+
+    usuario = await user.find({ email: email });
+
+    if (usuario.length >= 1) {
+        res.send("false");
+    }else{
+        res.send("true");
+    }
+
+});
+
+
+app.get('/api/v1/app/init/',async(req,res) => {
+
+    var version = "1.0.0.2";
+    if (req.query.version) {
+        version = req.query.version;
+    }
+
+    var aplicacion = await appstatuses.find({version: version});
+
+    if (aplicacion.length >= 1) {
+        aplicacion = aplicacion[0];
+        res.send(aplicacion.liga+","+aplicacion.mantenimiento+","+aplicacion.version+","+aplicacion.link+","+aplicacion.duelo+","+aplicacion.torneo+","+aplicacion.updates);
+
+    }else{
+        
+        aplicacion = new appstatuses({
+            version: req.query.version,
+            torneo: "off",
+            duelo: "off",
+            liga: "off",
+            mantenimiento: "on",
+            link: "https://cryptosoccergames.com",
+            ganado: 0, 
+            entregado: 0,
+            linea: [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            updates:["Titulo","Cuerpo","Fecha"]
+        });
+
+        aplicacion.save().then(()=>{
+            res.send("nueva version creada");
+        })
+            
+    }
+
+});
+
+
+app.get('/api/v1/consulta/leadboard',async(req,res) => {
+
+    var cantidad = 10;
+    var lista = [];
+
+    var aplicacion = await playerData.find({
+        CupsWin: {$gte: 1},
+        limit: cantidad
+        
+      }).limit(cantidad).sort([['CupsWin', -1]]);
+
+      
+    if (aplicacion.length >= 1) {
+        
+        for (let index = 0; index < aplicacion.length; index++) {
+            lista[index] = aplicacion[index].wallet;
+            
+        }
+        res.send(lista.toLocaleString());
+
+    }else{
+        res.send("null");
+            
+        
+    }
+
+    
+
+    
+});
+
+app.get('/api/v1/consulta/miranking/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet;
+
+    var aplicacion = await playerData.find({
+        CupsWin: {$gte: 1},
+        
+      }).sort([['CupsWin', -1]]);
+
+
+    if (aplicacion.length >= 1) {
+
+        var posicion = aplicacion.findIndex(item => item.wallet === uc.upperCase(wallet))+1;
+
+        if (posicion > 0) {
+            res.send(posicion+","+aplicacion[posicion-1].CupsWin);
+        }else{
+            res.send("0,0");
+        }
+        
+
+    }else{
+        res.send("0,0");
+        
+    }
+
+});
+
+
+app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet;
+
+    var data = await playerData.find({wallet: uc.upperCase(wallet)});
+
+    if (data.length >= 1) {
+        data = data[0];
+        var consulta = "null";
+
+        if(req.query.consulta === "BallonSet"){
+            consulta = data.BallonSet;
+        }
+
+        if(req.query.consulta === "CupsWin"){
+            consulta = data.CupsWin;
+        }
+
+        if(req.query.consulta === "DificultConfig"){
+            consulta = data.DificultConfig;
+        }
+
+        if(req.query.consulta === "DiscountMomment"){
+            consulta = data.DiscountMomment;
+        }
+
+        if(req.query.consulta === "DuelsOnlineWins"){
+            consulta = data.DuelsOnlineWins;
+        }
+
+        if(req.query.consulta === "DuelsPlays"){
+            consulta = data.DuelsPlays;
+        }
+
+        if(req.query.consulta === "FriendLyWins"){
+            consulta = data.FriendLyWins;
+        }
+
+        if(req.query.consulta === "FriendlyTiming"){
+            consulta = data.FriendlyTiming;
+        }
+
+        if(req.query.consulta === "LastDate"){
+            consulta = data.LastDate;
+        }
+
+        if(req.query.consulta === "LastDate"){
+            consulta = data.LastDate;
+        }
+
+        if(req.query.consulta === "LeagueDate"){
+            consulta = data.LeagueDate;
+        }
+            
+        if(req.query.consulta === "LeagueOpport"){
+            consulta = data.LeagueOpport;
+        }
+        
+        if(req.query.consulta === "LeagueTimer"){
+            consulta = data.LeagueTimer;
+        }
+
+        if(req.query.consulta === "LeaguesOnlineWins"){
+            consulta = data.LeaguesOnlineWins;
+        }
+        
+        if(req.query.consulta === "MatchLose"){
+            consulta = data.MatchLose;
+        }
+        
+        if(req.query.consulta === "MatchWins"){
+            consulta = data.MatchWins;
+        }
+        
+        if(req.query.consulta === "MatchesOnlineWins"){
+            consulta = data.MatchesOnlineWins;
+        }
+        
+        if(req.query.consulta === "Music"){
+            consulta = data.Music;
+        }
+        
+        if(req.query.consulta === "PhotonDisconnected"){
+            consulta = data.PhotonDisconnected;
+        }
+        
+        if(req.query.consulta === "PlaysOnlineTotal"){
+            consulta = data.PlaysOnlineTotal;
+        }
+        
+        if(req.query.consulta === "PlaysTotal"){
+            consulta = data.PlaysTotal;
+        }
+        
+        if(req.query.consulta === "QualityConfig"){
+            consulta = data.QualityConfig;
+        }
+        
+        if(req.query.consulta === "StadiumSet"){
+            consulta = data.StadiumSet;
+        }
+        
+        if(req.query.consulta === "TournamentsPlays"){
+            consulta = data.TournamentsPlays;
+        }
+        
+        if(req.query.consulta === "Version"){
+            consulta = data.Version;
+        }
+        
+        if(req.query.consulta === "VolumeConfig"){
+            consulta = data.VolumeConfig;
+        }
+
+        if(req.query.consulta === "Plataforma"){
+            consulta = data.Plataforma;
+        }
+
+        if(req.query.consulta === "GolesEnContra"){
+            consulta = data.GolesEnContra;
+        }
+
+        if(req.query.consulta === "GolesAFavor"){
+            consulta = data.GolesEnContra;
+        }
+
+        if(req.query.consulta === "FirstTime"){
+            consulta = data.FirstTime;
+        }
+
+        if(req.query.consulta){
+            res.send(consulta+"");
+        }else{
+            res.send(data);
+        }
+    
+    }else{
+
+        var playernewdata = new playerData({
+            wallet: uc.upperCase(wallet),
+            BallonSet: "0",
+            CupsWin: 0,
+            DificultConfig:  "3",
+            DiscountMomment:  "0",
+            DuelsOnlineWins:  "0",
+            DuelsPlays:  "0",
+            FriendLyWins:  "0",
+            FriendlyTiming: "2",
+            LastDate:  "0",
+            LeagueDate:  moment(Date.now()).format(formatoliga),
+            LeagueOpport:  "0",
+            LeagueTimer:  moment(Date.now()).format('HH:mm:ss'),
+            LeaguesOnlineWins:  "0",
+            MatchLose:  "0",
+            MatchWins:  "0",
+            MatchesOnlineWins:  "0",
+            Music:  "0",
+            PhotonDisconnected:  "0",
+            PlaysOnlineTotal:  "0",
+            PlaysTotal:  "0",
+            QualityConfig:  "0",
+            StadiumSet:  "0",
+            TournamentsPlays:  "0",
+            Version:  "mainet",
+            VolumeConfig:  "0",
+            Plataforma: "pc",
+            GolesEnContra: "0",
+            GolesAFavor: "0",
+            FirstTime: "0"
+            
+        })
+
+        playernewdata.save().then(()=>{
+            res.send("nueva playerdata creado");
+        })
+            
+        
+    }
+
+    
+});
+
+
+app.get('/api/v1/consulta/dailymission/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet;
+
+    var data = await playerData.find({wallet: uc.upperCase(wallet)});
+
+    if (data.length >= 1) {
+        data = data[0];
+    
+        res.send(data.TournamentsPlays+","+data.DuelsPlays+","+data.FriendLyWins);
+
+    }else{
+
+        var playernewdata = new playerData({
+            wallet: uc.upperCase(wallet),
+            BallonSet: "0",
+            CupsWin: 0,
+            DificultConfig:  "3",
+            DiscountMomment:  "0",
+            DuelsOnlineWins:  "0",
+            DuelsPlays:  "0",
+            FriendLyWins:  "0",
+            FriendlyTiming: "2",
+            LastDate:  "0",
+            LeagueDate:  moment(Date.now()).format(formatoliga),
+            LeagueOpport:  "0",
+            LeagueTimer:  moment(Date.now()).format('HH:mm:ss'),
+            LeaguesOnlineWins:  "0",
+            MatchLose:  "0",
+            MatchWins:  "0",
+            MatchesOnlineWins:  "0",
+            Music:  "0",
+            PhotonDisconnected:  "0",
+            PlaysOnlineTotal:  "0",
+            PlaysTotal:  "0",
+            QualityConfig:  "0",
+            StadiumSet:  "0",
+            TournamentsPlays:  "0",
+            Version:  "mainet",
+            VolumeConfig:  "0",
+            Plataforma: "pc",
+            GolesEnContra: "0",
+            GolesAFavor: "0",
+            FirstTime: "0"
+            
+        })
+
+        playernewdata.save().then(()=>{
+            res.send("0,0,0");
+        })
+            
+        
+    }
+
+    
+});
+
+app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet;
+    
+    if(req.body.token == TOKEN ){
+
+        var usuario = await playerData.find({wallet: uc.upperCase(wallet)});
+
+        if (usuario.length >= 1) {
+            usuario = usuario[0];
+
+            var data = {};
+            
+            if(req.body.clave === "BallonSet"){
+                data.BallonSet = req.body.valor;
+            }
+
+            if(req.query.consulta === "CupsWin"){
+                data.CupsWin = req.body.valor;
+            }
+
+            if(req.body.clave === "DificultConfig"){
+                data.DificultConfig = req.body.valor;
+            }
+
+            if(req.body.clave === "DiscountMomment"){
+                data.DiscountMomment = req.body.valor;
+            }
+
+            if(req.body.clave === "DuelsOnlineWins"){
+                data.DuelsOnlineWins = req.body.valor;
+            }
+
+            if(req.body.clave === "DuelsPlays"){
+                data.DuelsPlays = req.body.valor;
+            }
+
+            if(req.body.clave === "FriendLyWins"){
+                data.FriendLyWins = req.body.valor;
+            }
+
+            if(req.body.clave === "FriendlyTiming"){
+                data.FriendlyTiming = req.body.valor;
+            }
+
+            if(req.body.clave === "LastDate"){
+                data.LastDate = req.body.valor;
+            }
+
+            if(req.body.clave === "LastDate"){
+                data.LastDate = req.body.valor;
+            }
+                
+            if(req.body.clave === "LeagueOpport"){
+                data.LeagueOpport = req.body.valor;
+            }
+
+            if(req.body.clave === "LeagueDate"){
+                data.LeagueDate = req.body.valor;
+            }
+            
+            if(req.body.clave === "LeagueTimer"){
+                data.LeagueTimer = req.body.valor;
+            }
+
+            if(req.body.clave === "LeaguesOnlineWins"){
+                data.LeaguesOnlineWins = req.body.valor;
+            }
+            
+            if(req.body.clave === "MatchLose"){
+                data.MatchLose  = req.body.valor;
+            }
+            
+            if(req.body.clave === "MatchWins"){
+                data.MatchWins  = req.body.valor;
+            }
+            
+            if(req.body.clave === "MatchesOnlineWins"){
+                data.MatchesOnlineWins  = req.body.valor;
+            }
+            
+            if(req.body.clave === "Music"){
+                data.Music  = req.body.valor;
+            }
+            
+            if(req.body.clave === "PhotonDisconnected"){
+                data.PhotonDisconnected  = req.body.valor;
+            }
+            
+            if(req.body.clave === "PlaysOnlineTotal"){
+                data.PlaysOnlineTotal  = req.body.valor;
+            }
+            
+            if(req.body.clave === "PlaysTotal"){
+                data.PlaysTotal  = req.body.valor;
+            }
+            
+            if(req.body.clave === "QualityConfig"){
+                data.QualityConfig  = req.body.valor;
+            }
+            
+            if(req.body.clave === "StadiumSet"){
+                data.StadiumSet  = req.body.valor;
+            }
+            
+            if(req.body.clave === "TournamentsPlays"){
+                data.TournamentsPlays = req.body.valor;
+            }
+            
+            if(req.body.clave === "Version"){
+                data.Version = req.body.valor;
+            }
+            
+            if(req.body.clave === "VolumeConfig"){
+                data.VolumeConfig = req.body.valor;
+            }
+
+            if(req.body.clave === "Plataforma"){
+                data.Plataforma = req.body.valor;
+            }
+
+            if(req.body.clave === "GolesEnContra"){
+                data.GolesEnContra = req.body.valor;
+            }
+
+            if(req.body.clave === "GolesAFavor"){
+                data.GolesAFavor = req.body.valor;
+            }
+
+            if(req.body.clave === "FirstTime"){
+                data.FirstTime = req.body.valor;
+            }
+
+            update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+
+            res.send("true");
+
+        }else{
+
+            var playernewdata = new playerData({
+                wallet: uc.upperCase(wallet),
+                BallonSet: "0",
+                CupsWin: 0,
+                DificultConfig:  "3",
+                DiscountMomment:  "0",
+                DuelsOnlineWins:  "0",
+                DuelsPlays:  "0",
+                FriendLyWins:  "0",
+                FriendlyTiming: "2",
+                LastDate:  "0",
+                LeagueDate:  moment(Date.now()).format(formatoliga),
+                LeagueOpport:  "0",
+                LeagueTimer:  moment(Date.now()).format('HH:mm:ss'),
+                LeaguesOnlineWins:  "0",
+                MatchLose:  "0",
+                MatchWins:  "0",
+                MatchesOnlineWins:  "0",
+                Music:  "0",
+                PhotonDisconnected:  "0",
+                PlaysOnlineTotal:  "0",
+                PlaysTotal:  "0",
+                QualityConfig:  "0",
+                StadiumSet:  "0",
+                TournamentsPlays:  "0",
+                Version:  "mainet",
+                VolumeConfig:  "0",
+                Plataforma: "PC",
+                GolesEnContra: "0",
+                GolesAFavor: "0",
+                FirstTime: "0"
+                
+            })
+
+            playernewdata.save().then(()=>{
+                res.send("false");
+            })
+                
+            
+        }
+    }
+
+    
 });
 
 
