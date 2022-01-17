@@ -68,9 +68,9 @@ const testNet = false; //quita todos los equipos y formaciones comprados deja so
 
 const COMISION = process.env.APP_COMISION || 60000;
 
-const explorador = "https://bscscan.com/tx/";
+const explorador = process.env.APP_EXPLORER || "https://bscscan.com/tx/";
 
-const RED = "https://bsc-dataseed.binance.org/";
+const RED = process.env.APP_RED || "https://bsc-dataseed.binance.org/";
 const addressContract = process.env.APP_CONTRACT || "0xfF7009EF7eF85447F6A5b3f835C81ADd60a321C9";
 
 let web3 = new Web3(RED);
