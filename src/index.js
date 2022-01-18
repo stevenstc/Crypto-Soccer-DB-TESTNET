@@ -1725,7 +1725,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 data.BallonSet = req.body.valor;
             }
 
-            if(req.query.clave === "CupsWin"){
+            if(req.body.clave === "CupsWin"){
                 data.CupsWin = parseInt(req.body.valor);
             }
 
