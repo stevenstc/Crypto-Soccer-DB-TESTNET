@@ -1417,12 +1417,7 @@ app.get('/api/v1/consulta/leadboard',async(req,res) => {
     var cantidad = 10;
     var lista = [];
 
-    var aplicacion = await playerData.find({
-        CupsWin: {$gte: 1},
-        limit: cantidad
-        
-      }).limit(cantidad).sort([['CupsWin', -1]]);
-
+    var aplicacion = await playerData.find({}).limit(cantidad).sort([['CupsWin', -1]]);
       
     if (aplicacion.length >= 1) {
         
@@ -1443,10 +1438,7 @@ app.get('/api/v1/consulta/miranking/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet;
 
-    var aplicacion = await playerData.find({
-        CupsWin: {$gte: 1},
-        
-      }).sort([['CupsWin', -1]]);
+    var aplicacion = await playerData.find({}).sort([['CupsWin', -1]]);
 
 
     if (aplicacion.length >= 1) {
@@ -1843,6 +1835,8 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
             if(req.body.clave && req.body.valor){
                 update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
+
+                console.log(update);
 
                 res.send("true");
             }else{
