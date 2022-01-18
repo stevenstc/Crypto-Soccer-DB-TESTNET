@@ -1415,11 +1415,7 @@ app.get('/api/v1/consulta/leadboard',async(req,res) => {
     }else{
         res.send("null");
             
-        
     }
-
-    
-
     
 });
 
@@ -1825,7 +1821,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 data.FirstTime = req.body.valor;
             }
 
-            update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+            update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
 
             res.send("true");
 
