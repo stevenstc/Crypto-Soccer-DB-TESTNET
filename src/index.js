@@ -1050,7 +1050,7 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet.toLowerCase();
 
-    if(web3.utils.isAddress(wallet) && habilitarMisionDiaria){
+    if(web3.utils.isAddress(wallet) && habilitarMisionDiaria === "true"){
 
         var usuario = await user.find({ wallet: uc.upperCase(wallet) });
 
@@ -1065,6 +1065,8 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
                 res.send("true");
 
             }else{
+
+                console.log("consulta no es tiempo mision diaria");
 
                 res.send("false");
 
