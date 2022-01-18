@@ -185,7 +185,10 @@ const playerData = mongoose.model('playerdatas', {
     Plataforma: String,
     GolesEnContra: String,
     GolesAFavor: String,
-    FirstTime: String
+    FirstTime: String,
+    DrawMatchs: String,
+    DrawMatchsOnline: String,
+    LeaguePlay: String
 
 });
 
@@ -1171,12 +1174,12 @@ app.get('/api/v1/user/pais/:wallet',async(req,res) => {
     }
 });
 
-app.get('/api/v1/user/imagen/:wallet',async(req,res) => {
-    var wallet =  req.params.wallet.toLowerCase();
+app.get('/api/v1/user/imagen/:username',async(req,res) => {
+    var wallet =  req.params.username;
      
     if(web3.utils.isAddress(wallet)){
 
-        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+        usuario = await user.find({ username: username });
 
         if (usuario.length >= 1) {
             usuario = usuario[0];
@@ -1200,8 +1203,6 @@ app.get('/api/v1/user/ban/:wallet',async(req,res) => {
 
         if (usuario.length >= 1) {
             usuario = usuario[0];
-
-
 
             res.send(!usuario.active+"");
         }else{
@@ -1346,7 +1347,6 @@ app.get('/api/v1/username/disponible/',async(req,res) => {
 
     var username =  req.query.username;
 
-    console.log(username)
     usuario = await user.find({ username: username });
 
     //console.log(usuario)
@@ -1590,6 +1590,19 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
             consulta = data.FirstTime;
         }
 
+        if(req.query.consulta === "DrawMatchs"){
+            consulta = data.DrawMatchs;
+        }
+
+        if(req.query.consulta === "DrawMatchsOnline"){
+            consulta = data.DrawMatchsOnline;
+        }
+
+        if(req.query.consulta === "LeaguePlay"){
+            consulta = data.LeaguePlay;
+        }
+
+
         if(req.query.consulta){
             res.send(consulta+"");
         }else{
@@ -1628,7 +1641,10 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
             Plataforma: "pc",
             GolesEnContra: "0",
             GolesAFavor: "0",
-            FirstTime: "0"
+            FirstTime: "0",
+            DrawMatchs: "0",
+            DrawMatchsOnline: "0",
+            LeaguePlay: "0"
             
         })
 
@@ -1686,7 +1702,10 @@ app.get('/api/v1/consulta/dailymission/:wallet',async(req,res) => {
             Plataforma: "pc",
             GolesEnContra: "0",
             GolesAFavor: "0",
-            FirstTime: "0"
+            FirstTime: "0",
+            DrawMatchs: "0",
+            DrawMatchsOnline: "0",
+            LeaguePlay: "0"
             
         })
 
@@ -1833,6 +1852,19 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 data.FirstTime = req.body.valor;
             }
 
+            if(req.body.clave === "DrawMatchs"){
+                data.DrawMatchs = req.body.valor;
+            }
+
+            if(req.body.clave === "DrawMatchsOnline"){
+                data.DrawMatchsOnline = req.body.valor;
+            }
+
+            if(req.body.clave === "LeaguePlay"){
+                data.LeaguePlay = req.body.valor;
+            }
+
+
             if(req.body.clave && req.body.valor){
                 update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
 
@@ -1882,7 +1914,10 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 Plataforma: "PC",
                 GolesEnContra: "0",
                 GolesAFavor: "0",
-                FirstTime: "0"
+                FirstTime: "0",
+                DrawMatchs: "0",
+                DrawMatchsOnline: "0",
+                LeaguePlay: "0"
                 
             })
 
