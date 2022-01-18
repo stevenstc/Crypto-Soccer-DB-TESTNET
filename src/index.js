@@ -1726,11 +1726,9 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
     if(req.body.token == TOKEN ){
 
         var usuario = await playerData.find({wallet: uc.upperCase(wallet)});
-
+        
         if (usuario.length >= 1) {
-            usuario = usuario[0];
-
-            var data = {};
+            var data = usuario[0];
             
             if(req.body.clave === "BallonSet"){
                 data.BallonSet = req.body.valor;
@@ -1866,6 +1864,13 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
 
             if(req.body.clave && req.body.valor){
+
+                console.log(data)
+
+                var playernewdata = new playerData(data)
+
+                await playernewdata.save();
+
                 update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
 
                 console.log(update);
