@@ -1821,9 +1821,15 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 data.FirstTime = req.body.valor;
             }
 
-            update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
+            if(req.body.clave && req.body.valor){
+                update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
 
-            res.send("true");
+                res.send("true");
+            }else{
+                res.send("false");
+            }
+
+            
 
         }else{
 
