@@ -1837,8 +1837,13 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
 
                 console.log(update);
+                if(req.body.clave === "CupsWin"){
+                    res.send(req.body.valor);
+                }else{
+                    res.send("true");
+                }
 
-                res.send("true");
+                
             }else{
                 res.send("false");
             }
