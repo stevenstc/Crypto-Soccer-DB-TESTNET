@@ -188,7 +188,9 @@ const playerData = mongoose.model('playerdatas', {
     FirstTime: String,
     DrawMatchs: String,
     DrawMatchsOnline: String,
-    LeaguePlay: String
+    LeaguePlay: String,
+    Analiticas: String,
+    Fxs: String
 
 });
 
@@ -1602,6 +1604,13 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
             consulta = data.LeaguePlay;
         }
 
+        if(req.query.consulta === "Analiticas"){
+            consulta = data.Analiticas;
+        }
+
+        if(req.query.consulta === "Fxs"){
+            consulta = data.Fxs;
+        }
 
         if(req.query.consulta){
             res.send(consulta+"");
@@ -1644,7 +1653,9 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
             FirstTime: "0",
             DrawMatchs: "0",
             DrawMatchsOnline: "0",
-            LeaguePlay: "0"
+            LeaguePlay: "0",
+            Analiticas: "0",
+            Fxs: "0"
             
         })
 
@@ -1705,7 +1716,9 @@ app.get('/api/v1/consulta/dailymission/:wallet',async(req,res) => {
             FirstTime: "0",
             DrawMatchs: "0",
             DrawMatchsOnline: "0",
-            LeaguePlay: "0"
+            LeaguePlay: "0",
+            Analiticas: "0",
+            Fxs: "0"
             
         })
 
@@ -1862,10 +1875,17 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 data.LeaguePlay = req.body.valor;
             }
 
+            if(req.body.clave === "Analiticas"){
+                data.Analiticas = req.body.valor;
+            }
+
+            if(req.body.clave === "Fxs"){
+                data.Fxs = req.body.valor;
+            }
 
             if(req.body.clave && req.body.valor){
 
-                console.log(data)
+                //console.log(data)
 
                 var playernewdata = new playerData(data)
 
@@ -1873,7 +1893,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                 update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
 
-                console.log(update);
+                //console.log(update);
                 if(req.body.clave === "CupsWin"){
                     res.send(req.body.valor);
                 }else{
@@ -1922,7 +1942,9 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 FirstTime: "0",
                 DrawMatchs: "0",
                 DrawMatchsOnline: "0",
-                LeaguePlay: "0"
+                LeaguePlay: "0",
+                Analiticas: "0",
+                Fxs: "0"
                 
             })
 
