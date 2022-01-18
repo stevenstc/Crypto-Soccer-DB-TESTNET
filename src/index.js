@@ -1726,7 +1726,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
             }
 
             if(req.query.consulta === "CupsWin"){
-                data.CupsWin = req.body.valor;
+                data.CupsWin = parseInt(req.body.valor);
             }
 
             if(req.body.clave === "DificultConfig"){
