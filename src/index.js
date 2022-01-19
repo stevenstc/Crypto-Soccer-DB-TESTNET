@@ -10,8 +10,8 @@ var moment = require('moment');
 const BigNumber = require('bignumber.js');
 const uc = require('upper-case');
 
-console.log(("HolA Que Haze").toUpperCase())
-console.log(("HolA Que Haze").toLowerCase())
+//console.log(("HolA Que Haze").toUpperCase())
+//console.log(("HolA Que Haze").toLowerCase())
 
 const Cryptr = require('cryptr');
 
@@ -198,16 +198,12 @@ const playerData = mongoose.model('playerdatas', {
 
 app.get('/',async(req,res) => {
 
-    console.log(await contractMarket.methods
-      .largoInventario(cuenta.address)
-      .call({ from: cuenta.address }))
-
-    res.send("Conectado y funcionando v1.0");
+    res.send("Conectado y funcionando");
 });
 
 app.get('/api',async(req,res) => {
 
-    res.send("Conectado y funcionando v1.0");
+    res.send("Conectado y funcionando");
 });
 
 app.get('/api/v1',async(req,res) => {
@@ -2183,6 +2179,11 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
 
                 //console.log(update);
+                if(req.body.clave === "LeagueOpport"){
+                    res.send(data.LeagueOpport+"");
+                }else{
+                    res.send("true");
+                }
                 if(req.body.clave === "CupsWin"){
                     res.send(data.CupsWin+"");
                 }else{
