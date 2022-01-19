@@ -2184,7 +2184,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                 //console.log(update);
                 if(req.body.clave === "CupsWin"){
-                    res.send(data.CupsWin);
+                    res.send(data.CupsWin+"");
                 }else{
                     res.send("true");
                 }
