@@ -1198,7 +1198,12 @@ app.get('/api/v1/user/imagen/:username',async(req,res) => {
             usuario = usuario[0];
 
             //res.send(usuario.imagen);
-            res.send("https://img.search.brave.com/mjNYz4Hs6rASzAtlu8QSs6VLhmO4oqhb1VZyf2X4_BM/fit/500/500/ce/1/aHR0cHM6Ly9wdWJs/aWNkb21haW52ZWN0/b3JzLm9yZy9waG90/b3MvYWJzdHJhY3Qt/dXNlci1mbGF0LTMu/cG5n");
+            if(usuario.imagen){
+                res.send(usuario.imagen);
+            }else{
+                res.send("https://img.search.brave.com/mjNYz4Hs6rASzAtlu8QSs6VLhmO4oqhb1VZyf2X4_BM/fit/500/500/ce/1/aHR0cHM6Ly9wdWJs/aWNkb21haW52ZWN0/b3JzLm9yZy9waG90/b3MvYWJzdHJhY3Qt/dXNlci1mbGF0LTMu/cG5n");
+
+            }
         }else{
             res.send("https://img.search.brave.com/mjNYz4Hs6rASzAtlu8QSs6VLhmO4oqhb1VZyf2X4_BM/fit/500/500/ce/1/aHR0cHM6Ly9wdWJs/aWNkb21haW52ZWN0/b3JzLm9yZy9waG90/b3MvYWJzdHJhY3Qt/dXNlci1mbGF0LTMu/cG5n");
         }
@@ -2184,18 +2189,16 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 }else{
                     res.send("true");
                 }
+
                 if(req.body.clave === "CupsWin"){
                     res.send(data.CupsWin+"");
                 }else{
                     res.send("true");
                 }
 
-                
             }else{
                 res.send("false");
             }
-
-            
 
         }else{
 
