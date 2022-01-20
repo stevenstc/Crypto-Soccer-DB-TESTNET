@@ -2310,9 +2310,8 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                 //console.log(data)
 
-                var playernewdata = new playerData(data)
-
-                await playernewdata.save();
+                //var playernewdata = new playerData(data)
+                //await playernewdata.save();
 
                 update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
 
