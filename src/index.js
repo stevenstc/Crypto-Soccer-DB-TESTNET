@@ -1826,10 +1826,12 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
             //// las de arriba solo textos /|\
 
             var accionar; 
+            var respuesta = "";
 
                 if(req.body.clave === "CupsWin"){
 
                     accionar = data.CupsWin;
+
 
                     switch (req.body.accion) {
                         case "sumar":
@@ -1846,7 +1848,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -1872,7 +1874,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -1897,7 +1899,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -1922,7 +1924,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -1947,7 +1949,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -1972,7 +1974,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -1997,7 +1999,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -2022,7 +2024,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -2047,7 +2049,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -2072,7 +2074,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -2097,7 +2099,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -2122,7 +2124,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -2147,7 +2149,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -2172,7 +2174,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -2197,7 +2199,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -2222,7 +2224,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -2247,7 +2249,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -2272,7 +2274,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -2297,7 +2299,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     
                         default:
-                            res.send("false")
+                            respuesta = "false";
                             break;
                     }
 
@@ -2316,14 +2318,17 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
 
                 //console.log(update);
+
                 if(req.body.clave === "LeagueOpport"){
                     res.send(data.LeagueOpport+"");
-                }else{
-                    res.send("true");
                 }
 
                 if(req.body.clave === "CupsWin"){
                     res.send(data.CupsWin+"");
+                }
+
+                if(respuesta === "false"){
+                    res.send("false");
                 }else{
                     res.send("true");
                 }
