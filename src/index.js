@@ -1831,20 +1831,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     accionar = data.CupsWin;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.CupsWin = accionar;
@@ -1854,20 +1857,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "DiscountMomment"){
                     accionar = data.DiscountMomment;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.DiscountMomment = accionar+"";
@@ -1876,20 +1882,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "DuelsOnlineWins"){
                     accionar = data.DuelsOnlineWins;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.DuelsOnlineWins = accionar+"";
@@ -1898,20 +1907,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "DuelsPlays"){
                     accionar = data.DuelsPlays;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.DuelsPlays = accionar+"";
@@ -1920,20 +1932,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "FriendLyWins"){
                     accionar = data.FriendLyWins;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.FriendLyWins = accionar+"";
@@ -1942,20 +1957,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "LeagueOpport"){
                     accionar = data.LeagueOpport;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.LeagueOpport = accionar+"";
@@ -1964,20 +1982,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "LeaguesOnlineWins"){
                     accionar = data.LeaguesOnlineWins;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.LeaguesOnlineWins = accionar+"";
@@ -1986,20 +2007,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "MatchLose"){
                     accionar = data.MatchLose;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.MatchLose = accionar+"";
@@ -2008,20 +2032,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "MatchWins"){
                     accionar = data.MatchWins;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.MatchWins = accionar+"";
@@ -2030,20 +2057,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "MatchesOnlineWins"){
                     accionar = data.MatchesOnlineWins;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.MatchesOnlineWins = accionar+"";
@@ -2052,20 +2082,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "PhotonDisconnected"){
                     accionar = data.PhotonDisconnected;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.PhotonDisconnected = accionar+"";
@@ -2074,20 +2107,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "PlaysOnlineTotal"){
                     accionar = data.PlaysOnlineTotal;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.PlaysOnlineTotal = accionar+"";
@@ -2096,20 +2132,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "PlaysTotal"){
                     accionar = data.PlaysTotal;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.PlaysTotal = accionar+"";
@@ -2118,20 +2157,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "TournamentsPlays"){
                     accionar = data.TournamentsPlays;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.TournamentsPlays = accionar+"";
@@ -2140,20 +2182,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "GolesEnContra"){
                     accionar = data.GolesEnContra;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.GolesEnContra = accionar+"";
@@ -2162,20 +2207,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "GolesAFavor"){
                     accionar = data.GolesAFavor;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.GolesAFavor = accionar+"";
@@ -2184,20 +2232,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "DrawMatchs"){
                     accionar = data.DrawMatchs;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.DrawMatchs = accionar+"";
@@ -2206,20 +2257,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "DrawMatchsOnline"){
                     accionar = data.DrawMatchsOnline;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.DrawMatchsOnline = accionar+"";
@@ -2228,20 +2282,23 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 if(req.body.clave === "LeaguePlay"){
                     accionar = data.LeaguePlay;
 
-                    if(req.body.accion === "sumar"){
-                        accionar = parseInt(accionar)+parseInt(req.body.valor);
-                    }
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "restar"){
-                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                    }
+                        case "restar":
+                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            break;
 
-                    if(req.body.accion === "setear"){
-                        accionar = parseInt(req.body.valor);
-                    }
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
 
-                    if(!req.body.accion){
-                        res.send("false")
+                    
+                        default:
+                            res.send("false")
+                            break;
                     }
 
                     data.LeaguePlay = accionar+"";
