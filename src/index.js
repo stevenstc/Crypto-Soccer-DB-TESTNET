@@ -849,7 +849,7 @@ async function recompensaDiaria(wallet){
         
     }
 
-    if (false) { // solo testers // all
+    if (true) { // solo testers // Habilitar reconocimiento de equipos all
             
         for (let index = 0; index < result; index++) {
 
@@ -867,7 +867,7 @@ async function recompensaDiaria(wallet){
     }
     
 
-    if (false) { // solo legendarios
+    if (true) { // habilitar bono legendarios
         for (let index = 0; index < 3; index++) {
 
 
@@ -882,7 +882,7 @@ async function recompensaDiaria(wallet){
         }
     }
 
-    if (false) { // solo epico
+    if (true) { // habilitar bono epico
 
         if(!bono){
 
@@ -1098,11 +1098,17 @@ app.get('/api/v1/user/exist/:wallet',async(req,res) => {
      
     if(web3.utils.isAddress(wallet)){
 
-        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+        usuario = await user.find({ wallet: uc.upperCase(wallet) })
+            .catch(err => {
+                console.log("usuario inexistente");
+                res.send("false");
+                return;
+            });
 
         if (usuario.length >= 1) {
             res.send("true");
         }else{
+    
             res.send("false");
         }
     }else{
@@ -1826,7 +1832,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
             //// las de arriba solo textos /|\
 
             var accionar; 
-            var respuesta = "";
+            var respuesta = "true";
 
                 if(req.body.clave === "CupsWin"){
 
@@ -2319,18 +2325,22 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                 //console.log(update);
 
-                if(req.body.clave === "LeagueOpport"){
-                    res.send(data.LeagueOpport+"");
-                }
+                switch (req.body.clave) {
+                    case "LeagueOpport":
+                        res.send(data.LeagueOpport+"");
+                        break;
 
-                if(req.body.clave === "CupsWin"){
-                    res.send(data.CupsWin+"");
-                }
-
-                if(respuesta === "false"){
-                    res.send("false");
-                }else{
-                    res.send("true");
+                    case "CupsWin":
+                        res.send(data.CupsWin+"");
+                        break;
+                
+                    default:
+                        if(respuesta === "false"){
+                            res.send("false");
+                        }else{
+                            res.send("true");
+                        }
+                        break;
                 }
 
             }else{
