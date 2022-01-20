@@ -1076,7 +1076,6 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
             }else{
 
                 console.log("consulta no es tiempo mision diaria");
-
                 res.send("false");
 
             }
@@ -1828,349 +1827,426 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
             var accionar; 
 
-            if(req.body.clave === "CupsWin"){
+                if(req.body.clave === "CupsWin"){
 
-                accionar = data.CupsWin;
+                    accionar = data.CupsWin;
 
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.CupsWin = accionar;
+                    
                 }
 
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                if(req.body.clave === "DiscountMomment"){
+                    accionar = data.DiscountMomment;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.DiscountMomment = accionar+"";
                 }
 
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
+                if(req.body.clave === "DuelsOnlineWins"){
+                    accionar = data.DuelsOnlineWins;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.DuelsOnlineWins = accionar+"";
                 }
 
-                data.CupsWin = accionar;
+                if(req.body.clave === "DuelsPlays"){
+                    accionar = data.DuelsPlays;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.DuelsPlays = accionar+"";
+                }
+
+                if(req.body.clave === "FriendLyWins"){
+                    accionar = data.FriendLyWins;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.FriendLyWins = accionar+"";
+                }
+
+                if(req.body.clave === "LeagueOpport"){
+                    accionar = data.LeagueOpport;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.LeagueOpport = accionar+"";
+                }
                 
-            }
+                if(req.body.clave === "LeaguesOnlineWins"){
+                    accionar = data.LeaguesOnlineWins;
 
-            if(req.body.clave === "DiscountMomment"){
-                accionar = data.DiscountMomment;
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
 
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.LeaguesOnlineWins = accionar+"";
+                }
+                
+                if(req.body.clave === "MatchLose"){
+                    accionar = data.MatchLose;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.MatchLose = accionar+"";
+                }
+                
+                if(req.body.clave === "MatchWins"){
+                    accionar = data.MatchWins;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.MatchWins = accionar+"";
+                }
+                
+                if(req.body.clave === "MatchesOnlineWins"){
+                    accionar = data.MatchesOnlineWins;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.MatchesOnlineWins = accionar+"";
+                }
+                
+                if(req.body.clave === "PhotonDisconnected"){
+                    accionar = data.PhotonDisconnected;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.PhotonDisconnected = accionar+"";
+                }
+                
+                if(req.body.clave === "PlaysOnlineTotal"){
+                    accionar = data.PlaysOnlineTotal;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.PlaysOnlineTotal = accionar+"";
+                }
+                
+                if(req.body.clave === "PlaysTotal"){
+                    accionar = data.PlaysTotal;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.PlaysTotal = accionar+"";
+                }
+                
+                if(req.body.clave === "TournamentsPlays"){
+                    accionar = data.TournamentsPlays;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.TournamentsPlays = accionar+"";
                 }
 
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                if(req.body.clave === "GolesEnContra"){
+                    accionar = data.GolesEnContra;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.GolesEnContra = accionar+"";
                 }
 
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
+                if(req.body.clave === "GolesAFavor"){
+                    accionar = data.GolesAFavor;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.GolesAFavor = accionar+"";
                 }
 
-                data.DiscountMomment = accionar+"";
-            }
+                if(req.body.clave === "DrawMatchs"){
+                    accionar = data.DrawMatchs;
 
-            if(req.body.clave === "DuelsOnlineWins"){
-                accionar = data.DuelsOnlineWins;
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
 
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.DrawMatchs = accionar+"";
                 }
 
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                if(req.body.clave === "DrawMatchsOnline"){
+                    accionar = data.DrawMatchsOnline;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.DrawMatchsOnline = accionar+"";
                 }
 
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
+                if(req.body.clave === "LeaguePlay"){
+                    accionar = data.LeaguePlay;
+
+                    if(req.body.accion === "sumar"){
+                        accionar = parseInt(accionar)+parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "restar"){
+                        accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                    }
+
+                    if(req.body.accion === "setear"){
+                        accionar = parseInt(req.body.valor);
+                    }
+
+                    if(!req.body.accion){
+                        res.send("false")
+                    }
+
+                    data.LeaguePlay = accionar+"";
                 }
-
-                data.DuelsOnlineWins = accionar+"";
-            }
-
-            if(req.body.clave === "DuelsPlays"){
-                accionar = data.DuelsPlays;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.DuelsPlays = accionar+"";
-            }
-
-            if(req.body.clave === "FriendLyWins"){
-                accionar = data.FriendLyWins;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.FriendLyWins = accionar+"";
-            }
-
-            if(req.body.clave === "LeagueOpport"){
-                accionar = data.LeagueOpport;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.LeagueOpport = accionar+"";
-            }
-            
-            if(req.body.clave === "LeaguesOnlineWins"){
-                accionar = data.LeaguesOnlineWins;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.LeaguesOnlineWins = accionar+"";
-            }
-            
-            if(req.body.clave === "MatchLose"){
-                accionar = data.MatchLose;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.MatchLose = accionar+"";
-            }
-            
-            if(req.body.clave === "MatchWins"){
-                accionar = data.MatchWins;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.MatchWins = accionar+"";
-            }
-            
-            if(req.body.clave === "MatchesOnlineWins"){
-                accionar = data.MatchesOnlineWins;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.MatchesOnlineWins = accionar+"";
-            }
-            
-            if(req.body.clave === "PhotonDisconnected"){
-                accionar = data.PhotonDisconnected;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.PhotonDisconnected = accionar+"";
-            }
-            
-            if(req.body.clave === "PlaysOnlineTotal"){
-                accionar = data.PlaysOnlineTotal;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.PlaysOnlineTotal = accionar+"";
-            }
-            
-            if(req.body.clave === "PlaysTotal"){
-                accionar = data.PlaysTotal;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.PlaysTotal = accionar+"";
-            }
-            
-            if(req.body.clave === "TournamentsPlays"){
-                accionar = data.TournamentsPlays;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.TournamentsPlays = accionar+"";
-            }
-
-            if(req.body.clave === "GolesEnContra"){
-                accionar = data.GolesEnContra;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.GolesEnContra = accionar+"";
-            }
-
-            if(req.body.clave === "GolesAFavor"){
-                accionar = data.GolesAFavor;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.GolesAFavor = accionar+"";
-            }
-
-            if(req.body.clave === "DrawMatchs"){
-                accionar = data.DrawMatchs;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.DrawMatchs = accionar+"";
-            }
-
-            if(req.body.clave === "DrawMatchsOnline"){
-                accionar = data.DrawMatchsOnline;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.DrawMatchsOnline = accionar+"";
-            }
-
-            if(req.body.clave === "LeaguePlay"){
-                accionar = data.LeaguePlay;
-
-                if(req.body.accion === "sumar"){
-                    accionar = parseInt(accionar)+parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "restar"){
-                    accionar = parseInt(accionar)+-parseInt(req.body.valor);
-                }
-
-                if(req.body.accion === "setear"){
-                    accionar = parseInt(req.body.valor);
-                }
-
-                data.LeaguePlay = accionar+"";
-            }
+          
 
 
             if(req.body.clave && req.body.valor){
