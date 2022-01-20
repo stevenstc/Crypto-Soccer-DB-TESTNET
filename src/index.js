@@ -1845,7 +1845,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -1871,7 +1871,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -1896,7 +1896,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -1921,7 +1921,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -1946,7 +1946,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -1971,7 +1971,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -1996,7 +1996,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -2021,7 +2021,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -2046,7 +2046,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -2071,7 +2071,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -2096,7 +2096,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -2121,7 +2121,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -2146,7 +2146,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -2171,7 +2171,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -2196,7 +2196,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -2221,7 +2221,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -2246,7 +2246,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -2271,7 +2271,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -2296,7 +2296,7 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                             break;
 
                         case "restar":
-                            accionar = parseInt(accionar)+-parseInt(req.body.valor);
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
                             break;
 
                         case "setear":
@@ -2327,11 +2327,11 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                 switch (req.body.clave) {
                     case "LeagueOpport":
-                        res.send(data.LeagueOpport+"");
-                        break;
-
-                    case "CupsWin":
-                        res.send(data.CupsWin+"");
+                        if(respuesta === "false"){
+                            res.send("false");
+                        }else{
+                            res.send(data.LeagueOpport+"");
+                        }
                         break;
                 
                     default:
