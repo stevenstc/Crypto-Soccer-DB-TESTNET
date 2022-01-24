@@ -17,8 +17,6 @@ const Cryptr = require('cryptr');
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-moment().format(); 
-
 const abiMarket = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"admin","type":"address"}],"name":"AdminRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"admin","type":"address"}],"name":"NewAdmin","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[{"internalType":"address","name":"_tokenERC20","type":"address"}],"name":"ChangePrincipalToken","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_tokenERC20","type":"address"}],"name":"ChangeTokenOTRO","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_nombre","type":"string"},{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"bool","name":"_acumulable","type":"bool"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"addItem","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"addOption","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"admin","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"adminWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"address","name":"_user","type":"address"}],"name":"asignarCoinsTo","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"buyCoins","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"}],"name":"buyItem","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"},{"internalType":"string","name":"_nombre","type":"string"},{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"bool","name":"_acumulable","type":"bool"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"editItem","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"},{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"editOption","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"gastarCoins","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"address","name":"_user","type":"address"}],"name":"gastarCoinsfrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"inventario","outputs":[{"internalType":"string","name":"nombre","type":"string"},{"internalType":"string","name":"tipo","type":"string"},{"internalType":"uint256","name":"valor","type":"uint256"},{"internalType":"bool","name":"acumulable","type":"bool"},{"internalType":"bool","name":"ilimitado","type":"bool"},{"internalType":"uint256","name":"cantidad","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"investors","outputs":[{"internalType":"bool","name":"registered","type":"bool"},{"internalType":"string","name":"correo","type":"string"},{"internalType":"uint256","name":"balance","type":"uint256"},{"internalType":"uint256","name":"gastado","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"items","outputs":[{"internalType":"string","name":"nombre","type":"string"},{"internalType":"string","name":"tipo","type":"string"},{"internalType":"uint256","name":"valor","type":"uint256"},{"internalType":"bool","name":"acumulable","type":"bool"},{"internalType":"bool","name":"ilimitado","type":"bool"},{"internalType":"uint256","name":"cantidad","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"largoInventario","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"largoItems","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"largoOptions","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address payable","name":"_newadmin","type":"address"}],"name":"makeNewAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"_oldadmin","type":"address"}],"name":"makeRemoveAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"opciones","outputs":[{"internalType":"string","name":"tipo","type":"string"},{"internalType":"bool","name":"ilimitados","type":"bool"},{"internalType":"uint256","name":"cantidad","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address payable","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"redimETH","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"redimOTRO","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"redimTokenPrincipal01","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"redimTokenPrincipal02","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_correo","type":"string"}],"name":"registro","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"sellCoins","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"token","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address payable","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_correo","type":"string"}],"name":"updateRegistro","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"string","name":"_correo","type":"string"}],"name":"updateRegistroMaster","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"ventaPublica","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
 
 
@@ -72,6 +70,9 @@ const explorador = process.env.APP_EXPLORER || "https://bscscan.com/tx/";
 
 const RED = process.env.APP_RED || "https://bsc-dataseed.binance.org/";
 const addressContract = process.env.APP_CONTRACT || "0xfF7009EF7eF85447F6A5b3f835C81ADd60a321C9";
+
+const versionAPP = process.env.APP_VERSIONAPP || "1.0.0.6";
+const imgDefault = "https://cryptosoccermarket.com/assets/img/default-user-csg.png";
 
 let web3 = new Web3(RED);
 let cuenta = web3.eth.accounts.privateKeyToAccount(PEKEY);
@@ -136,7 +137,8 @@ const user = mongoose.model('usuarios', {
 
     }],
     txs: [String],
-    pais: String
+    pais: String,
+    imagen: String
 
 });
 
@@ -191,8 +193,15 @@ const playerData = mongoose.model('playerdatas', {
     DrawMatchsOnline: String,
     LeaguePlay: String,
     Analiticas: String,
-    Fxs: String
+    Fxs: String,
+    UserOnline: Number
 
+});
+
+
+const userplayonline = mongoose.model('userplayonline', {
+    wallet: String,
+    sesionPlayID: [String]
 });
 
 
@@ -240,6 +249,80 @@ app.get('/api/v1/datefuture',async(req,res) => {
     data = ""+data;
 
     res.send(data); 
+});
+
+app.get('/api/v1/sesion/active/:wallet',async(req,res) => {
+
+    let wallet =  req.params.wallet.toLowerCase();
+    let sesion = req.query.sesion;
+
+    if(!web3.utils.isAddress(wallet)){
+        console.log("wallet incorrecta: "+wallet)
+        res.send("0");
+    }else{
+            usuario = await userplayonline.find({ wallet: uc.upperCase(wallet) });
+
+        if (usuario.length >= 1) {
+            usuario = usuario[0];
+
+            var respuesta = "false"
+
+            for (let index = 0; index < usuario.sesionPlayID.length; index++) {
+                if(sesion === usuario.sesionPlayID[index]){
+                   
+                    respuesta = "true"
+                }
+                
+            }
+
+            res.send(respuesta);
+
+
+        }else{
+            res.send("false");    
+            
+        }
+
+    }
+
+    
+});
+
+app.post('/api/v1/sesion/create/:wallet',async(req,res) => {
+
+    let wallet =  req.params.wallet.toLowerCase();
+
+    if( req.body.token == TOKEN && web3.utils.isAddress(wallet)){
+
+            usuario = await userplayonline.find({ wallet: uc.upperCase(wallet) });
+
+            var respuesta = "CSC:"+Math.floor(Math.random() * 999)+":"+Math.floor(Math.random() * 999)+":"+Math.floor(Math.random() * 999)+":"+versionAPP;
+
+        if (usuario.length >= 1) {
+            usuario = usuario[0];
+
+            usuario.sesionPlayID.push(respuesta);
+        
+            await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+        
+            res.send(respuesta);
+
+
+        }else{
+
+            var users = new userplayonline({
+                wallet: uc.upperCase(wallet),   
+                sesionPlayID: [respuesta]
+            });
+
+            await users.save();
+   
+            res.send(respuesta);
+        }
+
+    }
+
+    
 });
 
 app.get('/api/v1/user/:wallet',async(req,res) => {
@@ -425,7 +508,8 @@ app.get('/api/v1/coins/:wallet',async(req,res) => {
                 deposit: [],
                 retiro: [],
                 txs: [],
-                pais: "null"
+                pais: "null",
+                imagen: imgDefault
             });
 
             users.save().then(()=>{
@@ -488,7 +572,8 @@ app.post('/api/v1/asignar/:wallet',async(req,res) => {
                 }],
                 retiro: [],
                 txs: [],
-                pais: "null"
+                pais: "null",
+                imagen: imgDefault
             });
     
             users.save().then(()=>{
@@ -559,7 +644,8 @@ app.post('/api/v1/quitar/:wallet',async(req,res) => {
                 deposit: [],
                 retiro: [],
                 txs: [],
-                pais: "null"
+                pais: "null",
+                imagen: imgDefault
             });
     
             users.save().then(()=>{
@@ -697,6 +783,25 @@ async function monedasAlJuego(coins,wallet,intentos){
 
 }
 
+app.get('/api/v1/time/coinsalmarket/:wallet',async(req,res)=>{
+    var wallet =  req.params.wallet.toLowerCase();
+
+    if(web3.utils.isAddress(wallet)){
+
+        var usuario = await user.find({ wallet: uc.upperCase(wallet) });
+
+        if (usuario.length >= 1) {
+            var datos = usuario[0];
+
+            res.send((datos.payAt + (TimeToMarket * 1000)).toString())
+        }else{
+            res.send((Date.now()+(TimeToMarket * 1000)).toString())
+        }
+    }else{
+        res.send((Date.now()+(TimeToMarket * 1000)).toString())
+    }
+});
+
 app.post('/api/v1/coinsalmarket/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet.toLowerCase();
@@ -734,9 +839,6 @@ async function monedasAlMarket(coins,wallet,intentos){
 
     if (usuario.length >= 1) {
         var datos = usuario[0];
-        console.log(Date.now())
-        console.log(datos.payAt)
-        console.log(datos.payAt + (TimeToMarket * 1000))
 
         if(Date.now() < datos.payAt + (TimeToMarket * 1000))return false ;
     }else{
@@ -905,56 +1007,7 @@ async function recompensaDiaria(wallet){
 
 }
 
-app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
 
-    var wallet =  req.params.wallet.toLowerCase();
-
-    if(req.body.token == TOKEN  && web3.utils.isAddress(wallet)){
-
-        if(req.body.control == "true"){
-
-            var usuario = await user.find({ wallet: uc.upperCase(wallet) });
-
-            if (usuario.length >= 1) {
-                var datos = usuario[0];
-
-                if(datos.active && (Date.now() >= datos.checkpoint + DaylyTime*1000 || datos.checkpoint === 0) ){
-
-                    var coins = await recompensaDiaria(wallet);
-                    datos.checkpoint = Date.now();
-
-                    datos.balance = datos.balance + coins;
-                    datos.ingresado = datos.ingresado + coins;
-                    datos.deposit.push({amount: coins,
-                        date: Date.now(),
-                        finalized: true,
-                        txhash: "Daily mision coins: "+coins+" # "+wallet
-                    })
-                    
-                    update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
-
-                    console.log("Daily mision coins: "+coins+" # "+wallet);
-                    res.send(coins+"");
-                }else{
-                    res.send("0");
-                }
-
-            
-            }else{
-                res.send("0");
-            }
-
-        }else{
-            //console.log("no se envio mision diaria");
-            res.send("0");
-
-        }
-
-    }else{
-        res.send("0");
-    }
-
-});
 
 app.get('/api/v1/sendmail',async(req,res) => {
     //console.log(req.query);
@@ -1011,7 +1064,12 @@ app.get('/api/v1/enlinea',async(req,res) => {
 
 app.get('/api/v1/ben10',async(req,res) => {
 
-    var aplicacion = await appstatuses.find({ });
+    var version = versionAPP;
+    if (req.query.version) {
+        version = req.query.version;
+    }
+
+    var aplicacion = await appstatuses.find({version: version });
     aplicacion = aplicacion[0];
 
     if(req.query.ganado){
@@ -1020,17 +1078,6 @@ app.get('/api/v1/ben10',async(req,res) => {
         datos.ganado = aplicacion.ganado+parseInt(req.query.ganado);
 
         update = await appstatuses.updateOne({ _id: aplicacion._id }, datos)
-
-        res.send("true");
-
-    }else
-
-    if(req.query.entregado){
-
-        datos = {};
-        datos.entregado = aplicacion.entregado+parseInt(req.query.entregado);
-
-        update = await appstatuses.updateOne({ _id: estado._id }, datos)
 
         res.send("true");
 
@@ -1043,10 +1090,35 @@ app.get('/api/v1/ben10',async(req,res) => {
     
 });
 
+app.get('/api/v1/misionesdiarias/tiempo/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet.toLowerCase();
+
+    if(web3.utils.isAddress(wallet)){
+
+            var usuario = await user.find({ wallet: uc.upperCase(wallet) });
+
+            if (usuario.length >= 1) {
+                var usuario = usuario[0];
+
+                if(usuario.checkpoint === 0){
+                    usuario.checkpoint=Date.now()- DaylyTime*1000;
+
+                }
+
+                res.send(moment(usuario.checkpoint + DaylyTime*1000).format('D/M/YY HH:mm:ss [UTC]'));
+                
+            }else{
+                res.send(moment(Date.now() + DaylyTime*1000).format('D/M/YY HH:mm:ss [UTC]'));
+            }
+        
+    }
+});
+
 app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet.toLowerCase();
-    var version = "1.0.0.2";
+    var version = versionAPP;
     var MisionDiaria = false;
     if (req.query.version) {
         version = req.query.version;
@@ -1063,31 +1135,104 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
 
         var usuario = await user.find({ wallet: uc.upperCase(wallet) });
 
-        if (usuario.length >= 1) {
+        var data = await playerData.find({wallet: uc.upperCase(wallet)});
+
+        if (data.length >= 1 && usuario.length >= 1) {
+            data = data[0];
             usuario = usuario[0];
-
-
-            if(usuario.active && ( Date.now() >= usuario.checkpoint + DaylyTime*1000 || usuario.checkpoint === 0)){
-
-                console.log("consulta mision diaria");
-
-                res.send("true");
-
+    
+            if(parseInt(data.TournamentsPlays) >= 0 && parseInt(data.DuelsPlays) >= 4 && parseInt(data.FriendLyWins) >= 10){
+              
+                if(usuario.active && ( Date.now() >= usuario.checkpoint + DaylyTime*1000 || usuario.checkpoint === 0)){
+    
+                    console.log("asignar mision diaria");
+    
+                    res.send("true");
+    
+                }else{
+    
+                    console.log("no cumple mision diaria: "+uc.upperCase(wallet)+" TP: "+data.TournamentsPlays+" DP: "+data.DuelsPlays+" Training: "+data.FriendLyWins);
+                    res.send("false");
+    
+                }
+        
             }else{
-
-                console.log("consulta no es tiempo mision diaria");
-                res.send("false");
-
+                res.send("false")
             }
-
-
         }else{
-            res.send("false");
-
+            res.send("false")
         }
 
     }else{
         res.send("false");
+    }
+
+});
+
+app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet.toLowerCase();
+    var version = versionAPP;
+
+    if (req.query.version) {
+        version = req.query.version;
+    }
+    var aplicacion = await appstatuses.find({version: version });
+    aplicacion = aplicacion[0];
+    
+    if(req.body.token == TOKEN  && web3.utils.isAddress(wallet)){
+
+        if(req.body.control == "true"){
+
+            var usuario = await user.find({ wallet: uc.upperCase(wallet) });
+            var player = await playerData.find({ wallet: uc.upperCase(wallet) });
+
+            if (usuario.length >= 1 && player.length >= 1) {
+                var datos = usuario[0];
+                var dataPlay = player[0];
+
+                if(datos.active && (Date.now() >= datos.checkpoint + DaylyTime*1000 || datos.checkpoint === 0) ){
+
+                    var coins = await recompensaDiaria(wallet);
+                    datos.checkpoint = Date.now();
+
+                    datos.balance = datos.balance + coins;
+                    datos.ingresado = datos.ingresado + coins;
+                    datos.deposit.push({amount: coins,
+                        date: Date.now(),
+                        finalized: true,
+                        txhash: "Daily mision coins: "+coins+" # "+wallet
+                    })
+
+                    dataPlay.DuelsPlays = "0";
+                    dataPlay.FriendLyWins = "0";
+                    dataPlay.TournamentsPlays = "0";
+
+                    aplicacion.entregado += coins;
+
+                    await appstatuses.updateOne({ version: version }, aplicacion)
+                    await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+                    await playerData.updateOne({ wallet: uc.upperCase(wallet) }, dataPlay);
+
+                    console.log("Daily mision coins: "+coins+" # "+wallet);
+                    res.send(coins+"");
+                }else{
+                    res.send("0");
+                }
+
+            
+            }else{
+                res.send("0");
+            }
+
+        }else{
+            //console.log("no se envio mision diaria");
+            res.send("0");
+
+        }
+
+    }else{
+        res.send("0");
     }
 
 });
@@ -1192,29 +1337,25 @@ app.get('/api/v1/user/pais/:wallet',async(req,res) => {
     }
 });
 
-app.get('/api/v1/user/imagen/:username',async(req,res) => {
-    var wallet =  req.params.username;
+app.get('/api/v1/imagen/user',async(req,res) => {
+    var username =  req.query.username;
      
-    if(web3.utils.isAddress(wallet)){
+    usuario = await user.find({ username: username });
 
-        usuario = await user.find({ username: username });
+    if (usuario.length >= 1) {
+        usuario = usuario[0];
 
-        if (usuario.length >= 1) {
-            usuario = usuario[0];
-
-            //res.send(usuario.imagen);
-            if(usuario.imagen){
-                res.send(usuario.imagen);
-            }else{
-                res.send("https://img.search.brave.com/mjNYz4Hs6rASzAtlu8QSs6VLhmO4oqhb1VZyf2X4_BM/fit/500/500/ce/1/aHR0cHM6Ly9wdWJs/aWNkb21haW52ZWN0/b3JzLm9yZy9waG90/b3MvYWJzdHJhY3Qt/dXNlci1mbGF0LTMu/cG5n");
-
-            }
+        console.log(usuario.imagen);
+        if(usuario.imagen){
+            res.send(usuario.imagen);
         }else{
-            res.send("https://img.search.brave.com/mjNYz4Hs6rASzAtlu8QSs6VLhmO4oqhb1VZyf2X4_BM/fit/500/500/ce/1/aHR0cHM6Ly9wdWJs/aWNkb21haW52ZWN0/b3JzLm9yZy9waG90/b3MvYWJzdHJhY3Qt/dXNlci1mbGF0LTMu/cG5n");
+            res.send(imgDefault);
+
         }
     }else{
-        res.send("https://img.search.brave.com/mjNYz4Hs6rASzAtlu8QSs6VLhmO4oqhb1VZyf2X4_BM/fit/500/500/ce/1/aHR0cHM6Ly9wdWJs/aWNkb21haW52ZWN0/b3JzLm9yZy9waG90/b3MvYWJzdHJhY3Qt/dXNlci1mbGF0LTMu/cG5n");
+        res.send(imgDefault);
     }
+
 });
 
 app.get('/api/v1/user/ban/:wallet',async(req,res) => {
@@ -1264,10 +1405,26 @@ app.post('/api/v1/user/update/info/:wallet',async(req,res) => {
                     datos.pais = req.body.pais;
                 }
 
-                if (req.body.email || req.body.username || req.body.password || req.body.pais){
-                    update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+                if (req.body.imagen) {
+                    datos.imagen = req.body.imagen;
                 }
-                res.send("true");
+
+                if (req.body.ban) {
+                    if(req.body.ban === "true"){
+                        datos.active = false;
+                    }else{
+                        datos.active = false;
+                    }
+                    
+                }
+
+                if (req.body.email || req.body.username || req.body.password || req.body.pais || req.body.ban || req.body.imagen){
+                    update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+                    res.send("true");
+                }else{
+                    res.send("false");
+                }
+                
             }else{
                 res.send("false");
             }
@@ -1307,7 +1464,8 @@ app.post('/api/v1/user/update/info/:wallet',async(req,res) => {
                 }],
                 retiro: [],
                 txs: [],
-                pais: "null"
+                pais: "null",
+                imagen: imgDefault
             });
     
             users.save().then(()=>{
@@ -1400,7 +1558,7 @@ app.get('/api/v1/email/disponible/',async(req,res) => {
 
 app.get('/api/v1/app/init/',async(req,res) => {
 
-    var version = "1.0.0.2";
+    var version = versionAPP;
     if (req.query.version) {
         version = req.query.version;
     }
@@ -1415,16 +1573,16 @@ app.get('/api/v1/app/init/',async(req,res) => {
         
         aplicacion = new appstatuses({
             version: req.query.version,
-            torneo: "off",
-            duelo: "off",
-            liga: "off",
-            mantenimiento: "on",
-            link: "https://cryptosoccergames.com",
+            torneo: "on",
+            duelo: "on",
+            liga: "on",
+            mantenimiento: "off",
+            link: "https://cryptosoccermarket.com/download",
             ganado: 0, 
             entregado: 0,
             linea: [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            updates:["V"+req.query.version+" READY!","thanks for downloading",moment(Date.now()).format('DD/MM/YYYY HH:mm A')],
-            misiondiaria: false
+            updates:["V"+req.query.version+" READY!","thanks for download",moment(Date.now()).format('DD/MM/YYYY HH:mm:ss [UTC]')],
+            misiondiaria: true
         });
 
         aplicacion.save().then(()=>{
@@ -1634,6 +1792,15 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
             consulta = data.Fxs;
         }
 
+        if(req.query.consulta === "UserOnline"){
+            if( data.UserOnline + 300*1000 > Date.now()){
+                consulta = "true"
+            }else{
+                consulta = "false"
+            }
+            
+        }
+
         if(req.query.consulta){
             res.send(consulta+"");
         }else{
@@ -1677,7 +1844,8 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
             DrawMatchsOnline: "0",
             LeaguePlay: "0",
             Analiticas: "0",
-            Fxs: "0"
+            Fxs: "0",
+            UserOnline: Date.now()
             
         })
 
@@ -1740,7 +1908,8 @@ app.get('/api/v1/consulta/dailymission/:wallet',async(req,res) => {
             DrawMatchsOnline: "0",
             LeaguePlay: "0",
             Analiticas: "0",
-            Fxs: "0"
+            Fxs: "0",
+            UserOnline: Date.now()
             
         })
 
@@ -1787,10 +1956,6 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
             if(req.body.clave === "LeagueDate"){
                 data.LeagueDate = req.body.valor;
-            }
-
-            if(req.body.clave === "LeagueTimer"){
-                data.LeagueTimer = req.body.valor;
             }
 
             if(req.body.clave === "Music"){
@@ -2311,12 +2476,18 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     data.LeaguePlay = accionar+"";
                 }
-          
 
 
             if(req.body.clave && req.body.valor){
 
                 //console.log(data)
+
+                data.UserOnline = Date.now();
+
+                if( Date.now() >= parseInt(data.LeagueTimer) + 86400*1000){
+                    data.LeagueOpport = "0";
+                    data.LeagueTimer = Date.now();
+                }
 
                 var playernewdata = new playerData(data)
                 await playernewdata.save();
@@ -2384,7 +2555,8 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 DrawMatchsOnline: "0",
                 LeaguePlay: "0",
                 Analiticas: "0",
-                Fxs: "0"
+                Fxs: "0",
+                UserOnline: Date.now()
                 
             })
 
