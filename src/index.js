@@ -194,7 +194,9 @@ const playerData = mongoose.model('playerdatas', {
     LeaguePlay: String,
     Analiticas: String,
     Fxs: String,
-    UserOnline: Number
+    UserOnline: Number,
+    Resolucion: String,
+    Fullscreen: String
 
 });
 
@@ -1345,9 +1347,13 @@ app.get('/api/v1/imagen/user',async(req,res) => {
     if (usuario.length >= 1) {
         usuario = usuario[0];
 
-        console.log(usuario.imagen);
         if(usuario.imagen){
-            res.send(usuario.imagen);
+            if(usuario.imagen.indexOf('https://')>=0){
+                res.send(usuario.imagen);
+            }else{
+                res.send(imgDefault);
+
+            }
         }else{
             res.send(imgDefault);
 
@@ -1495,8 +1501,6 @@ app.post('/api/v1/user/auth/:wallet',async(req,res) => {
         if (usuario.length >= 1) {
             var usuario = usuario[0];
 
-            console.log(req.body.password)
-
             if(usuario.password === req.body.password && req.body.password != "" && req.body.password.length >= 8){
 
                 if(usuario.active && usuario.email.toLowerCase() === req.body.email.toLowerCase()){
@@ -1505,9 +1509,11 @@ app.post('/api/v1/user/auth/:wallet',async(req,res) => {
                     
                     
                 }else{
+                    
                     res.send("false");
                 }
             }else{
+                console.log("Error Loggin: "+uc.upperCase(wallet)+" : "+req.body.password +" : "+req.body.email.toLowerCase());
                 res.send("false");
             }
     
@@ -1846,7 +1852,9 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
             LeaguePlay: "0",
             Analiticas: "0",
             Fxs: "0",
-            UserOnline: Date.now()
+            UserOnline: Date.now(),
+            Resolucion: "0",
+            Fullscreen: "0"
             
         })
 
@@ -1910,7 +1918,9 @@ app.get('/api/v1/consulta/dailymission/:wallet',async(req,res) => {
             LeaguePlay: "0",
             Analiticas: "0",
             Fxs: "0",
-            UserOnline: Date.now()
+            UserOnline: Date.now(),
+            Resolucion: "0",
+            Fullscreen: "0"
             
         })
 
@@ -2557,7 +2567,9 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 LeaguePlay: "0",
                 Analiticas: "0",
                 Fxs: "0",
-                UserOnline: Date.now()
+                UserOnline: Date.now(),
+                Resolucion: "0",
+                Fullscreen: "0"
                 
             })
 
