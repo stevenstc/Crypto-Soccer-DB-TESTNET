@@ -2616,6 +2616,8 @@ app.post('/prueba/', (req, res, next) => {
         return false;
     }
 
+    console.log(req)
+
     console.log(req.body)
 
     console.log(isJson(req.body));
