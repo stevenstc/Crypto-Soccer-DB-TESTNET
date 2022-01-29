@@ -2598,6 +2598,8 @@ app.get('/', (req, res, next) => {
 
 app.post('/prueba/', (req, res, next) => {
 
+    console.log(req.body)
+
     res.send(req.body);
 
 });
