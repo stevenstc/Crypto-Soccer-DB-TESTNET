@@ -2598,6 +2598,24 @@ app.get('/', (req, res, next) => {
 
 app.post('/prueba/', (req, res, next) => {
 
+    function isJson(item) {
+        item = typeof item !== "string"
+            ? JSON.stringify(item)
+            : item;
+    
+        try {
+            item = JSON.parse(item);
+        } catch (e) {
+            return false;
+        }
+    
+        if (typeof item === "object" && item !== null) {
+            return true;
+        }
+    
+        return false;
+    }
+
     console.log(req.body)
 
     console.log(isJson(req.body));
