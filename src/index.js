@@ -2616,7 +2616,7 @@ app.post('/prueba/', (req, res, next) => {
         return false;
     }
 
-    console.log(req)
+    console.log(res.params)
 
     console.log(req.body)
 
