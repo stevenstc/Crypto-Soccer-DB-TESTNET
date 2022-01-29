@@ -71,7 +71,7 @@ const explorador = process.env.APP_EXPLORER || "https://bscscan.com/tx/";
 const RED = process.env.APP_RED || "https://bsc-dataseed.binance.org/";
 const addressContract = process.env.APP_CONTRACT || "0xfF7009EF7eF85447F6A5b3f835C81ADd60a321C9";
 
-const versionAPP = process.env.APP_VERSIONAPP || "1.0.0.6";
+const versionAPP = process.env.APP_VERSIONAPP || "1.0.0.9";
 const imgDefault = "https://cryptosoccermarket.com/assets/img/default-user-csg.png";
 
 let web3 = new Web3(RED);
@@ -346,14 +346,16 @@ app.get('/api/v1/user/:wallet',async(req,res) => {
 
 
         if (email === "" || email.length < 100) {
-            res.send("false");
+            res.send("true");
+            //res.send("false");
         }else{
             email = cryptr.decrypt(email).toLowerCase();
 
             if(emailApp === email){
                 res.send("true");
             }else{
-                res.send("false");
+                res.send("true");
+                //res.send("false");
             }
         
         }
@@ -812,17 +814,32 @@ app.post('/api/v1/coinsalmarket/:wallet',async(req,res) => {
 
         coins = new BigNumber(req.body.coins).multipliedBy(10**18);
 
-        await delay(Math.floor(Math.random() * 12000));
+        var usuario = await user.find({ wallet: uc.upperCase(wallet) });
 
-        if(await monedasAlMarket(coins, wallet,1)){
-            res.send("true");
+        usuario = usuario[0];
 
+        console.log(usuario.balance);
+        console.log(usuario.balance-parseInt(req.body.coins))
+
+        if (usuario.balance > 0 && usuario.balance-parseInt(req.body.coins) >= 0) {
+            
+            await delay(Math.floor(Math.random() * 12000));
+
+            if(await monedasAlMarket(coins, wallet,1)){
+                res.send("true");
+
+            }else{
+                res.send("false");
+
+            }
         }else{
+
             res.send("false");
 
         }
 
     }else{
+
         res.send("false");
     }
 		
@@ -830,6 +847,7 @@ app.post('/api/v1/coinsalmarket/:wallet',async(req,res) => {
 });
 
 async function monedasAlMarket(coins,wallet,intentos){
+
 
     await delay(Math.floor(Math.random() * 12000));
 
@@ -847,19 +865,6 @@ async function monedasAlMarket(coins,wallet,intentos){
         return false;
     }
 
-    /*var noNce = await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address);
-    if (nonceGlobal == noNce && used) {
-
-        intentos++;
-        console.log(coins.dividedBy(10**18)+" ->  "+wallet+" : "+intentos+" Nonce:"+await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address))
-        //await delay(Math.floor(Math.random() * 12000));
-        paso = await monedasAlMarket(coins,wallet,intentos);
-        
-    }else{
-        nonceGlobal = noNce;
-        used = true;
-    }*/
-
     await contractMarket.methods
         .asignarCoinsTo(coins, wallet)
         .send({ from: web3.eth.accounts.wallet[0].address, gas: COMISION, gasPrice: gases })
@@ -871,10 +876,10 @@ async function monedasAlMarket(coins,wallet,intentos){
 
                 if (usuario.length >= 1) {
                     var datos = usuario[0];
-                    if(datos.active){
+                    if(datos.active ){
                         datos.payAt = Date.now();
-                        datos.balance = BigNumber(datos.balance).minus(coins.dividedBy(10**18));
-                        datos.retirado = coins.dividedBy(10**18).plus(datos.retirado);
+                        datos.balance = datos.balance-coins.dividedBy(10**18).toNumber();
+                        datos.retirado = coins.dividedBy(10**18).toNumber()+datos.retirado;
                         datos.retiro.push({
                             amount: coins.dividedBy(10**18).decimalPlaces(0).toNumber(),
                             date: Date.now(),
@@ -1493,7 +1498,6 @@ app.post('/api/v1/user/auth/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet.toLowerCase();
 
-    
     if(req.body.token == TOKEN && web3.utils.isAddress(wallet)){
 
         usuario = await user.find({ wallet: uc.upperCase(wallet) });
@@ -1503,7 +1507,7 @@ app.post('/api/v1/user/auth/:wallet',async(req,res) => {
 
             if(usuario.password === req.body.password && req.body.password != "" && req.body.password.length >= 8){
 
-                if(usuario.active && usuario.email.toLowerCase() === req.body.email.toLowerCase()){
+                if(usuario.active ){//usuario.email.toLowerCase() === req.body.email.toLowerCase()){
 
                     res.send("true");
                     
@@ -1513,7 +1517,7 @@ app.post('/api/v1/user/auth/:wallet',async(req,res) => {
                     res.send("false");
                 }
             }else{
-                console.log("Error Loggin: "+uc.upperCase(wallet)+" : "+req.body.password +" : "+req.body.email.toLowerCase());
+                console.log("Error Loggin:"+uc.upperCase(wallet)+": "+req.body.password);
                 res.send("false");
             }
     
@@ -1555,7 +1559,8 @@ app.get('/api/v1/email/disponible/',async(req,res) => {
     usuario = await user.find({ email: email });
 
     if (usuario.length >= 1) {
-        res.send("false");
+        //res.send("false");
+        res.send("true");
     }else{
         res.send("true");
     }
@@ -2588,6 +2593,12 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 app.get('/', (req, res, next) => {
 
     res.send(req.query);
+
+});
+
+app.post('/prueba/', (req, res, next) => {
+
+    res.send(req.body);
 
 });
 
