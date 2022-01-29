@@ -2600,6 +2600,8 @@ app.post('/prueba/', (req, res, next) => {
 
     console.log(req.body)
 
+    console.log(isJson(req.body));
+
     res.send(req.body);
 
 });
