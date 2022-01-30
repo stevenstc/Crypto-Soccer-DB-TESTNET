@@ -2610,7 +2610,10 @@ app.put('/prueba/', (req, res, next) => {
 
     console.log(req.body)
 
-    res.send(req.body);
+    let json = JSON.stringify(req.body);
+    console.log(json);
+
+    res.send(json);
 
 });
 
