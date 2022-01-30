@@ -44,6 +44,8 @@ app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(bodyParser.raw());
+app.use(bodyParser.text());
 
 const port = process.env.PORT || 3004;
 const PEKEY = process.env.APP_PRIVATEKEY;
@@ -2598,29 +2600,15 @@ app.get('/', (req, res, next) => {
 
 app.post('/prueba/', (req, res, next) => {
 
-    function isJson(item) {
-        item = typeof item !== "string"
-            ? JSON.stringify(item)
-            : item;
-    
-        try {
-            item = JSON.parse(item);
-        } catch (e) {
-            return false;
-        }
-    
-        if (typeof item === "object" && item !== null) {
-            return true;
-        }
-    
-        return false;
-    }
-
-    console.log(res.params)
-
     console.log(req.body)
 
-    console.log(isJson(req.body));
+    res.send(req.body);
+
+});
+
+app.put('/prueba/', (req, res, next) => {
+
+    console.log(req.body)
 
     res.send(req.body);
 
