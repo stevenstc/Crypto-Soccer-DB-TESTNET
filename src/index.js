@@ -2608,9 +2608,19 @@ app.post('/prueba/', (req, res, next) => {
 
 app.put('/prueba/', (req, res, next) => {
 
-    console.log(req.body)
+    //console.log(req.body)
 
-    let json = JSON.stringify(req.body);
+    //var json = {"type":"Buffer","data":[123,34,108,101,118,101,108,34,58,49,44,34,116,105,109,101,69,108,97,112,115,101,100,34,58,52,55,46,53,44,34,112,108,97,121,101,114,78,97,109,101,34,58,34,68,114,32,67,104,97,114,108,101,115,32,70,114,97,110,99,105,115,34,125]}
+
+    var json = req.body;
+
+    json = Buffer.from(json);
+    console.log(json);
+
+    json = json.toString('utf8');
+    console.log(json);
+
+    json = JSON.parse(json);
     console.log(json);
 
     res.send(json);
