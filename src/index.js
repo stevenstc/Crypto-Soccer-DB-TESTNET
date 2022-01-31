@@ -198,7 +198,8 @@ const playerData = mongoose.model('playerdatas', {
     Fxs: String,
     UserOnline: Number,
     Resolucion: String,
-    Fullscreen: String
+    Fullscreen: String,
+    Soporte: String
 
 });
 
@@ -1660,166 +1661,15 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet;
 
-    var data = await playerData.find({wallet: uc.upperCase(wallet)});
+    var data = await playerData.find({wallet: uc.upperCase(wallet)},{_id:0,wallet:0,__v:0,UserOnline:0});
 
     if (data.length >= 1) {
         data = data[0];
-        var consulta = "null";
 
-        if(req.query.consulta === "BallonSet"){
-            consulta = data.BallonSet;
-        }
-
-        if(req.query.consulta === "CupsWin"){
-            consulta = data.CupsWin;
-        }
-
-        if(req.query.consulta === "DificultConfig"){
-            consulta = data.DificultConfig;
-        }
-
-        if(req.query.consulta === "DiscountMomment"){
-            consulta = data.DiscountMomment;
-        }
-
-        if(req.query.consulta === "DuelsOnlineWins"){
-            consulta = data.DuelsOnlineWins;
-        }
-
-        if(req.query.consulta === "DuelsPlays"){
-            consulta = data.DuelsPlays;
-        }
-
-        if(req.query.consulta === "FriendLyWins"){
-            consulta = data.FriendLyWins;
-        }
-
-        if(req.query.consulta === "FriendlyTiming"){
-            consulta = data.FriendlyTiming;
-        }
-
-        if(req.query.consulta === "LastDate"){
-            consulta = data.LastDate;
-        }
-
-        if(req.query.consulta === "LastDate"){
-            consulta = data.LastDate;
-        }
-
-        if(req.query.consulta === "LeagueDate"){
-            consulta = data.LeagueDate;
-        }
-            
-        if(req.query.consulta === "LeagueOpport"){
-            consulta = data.LeagueOpport;
-        }
+        console.log(data)
         
-        if(req.query.consulta === "LeagueTimer"){
-            consulta = data.LeagueTimer;
-        }
-
-        if(req.query.consulta === "LeaguesOnlineWins"){
-            consulta = data.LeaguesOnlineWins;
-        }
+        res.send(data);
         
-        if(req.query.consulta === "MatchLose"){
-            consulta = data.MatchLose;
-        }
-        
-        if(req.query.consulta === "MatchWins"){
-            consulta = data.MatchWins;
-        }
-        
-        if(req.query.consulta === "MatchesOnlineWins"){
-            consulta = data.MatchesOnlineWins;
-        }
-        
-        if(req.query.consulta === "Music"){
-            consulta = data.Music;
-        }
-        
-        if(req.query.consulta === "PhotonDisconnected"){
-            consulta = data.PhotonDisconnected;
-        }
-        
-        if(req.query.consulta === "PlaysOnlineTotal"){
-            consulta = data.PlaysOnlineTotal;
-        }
-        
-        if(req.query.consulta === "PlaysTotal"){
-            consulta = data.PlaysTotal;
-        }
-        
-        if(req.query.consulta === "QualityConfig"){
-            consulta = data.QualityConfig;
-        }
-        
-        if(req.query.consulta === "StadiumSet"){
-            consulta = data.StadiumSet;
-        }
-        
-        if(req.query.consulta === "TournamentsPlays"){
-            consulta = data.TournamentsPlays;
-        }
-        
-        if(req.query.consulta === "Version"){
-            consulta = data.Version;
-        }
-        
-        if(req.query.consulta === "VolumeConfig"){
-            consulta = data.VolumeConfig;
-        }
-
-        if(req.query.consulta === "Plataforma"){
-            consulta = data.Plataforma;
-        }
-
-        if(req.query.consulta === "GolesEnContra"){
-            consulta = data.GolesEnContra;
-        }
-
-        if(req.query.consulta === "GolesAFavor"){
-            consulta = data.GolesEnContra;
-        }
-
-        if(req.query.consulta === "FirstTime"){
-            consulta = data.FirstTime;
-        }
-
-        if(req.query.consulta === "DrawMatchs"){
-            consulta = data.DrawMatchs;
-        }
-
-        if(req.query.consulta === "DrawMatchsOnline"){
-            consulta = data.DrawMatchsOnline;
-        }
-
-        if(req.query.consulta === "LeaguePlay"){
-            consulta = data.LeaguePlay;
-        }
-
-        if(req.query.consulta === "Analiticas"){
-            consulta = data.Analiticas;
-        }
-
-        if(req.query.consulta === "Fxs"){
-            consulta = data.Fxs;
-        }
-
-        if(req.query.consulta === "UserOnline"){
-            if( data.UserOnline + 300*1000 > Date.now()){
-                consulta = "true"
-            }else{
-                consulta = "false"
-            }
-            
-        }
-
-        if(req.query.consulta){
-            res.send(consulta+"");
-        }else{
-            res.send(data);
-        }
     
     }else{
 
@@ -1861,7 +1711,8 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
             Fxs: "0",
             UserOnline: Date.now(),
             Resolucion: "0",
-            Fullscreen: "0"
+            Fullscreen: "0",
+            Soporte: "J&S"
             
         })
 
@@ -1927,7 +1778,8 @@ app.get('/api/v1/consulta/dailymission/:wallet',async(req,res) => {
             Fxs: "0",
             UserOnline: Date.now(),
             Resolucion: "0",
-            Fullscreen: "0"
+            Fullscreen: "0",
+            Soporte: "J&S"
             
         })
 
@@ -2576,7 +2428,8 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 Fxs: "0",
                 UserOnline: Date.now(),
                 Resolucion: "0",
-                Fullscreen: "0"
+                Fullscreen: "0",
+                Soporte: "J&S"
                 
             })
 
@@ -2693,7 +2546,7 @@ app.put('/prueba/', (req, res, next) => {
         Fxs: 0,
         Resolucion: 0,
         Fullscreen: 0,
-        Soporte: "0"
+        Soporte: "J&S"
     }
 
         for (let index = 0; index < json.length; index++) {
