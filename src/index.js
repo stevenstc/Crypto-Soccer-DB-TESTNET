@@ -2692,7 +2692,8 @@ app.put('/prueba/', (req, res, next) => {
         Analiticas: 0,
         Fxs: 0,
         Resolucion: 0,
-        Fullscreen: 0
+        Fullscreen: 0,
+        Soporte: "0"
     }
 
         for (let index = 0; index < json.length; index++) {
