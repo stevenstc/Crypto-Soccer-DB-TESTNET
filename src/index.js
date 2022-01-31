@@ -2623,6 +2623,10 @@ app.put('/prueba/', (req, res, next) => {
     json = JSON.parse(json);
     console.log(json);
 
+    json.level += 2
+    json.timeElapsed += 158, 
+    json.playerName = 'Steven el Pro'
+
     res.send(json);
 
 });
