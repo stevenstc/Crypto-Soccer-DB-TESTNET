@@ -2614,8 +2614,99 @@ app.put('/prueba/', (req, res, next) => {
     json = json.toString('utf8');
     json = JSON.parse(json);
     console.log(json);
+/*
+    var json = {
+        misDat: [
+         { variable: 'BallonSet', action: 'setear', valorS: '1' },
+         { variable: 'CupsWin', action: 'nada', valorS: '0' },
+         { variable: 'DificultConfig', action: 'nada', valorS: '0' },
+         { variable: 'DiscountMomment', action: 'nada', valorS: '0' },
+         { variable: 'DuelsOnlineWins', action: 'nada', valorS: '0' },
+         { variable: 'DuelsPlays', action: 'nada', valorS: '0' },
+         { variable: 'FriendLyWins', action: 'nada', valorS: '0' },
+         { variable: 'FriendlyTiming', action: 'nada', valorS: '0' },
+            { variable: 'LastDate', action: 'nada', valorS: '0' },
+            { variable: 'LeagueOpport', action: 'nada', valorS: '0' },
+            { variable: 'LeaguesOnlineWins', action: 'nada', valorS: '0' },
+            { variable: 'MatchLose', action: 'nada', valorS: '0' },
+            { variable: 'MatchWins', action: 'nada', valorS: '0' },
+            { variable: 'MatchesOnlineWins', action: 'nada', valorS: '0' },
+            { variable: 'Music', action: 'nada', valorS: '0' },
+            { variable: 'PhotonDisconnected', action: 'nada', valorS: '0' },
+            { variable: 'PlaysOnlineTotal', action: 'nada', valorS: '0' },
+            { variable: 'PlaysTotal', action: 'nada', valorS: '0' },
+            { variable: 'QualityConfig', action: 'nada', valorS: '0' },
+            { variable: 'StadiumSet', action: 'nada', valorS: '0' },
+            { variable: 'TournamentsPlays', action: 'nada', valorS: '0' },
+            { variable: 'Version', action: 'nada', valorS: '0' },
+            { variable: 'VolumeConfig', action: 'nada', valorS: '0' },
+            { variable: 'Plataforma', action: 'nada', valorS: '0' },
+            { variable: 'GolesEnContra', action: 'nada', valorS: '0' },
+            { variable: 'GolesAFavor', action: 'nada', valorS: '0' },
+            { variable: 'FirstTime', action: 'nada', valorS: '0' },
+            { variable: 'DrawMatchs', action: 'nada', valorS: '0' },
+            { variable: 'DrawMatchsOnline', action: 'nada', valorS: '0' },
+            { variable: 'LeaguePlay', action: 'nada', valorS: '0' },
+            { variable: 'Analiticas', action: 'nada', valorS: '0' },
+            { variable: 'Fxs', action: 'nada', valorS: '0' },
+            { variable: 'Resolucion', action: 'nada', valorS: '0' },
+            { variable: 'Fullscreen', action: 'nada', valorS: '0' }
+          ]
+       }*/
 
-    res.send(json);
+       json = json.misDat;
+
+       console.log(json);
+
+    respuesta = {
+        wallet: "0X11134BD1DD0219EB9B4AB931C508834EA29C0F8D",
+        BallonSet: "7",
+        CupsWin: 21,
+        DificultConfig: "1",
+        DiscountMomment: "10",
+        DuelsOnlineWins: "6",
+        DuelsPlays: "13",
+        FriendLyWins: "0",
+        FriendlyTiming: "2",
+        LastDate: "0",
+        LeagueDate: "1192022",
+        LeagueOpport: "0",
+        LeagueTimer: "1643645162308",
+        LeaguesOnlineWins: "7",
+        MatchLose: "7",
+        MatchWins: "2",
+        MatchesOnlineWins: "13",
+        Music: "1",
+        PhotonDisconnected: "15",
+        PlaysOnlineTotal: "21",
+        PlaysTotal: "9",
+        QualityConfig: "0",
+        StadiumSet: "3",
+        TournamentsPlays: "0",
+        Version: "testnet",
+        VolumeConfig: "-72",
+        Plataforma: "windows",
+        GolesEnContra: "11",
+        GolesAFavor: "13",
+        FirstTime: "1",
+        DrawMatchs: "0",
+        DrawMatchsOnline: "1",
+        LeaguePlay: "9",
+        Analiticas: "1",
+        Fxs: "0",
+        UserOnline: 1643655685745
+        }
+
+        for (let index = 0; index < json.length; index++) {
+            
+            Object.defineProperty(respuesta, json[index].variable, {
+                value: json[index].valorS,
+                writable: true
+              });    
+            
+        }
+
+    res.send(respuesta);
 
 });
 
