@@ -2623,8 +2623,6 @@ app.put('/prueba/', (req, res, next) => {
     json = JSON.parse(json);
     console.log(json);
 
-    json = {hola: "jhonatan", hello: "pitter"}
-
     res.send(json);
 
 });
