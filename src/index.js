@@ -2387,6 +2387,8 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
     json = json.toString('utf8');
     json = JSON.parse(json);
     json = json.misDat;
+
+    console.log(json)
         
     
     if( true || req.body.token == TOKEN ){
@@ -2442,6 +2444,8 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
             }
 
             usuario = {...usuario, ...respuesta}
+
+            console.log(usuario)
 
             var playernewdata = new playerData(usuario)
             await playernewdata.save();
