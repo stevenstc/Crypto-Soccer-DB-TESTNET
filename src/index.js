@@ -2649,8 +2649,8 @@ app.put('/prueba/', (req, res, next) => {
             { variable: 'LeaguePlay', action: 'nada', valorS: '0' },
             { variable: 'Analiticas', action: 'nada', valorS: '0' },
             { variable: 'Fxs', action: 'nada', valorS: '0' },
-            { variable: 'Resolucion', action: 'nada', valorS: '0' },
-            { variable: 'Fullscreen', action: 'nada', valorS: '0' }
+            { variable: 'Resolucion', action: 'nada', valorS: '3465678789567' },
+            { variable: 'Fullscreen', action: 'nada', valorS: '32' }
           ]
        }*/
 
@@ -2658,7 +2658,7 @@ app.put('/prueba/', (req, res, next) => {
 
        console.log(json);
 
-    respuesta = {
+    const respuesta = {
         wallet: "0X11134BD1DD0219EB9B4AB931C508834EA29C0F8D",
         BallonSet: "7",
         CupsWin: 21,
@@ -2695,18 +2695,21 @@ app.put('/prueba/', (req, res, next) => {
         Analiticas: "1",
         Fxs: "0",
         Resolucion: "0",
-        Fullscreen: "",
         UserOnline: 1643655685745
         }
 
-        respuesta = {};
-
         for (let index = 0; index < json.length; index++) {
+
+            if (json[index].action !== "nada") {
+
+                Object.defineProperty(respuesta, json[index].variable, {
+                    value: json[index].valorS,
+                    writable: true
+                  });  
+                
+            }
             
-            Object.defineProperty(respuesta, json[index].variable, {
-                value: json[index].valorS,
-                writable: true
-              });    
+              
             
         }
 
