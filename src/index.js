@@ -2659,44 +2659,41 @@ app.put('/prueba/', (req, res, next) => {
        console.log(json);
 
     const respuesta = {
-        wallet: "0X11134BD1DD0219EB9B4AB931C508834EA29C0F8D",
-        BallonSet: "7",
-        CupsWin: 21,
-        DificultConfig: "1",
-        DiscountMomment: "10",
-        DuelsOnlineWins: "6",
-        DuelsPlays: "13",
-        FriendLyWins: "0",
-        FriendlyTiming: "2",
-        LastDate: "0",
-        LeagueDate: "1192022",
-        LeagueOpport: "0",
-        LeagueTimer: "1643645162308",
-        LeaguesOnlineWins: "7",
-        MatchLose: "7",
-        MatchWins: "2",
-        MatchesOnlineWins: "13",
-        Music: "1",
-        PhotonDisconnected: "15",
-        PlaysOnlineTotal: "21",
-        PlaysTotal: "9",
-        QualityConfig: "0",
-        StadiumSet: "3",
-        TournamentsPlays: "0",
-        Version: "testnet",
-        VolumeConfig: "-72",
-        Plataforma: "windows",
-        GolesEnContra: "11",
-        GolesAFavor: "13",
-        FirstTime: "1",
-        DrawMatchs: "0",
-        DrawMatchsOnline: "1",
-        LeaguePlay: "9",
-        Analiticas: "1",
-        Fxs: "0",
-        Resolucion: "0",
-        UserOnline: 1643655685745
-        }
+        BallonSet: 0,
+        CupsWin: 0,
+        DificultConfig: 3,
+        DiscountMomment: 3,
+        DuelsOnlineWins: 0,
+        DuelsPlays: 0,
+        FriendLyWins: 0,
+        FriendlyTiming: 2,
+        LastDate: 0,
+        LeagueOpport: 0,
+        LeaguesOnlineWins: 0,
+        MatchLose: 0,
+        MatchWins: 0,
+        MatchesOnlineWins: 0,
+        Music: 0,
+        PhotonDisconnected: 0,
+        PlaysOnlineTotal: 0,
+        PlaysTotal: 0,
+        QualityConfig: 0,
+        StadiumSet: 0,
+        TournamentsPlays: 0,
+        Version: "mainet",
+        VolumeConfig: 0,
+        Plataforma: "PC",
+        GolesEnContra: 0,
+        GolesAFavor: 0,
+        FirstTime: 0,
+        DrawMatchs: 0,
+        DrawMatchsOnline: 0,
+        LeaguePlay: 0,
+        Analiticas: 0,
+        Fxs: 0,
+        Resolucion: 0,
+        Fullscreen: 0
+    }
 
         for (let index = 0; index < json.length; index++) {
 
@@ -2707,9 +2704,7 @@ app.put('/prueba/', (req, res, next) => {
                     writable: true
                   });  
                 
-            }
-            
-              
+            }    
             
         }
 
