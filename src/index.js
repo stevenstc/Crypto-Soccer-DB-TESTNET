@@ -2613,7 +2613,7 @@ app.put('/prueba/', (req, res, next) => {
     json = Buffer.from(json);
     json = json.toString('utf8');
     json = JSON.parse(json);
-    console.log(json);
+    //console.log(json);
 /*
     var json = {
         misDat: [
@@ -2656,7 +2656,7 @@ app.put('/prueba/', (req, res, next) => {
 
        json = json.misDat;
 
-       //console.log(json);
+       console.log(json);
 
     respuesta = {
         wallet: "0X11134BD1DD0219EB9B4AB931C508834EA29C0F8D",
@@ -2694,8 +2694,12 @@ app.put('/prueba/', (req, res, next) => {
         LeaguePlay: "9",
         Analiticas: "1",
         Fxs: "0",
+        Resolucion: "0",
+        Fullscreen: "",
         UserOnline: 1643655685745
         }
+
+        respuesta = {};
 
         for (let index = 0; index < json.length; index++) {
             
