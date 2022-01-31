@@ -2613,7 +2613,7 @@ app.put('/prueba/', (req, res, next) => {
     json = Buffer.from(json);
     json = json.toString('utf8');
     json = JSON.parse(json);
-    //console.log(json);
+    console.log(json);
 /*
     var json = {
         misDat: [
