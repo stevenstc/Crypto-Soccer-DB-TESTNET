@@ -1726,73 +1726,6 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
     
 });
 
-
-app.get('/api/v1/consulta/dailymission/:wallet',async(req,res) => {
-
-    var wallet =  req.params.wallet;
-
-    var data = await playerData.find({wallet: uc.upperCase(wallet)});
-
-    if (data.length >= 1) {
-        data = data[0];
-    
-        res.send(data.TournamentsPlays+","+data.DuelsPlays+","+data.FriendLyWins);
-
-    }else{
-
-        var playernewdata = new playerData({
-            wallet: uc.upperCase(wallet),
-            BallonSet: "0",
-            CupsWin: 0,
-            DificultConfig:  "3",
-            DiscountMomment:  "0",
-            DuelsOnlineWins:  "0",
-            DuelsPlays:  "0",
-            FriendLyWins:  "0",
-            FriendlyTiming: "2",
-            LastDate:  "0",
-            LeagueDate:  moment(Date.now()).format(formatoliga),
-            LeagueOpport:  "0",
-            LeagueTimer:  moment(Date.now()).format('HH:mm:ss'),
-            LeaguesOnlineWins:  "0",
-            MatchLose:  "0",
-            MatchWins:  "0",
-            MatchesOnlineWins:  "0",
-            Music:  "0",
-            PhotonDisconnected:  "0",
-            PlaysOnlineTotal:  "0",
-            PlaysTotal:  "0",
-            QualityConfig:  "0",
-            StadiumSet:  "0",
-            TournamentsPlays:  "0",
-            Version:  "mainet",
-            VolumeConfig:  "0",
-            Plataforma: "pc",
-            GolesEnContra: "0",
-            GolesAFavor: "0",
-            FirstTime: "0",
-            DrawMatchs: "0",
-            DrawMatchsOnline: "0",
-            LeaguePlay: "0",
-            Analiticas: "0",
-            Fxs: "0",
-            UserOnline: Date.now(),
-            Resolucion: "0",
-            Fullscreen: "0",
-            Soporte: "J&S"
-            
-        })
-
-        playernewdata.save().then(()=>{
-            res.send("0,0,0");
-        })
-            
-        
-    }
-
-    
-});
-
 app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet;
@@ -2443,6 +2376,210 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
     
 });
+
+app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet;
+
+    var json = req.body;
+
+    json = Buffer.from(json);
+    json = json.toString('utf8');
+    json = JSON.parse(json);
+    json = json.misDat;
+        
+    
+    if( true || req.body.token == TOKEN ){
+
+        var usuario = await playerData.find({wallet: uc.upperCase(wallet)},{_id:0,wallet:0,__v:0,UserOnline:0});
+        
+        if (usuario.length >= 1) {
+            var usuario = usuario[0];
+            const respuesta = usuario;
+        
+            for (let index = 0; index < json.length; index++) {
+
+                var accionar = usuario[json[index].variable]
+
+                switch (json[index].action) {
+                    case "sumar":
+                        accionar = parseInt(accionar)+parseInt(json[index].valorS);
+                        Object.defineProperty(respuesta, json[index].variable, {
+                            value: accionar+"",
+                            writable: true
+                            }); 
+                        break;
+
+                    case "restar":
+                        accionar = parseInt(accionar)-parseInt(json[index].valorS);
+                        Object.defineProperty(respuesta, json[index].variable, {
+                            value: accionar+"",
+                            writable: true
+                            }); 
+                        break;
+
+                    case "setear":
+                        Object.defineProperty(respuesta, json[index].variable, {
+                            value: json[index].valorS,
+                            writable: true
+                            }); 
+                        break;
+
+                
+                    default:
+                        
+                        break;
+                }
+                
+                
+            }
+        
+            usuario.UserOnline = Date.now();
+
+            if( Date.now() >= parseInt(usuario.LeagueTimer) + 86400*1000){
+                usuario.LeagueOpport = "0";
+                usuario.LeagueTimer = Date.now();
+            }
+
+            usuario = {...usuario, ...respuesta}
+
+            var playernewdata = new playerData(usuario)
+            await playernewdata.save();
+
+            //update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
+            //console.log(update);
+
+            res.send(respuesta);
+        
+                
+
+        }else{
+            res.send("false");
+        }
+
+    }else{
+
+            var playernewdata = new playerData({
+                wallet: uc.upperCase(wallet),
+                BallonSet: "0",
+                CupsWin: 0,
+                DificultConfig:  "3",
+                DiscountMomment:  "0",
+                DuelsOnlineWins:  "0",
+                DuelsPlays:  "0",
+                FriendLyWins:  "0",
+                FriendlyTiming: "2",
+                LastDate:  "0",
+                LeagueDate:  moment(Date.now()).format(formatoliga),
+                LeagueOpport:  "0",
+                LeagueTimer:  moment(Date.now()).format('HH:mm:ss'),
+                LeaguesOnlineWins:  "0",
+                MatchLose:  "0",
+                MatchWins:  "0",
+                MatchesOnlineWins:  "0",
+                Music:  "0",
+                PhotonDisconnected:  "0",
+                PlaysOnlineTotal:  "0",
+                PlaysTotal:  "0",
+                QualityConfig:  "0",
+                StadiumSet:  "0",
+                TournamentsPlays:  "0",
+                Version:  "mainet",
+                VolumeConfig:  "0",
+                Plataforma: "PC",
+                GolesEnContra: "0",
+                GolesAFavor: "0",
+                FirstTime: "0",
+                DrawMatchs: "0",
+                DrawMatchsOnline: "0",
+                LeaguePlay: "0",
+                Analiticas: "0",
+                Fxs: "0",
+                UserOnline: Date.now(),
+                Resolucion: "0",
+                Fullscreen: "0",
+                Soporte: "J&S"
+                
+            })
+
+            playernewdata.save().then(()=>{
+                res.send("false");
+            })
+                
+            
+        
+    }
+
+});
+
+
+app.get('/api/v1/consulta/dailymission/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet;
+
+    var data = await playerData.find({wallet: uc.upperCase(wallet)});
+
+    if (data.length >= 1) {
+        data = data[0];
+    
+        res.send(data.TournamentsPlays+","+data.DuelsPlays+","+data.FriendLyWins);
+
+    }else{
+
+        var playernewdata = new playerData({
+            wallet: uc.upperCase(wallet),
+            BallonSet: "0",
+            CupsWin: 0,
+            DificultConfig:  "3",
+            DiscountMomment:  "0",
+            DuelsOnlineWins:  "0",
+            DuelsPlays:  "0",
+            FriendLyWins:  "0",
+            FriendlyTiming: "2",
+            LastDate:  "0",
+            LeagueDate:  moment(Date.now()).format(formatoliga),
+            LeagueOpport:  "0",
+            LeagueTimer:  moment(Date.now()).format('HH:mm:ss'),
+            LeaguesOnlineWins:  "0",
+            MatchLose:  "0",
+            MatchWins:  "0",
+            MatchesOnlineWins:  "0",
+            Music:  "0",
+            PhotonDisconnected:  "0",
+            PlaysOnlineTotal:  "0",
+            PlaysTotal:  "0",
+            QualityConfig:  "0",
+            StadiumSet:  "0",
+            TournamentsPlays:  "0",
+            Version:  "mainet",
+            VolumeConfig:  "0",
+            Plataforma: "pc",
+            GolesEnContra: "0",
+            GolesAFavor: "0",
+            FirstTime: "0",
+            DrawMatchs: "0",
+            DrawMatchsOnline: "0",
+            LeaguePlay: "0",
+            Analiticas: "0",
+            Fxs: "0",
+            UserOnline: Date.now(),
+            Resolucion: "0",
+            Fullscreen: "0",
+            Soporte: "J&S"
+            
+        })
+
+        playernewdata.save().then(()=>{
+            res.send("0,0,0");
+        })
+            
+        
+    }
+
+    
+});
+
+
 
 
 app.get('/', (req, res, next) => {
