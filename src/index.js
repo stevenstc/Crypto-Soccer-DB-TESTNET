@@ -2613,7 +2613,7 @@ app.put('/prueba/', (req, res, next) => {
     json = Buffer.from(json);
     json = json.toString('utf8');
     json = JSON.parse(json);
-    console.log(json);
+    //console.log(json);
 /*
     var json = {
         misDat: [
@@ -2656,7 +2656,7 @@ app.put('/prueba/', (req, res, next) => {
 
        json = json.misDat;
 
-       console.log(json);
+       //console.log(json);
 
     respuesta = {
         wallet: "0X11134BD1DD0219EB9B4AB931C508834EA29C0F8D",
@@ -2705,6 +2705,8 @@ app.put('/prueba/', (req, res, next) => {
               });    
             
         }
+
+        console.log(respuesta)
 
     res.send(respuesta);
 
