@@ -2444,7 +2444,7 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
             console.log(consulta)
 
 
-            res.send(usuario);
+            res.send(consulta);
         
                 
 
