@@ -2440,12 +2440,12 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                 switch (json[index].action) {
                     case "sumar":
-                        usuario[json[index].variable] = parseInt(usuario[json[index].variable])+parseInt(json[index].valorS);
+                        usuario[json[index].variable] = (parseFloat(usuario[json[index].variable])+parseFloat(json[index].valorS))+"";
                      
                         break;
 
                     case "restar":
-                        usuario[json[index].variable] = parseInt(usuario[json[index].variable])-parseInt(json[index].valorS);
+                        usuario[json[index].variable] = (parseFloat(usuario[json[index].variable])-parseFloat(json[index].valorS))+"";
   
                         break;
 
