@@ -1668,7 +1668,7 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
 
         console.log(data[req.query.consulta])
         
-        res.send(data[req.query.consulta]);
+        res.send(data[req.query.consulta]+"");
         
     
     }else{
@@ -2444,6 +2444,7 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
             //console.log(usuario)
 
             usuario = await playerData.find({wallet: uc.upperCase(wallet)},{_id:0,wallet:0,__v:0,UserOnline:0});
+            usuario = usuario[0];
 
             res.send(usuario);
         
