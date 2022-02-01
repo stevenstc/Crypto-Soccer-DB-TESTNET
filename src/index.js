@@ -2440,10 +2440,10 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
             console.log(usuario)
 
-            usuario = await playerData.find({wallet: uc.upperCase(wallet)},{_id:0,wallet:0,__v:0,UserOnline:0});
-            usuario = usuario[0];
+            var consulta = await playerData.find({wallet: uc.upperCase(wallet)},{_id:0,wallet:0,__v:0,UserOnline:0});
+            consulta = consulta[0];
 
-            console.log(usuario)
+            console.log(consulta)
 
 
             res.send(usuario);
