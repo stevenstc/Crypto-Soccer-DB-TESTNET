@@ -1234,8 +1234,10 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
                 if(datos.active ){
 
                     var coins = await recompensaDiaria(wallet);
-                    datos.checkpoint = Date.now()+ DaylyTime*1000;
-                    usuario.reclamado = false;
+                    if(Date.now() >= datos.checkpoint){
+                        datos.checkpoint = Date.now()+ DaylyTime*1000;
+                    }
+                    datos.reclamado = false;
 
                     datos.balance = datos.balance + coins;
                     datos.ingresado = datos.ingresado + coins;
