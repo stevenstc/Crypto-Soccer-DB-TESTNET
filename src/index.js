@@ -2387,45 +2387,36 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
     json = json.toString('utf8');
     json = JSON.parse(json);
     
-        
-    
     if( json.misDat ){
 
         json = json.misDat;
 
-        console.log(json)
+        //console.log(json)
 
-        var usuario = await playerData.find({wallet: uc.upperCase(wallet)},{_id:0,wallet:0,__v:0,UserOnline:0});
+        var usuario = await playerData.find({wallet: uc.upperCase(wallet)});
         
         if (usuario.length >= 1) {
             var usuario = usuario[0];
         
             for (let index = 0; index < json.length; index++) {
 
-                var accionar = usuario[json[index].variable]
+
+                console.log(json[index].action)
 
                 switch (json[index].action) {
                     case "sumar":
-                        accionar = parseInt(accionar)+parseInt(json[index].valorS);
-                        Object.defineProperty(usuario, json[index].variable, {
-                            value: accionar+"",
-                            writable: true
-                            }); 
+                        usuario[json[index].variable] = parseInt(usuario[json[index].variable])+parseInt(json[index].valorS);
+                     
                         break;
 
                     case "restar":
-                        accionar = parseInt(accionar)-parseInt(json[index].valorS);
-                        Object.defineProperty(usuario, json[index].variable, {
-                            value: accionar+"",
-                            writable: true
-                            }); 
+                        usuario[json[index].variable] = parseInt(usuario[json[index].variable])-parseInt(json[index].valorS);
+  
                         break;
 
                     case "setear":
-                        Object.defineProperty(usuario, json[index].variable, {
-                            value: json[index].valorS,
-                            writable: true
-                            }); 
+                            usuario[json[index].variable] = json[index].valorS;
+                         
                         break;
 
                 
@@ -2444,13 +2435,15 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 usuario.LeagueTimer = Date.now();
             }
 
-            //var playernewdata = new playerData(usuario)
-            //await playernewdata.save();
+            var playernewdata = new playerData(usuario)
+            await playernewdata.save();
 
-            update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
+            //update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
             //console.log(update);
 
-            console.log(usuario)
+            //console.log(usuario)
+
+            usuario = await playerData.find({wallet: uc.upperCase(wallet)},{_id:0,wallet:0,__v:0,UserOnline:0});
 
             res.send(usuario);
         
