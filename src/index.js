@@ -2399,7 +2399,6 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
         
         if (usuario.length >= 1) {
             var usuario = usuario[0];
-            const respuesta = usuario;
         
             for (let index = 0; index < json.length; index++) {
 
@@ -2408,7 +2407,7 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 switch (json[index].action) {
                     case "sumar":
                         accionar = parseInt(accionar)+parseInt(json[index].valorS);
-                        Object.defineProperty(respuesta, json[index].variable, {
+                        Object.defineProperty(usuario, json[index].variable, {
                             value: accionar+"",
                             writable: true
                             }); 
@@ -2416,14 +2415,14 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                     case "restar":
                         accionar = parseInt(accionar)-parseInt(json[index].valorS);
-                        Object.defineProperty(respuesta, json[index].variable, {
+                        Object.defineProperty(usuario, json[index].variable, {
                             value: accionar+"",
                             writable: true
                             }); 
                         break;
 
                     case "setear":
-                        Object.defineProperty(respuesta, json[index].variable, {
+                        Object.defineProperty(usuario, json[index].variable, {
                             value: json[index].valorS,
                             writable: true
                             }); 
@@ -2445,16 +2444,10 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 usuario.LeagueTimer = Date.now();
             }
 
-            var tioey = respuesta;
+            //var playernewdata = new playerData(usuario)
+            //await playernewdata.save();
 
-            usuario = {...usuario, ...tioey}
-
-            console.log(usuario)
-
-            var playernewdata = new playerData(usuario)
-            await playernewdata.save();
-
-            //update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
+            update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
             //console.log(update);
 
             console.log(respuesta)
