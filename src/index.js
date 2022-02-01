@@ -120,6 +120,7 @@ const user = mongoose.model('usuarios', {
     active: Boolean,
     payAt: Number,
     checkpoint: Number,
+    reclamado: Boolean,
     balance: Number,
     ingresado: Number,
     retirado: Number,
@@ -509,6 +510,7 @@ app.get('/api/v1/coins/:wallet',async(req,res) => {
                 active: true,
                 payAt: Date.now(),
                 checkpoint: 0,
+                reclamado: false,
                 balance: 0,
                 ingresado: 0,
                 retirado: 0,
@@ -569,6 +571,7 @@ app.post('/api/v1/asignar/:wallet',async(req,res) => {
                 active: true,
                 payAt: Date.now(),
                 checkpoint: 0,
+                reclamado: false,
                 balance: req.body.coins,
                 ingresado: req.body.coins,
                 retirado: 0,
@@ -645,6 +648,7 @@ app.post('/api/v1/quitar/:wallet',async(req,res) => {
                 active: true,
                 payAt: Date.now(),
                 checkpoint: 0,
+                reclamado: false,
                 balance: 0,
                 ingresado: 0,
                 retirado: 0,
@@ -751,6 +755,7 @@ async function monedasAlJuego(coins,wallet,intentos){
                             active: true,
                             payAt: Date.now(),
                             checkpoint: 0,
+                            reclamado: false,
                             balance: coins.dividedBy(10**18).decimalPlaces(0).toNumber(),
                             ingresado: coins.dividedBy(10**18).decimalPlaces(0).toNumber(),
                             retirado: 0,
@@ -906,6 +911,7 @@ async function monedasAlMarket(coins,wallet,intentos){
                         active: true,
                         payAt: Date.now(),
                         checkpoint: 0,
+                        reclamado: false,
                         balance: 0,
                         ingresado: 0,
                         retirado: 0,
@@ -1112,14 +1118,14 @@ app.get('/api/v1/misionesdiarias/tiempo/:wallet',async(req,res) => {
                 var usuario = usuario[0];
 
                 if(usuario.checkpoint === 0){
-                    usuario.checkpoint=Date.now()- DaylyTime*1000;
+                    usuario.checkpoint=Date.now();
 
                 }
 
-                res.send(moment(usuario.checkpoint + DaylyTime*1000).format('D/M/YY HH:mm:ss [UTC]'));
+                res.send(moment(usuario.checkpoint).format('D/M/YY HH:mm:ss [UTC]'));
                 
             }else{
-                res.send(moment(Date.now() + DaylyTime*1000).format('D/M/YY HH:mm:ss [UTC]'));
+                res.send(moment(Date.now()).format('D/M/YY HH:mm:ss [UTC]'));
             }
         
     }
@@ -1153,11 +1159,35 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
     
             if(parseInt(data.TournamentsPlays) >= 0 && parseInt(data.DuelsPlays) >= 4 && parseInt(data.FriendLyWins) >= 10){
               
-                if(usuario.active && ( Date.now() >= usuario.checkpoint + DaylyTime*1000 || usuario.checkpoint === 0)){
+                if(usuario.active ){
+                    
+                    if( (Date.now() < usuario.checkpoint || usuario.checkpoint === 0) && !usuario.reclamado ){
     
-                    console.log("asignar mision diaria");
-    
-                    res.send("true");
+                        console.log("asignar mision diaria");
+        
+                        res.send("true");
+                    }else{
+
+                        if(Date.now() >= usuario.checkpoint){
+
+                            // resetear datos y tiempo
+
+                            usuario.checkpoint =  Date.now() + DaylyTime*1000;
+                            usuario.reclamado = false;
+
+                            data.DuelsPlays = "0";
+                            data.FriendLyWins = "0";
+                            data.TournamentsPlays = "0";
+
+                            await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+                            await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
+
+                        }
+
+                        res.send("false");
+
+
+                    }
     
                 }else{
     
@@ -1201,10 +1231,11 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
                 var datos = usuario[0];
                 var dataPlay = player[0];
 
-                if(datos.active && (Date.now() >= datos.checkpoint + DaylyTime*1000 || datos.checkpoint === 0) ){
+                if(datos.active ){
 
                     var coins = await recompensaDiaria(wallet);
-                    datos.checkpoint = Date.now();
+                    datos.checkpoint = Date.now()+ DaylyTime*1000;
+                    usuario.reclamado = false;
 
                     datos.balance = datos.balance + coins;
                     datos.ingresado = datos.ingresado + coins;
@@ -1468,6 +1499,7 @@ app.post('/api/v1/user/update/info/:wallet',async(req,res) => {
                 active: true,
                 payAt: Date.now(),
                 checkpoint: 0,
+                reclamado: false,
                 balance: 0,
                 ingresado: 0,
                 retirado: 0,
