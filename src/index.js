@@ -2450,9 +2450,9 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
             update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
             //console.log(update);
 
-            console.log(respuesta)
+            console.log(usuario)
 
-            res.send(respuesta);
+            res.send(usuario);
         
                 
 
