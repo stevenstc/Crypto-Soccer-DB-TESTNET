@@ -2391,7 +2391,7 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
         json = json.misDat;
 
-        //console.log(json)
+        console.log(json)
 
         var usuario = await playerData.find({wallet: uc.upperCase(wallet)});
         
@@ -2437,8 +2437,6 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
             //update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
             //console.log(update);
-
-            console.log(usuario)
 
             var consulta = await playerData.find({wallet: uc.upperCase(wallet)},{_id:0,wallet:0,__v:0,UserOnline:0});
             consulta = consulta[0];
