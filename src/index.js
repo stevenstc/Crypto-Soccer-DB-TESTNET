@@ -2386,12 +2386,14 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
     json = Buffer.from(json);
     json = json.toString('utf8');
     json = JSON.parse(json);
-    json = json.misDat;
-
-    console.log(json)
+    
         
     
-    if( true || req.body.token == TOKEN ){
+    if( json.misDat ){
+
+        json = json.misDat;
+
+        console.log(json)
 
         var usuario = await playerData.find({wallet: uc.upperCase(wallet)},{_id:0,wallet:0,__v:0,UserOnline:0});
         
@@ -2443,7 +2445,9 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 usuario.LeagueTimer = Date.now();
             }
 
-            usuario = {...usuario, ...respuesta}
+            var tioey = respuesta;
+
+            usuario = {...usuario, ...tioey}
 
             console.log(usuario)
 
@@ -2452,6 +2456,8 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
             //update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
             //console.log(update);
+
+            console.log(respuesta)
 
             res.send(respuesta);
         
