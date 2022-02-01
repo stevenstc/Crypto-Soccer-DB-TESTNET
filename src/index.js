@@ -2440,17 +2440,17 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                 switch (json[index].action) {
                     case "sumar":
-                        usuario[json[index].variable] = ((parseFloat(usuario[json[index].variable].replace(",", "."))+parseFloat(json[index].valorS.replace(",", ".")))+"").replace(".", ",");
+                        usuario[json[index].variable] = (parseFloat(usuario[json[index].variable].replace(",", "."))+parseFloat(json[index].valorS.replace(",", ".")))+"";
                      
                         break;
 
                     case "restar":
-                        usuario[json[index].variable] = ((parseFloat(usuario[json[index].variable].replace(",", "."))-parseFloat(json[index].valorS.replace(",", ".")))+"").replace(".", ",");
+                        usuario[json[index].variable] = (parseFloat(usuario[json[index].variable].replace(",", "."))-parseFloat(json[index].valorS.replace(",", ".")))+"";
   
                         break;
 
                     case "setear":
-                            usuario[json[index].variable] = json[index].valorS;
+                            usuario[json[index].variable] = (json[index].valorS).replace(",", ".");
                          
                         break;
 
