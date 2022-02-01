@@ -2400,9 +2400,6 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
         
             for (let index = 0; index < json.length; index++) {
 
-
-                console.log(json[index].action)
-
                 switch (json[index].action) {
                     case "sumar":
                         usuario[json[index].variable] = parseInt(usuario[json[index].variable])+parseInt(json[index].valorS);
@@ -2441,10 +2438,13 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
             //update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
             //console.log(update);
 
-            //console.log(usuario)
+            console.log(usuario)
 
             usuario = await playerData.find({wallet: uc.upperCase(wallet)},{_id:0,wallet:0,__v:0,UserOnline:0});
             usuario = usuario[0];
+
+            console.log(usuario)
+
 
             res.send(usuario);
         
