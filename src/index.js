@@ -1666,9 +1666,9 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
     if (data.length >= 1) {
         data = data[0];
 
-        console.log(data)
+        console.log(data[req.query.consulta])
         
-        res.send(data);
+        res.send(data[req.query.consulta]);
         
     
     }else{
