@@ -1544,14 +1544,14 @@ app.post('/api/v1/user/auth/:wallet',async(req,res) => {
 
             if(usuario.password === req.body.password && req.body.password != "" && req.body.password.length >= 8){
 
-                if(usuario.active ){//usuario.email.toLowerCase() === req.body.email.toLowerCase()){
+                if(usuario.active ){
 
                     res.send("true");
-                    
                     
                 }else{
                     
                     res.send("false");
+                    
                 }
             }else{
                 console.log("Error Loggin:"+uc.upperCase(wallet)+": "+req.body.password);
