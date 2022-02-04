@@ -13,6 +13,10 @@ const uc = require('upper-case');
 //console.log(("HolA Que Haze").toUpperCase())
 //console.log(("HolA Que Haze").toLowerCase())
 
+//var cosa = {cosita: "1,23456"}
+
+//console.log(cosa["cosita"].replace(",","."))
+
 const Cryptr = require('cryptr');
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
@@ -56,7 +60,6 @@ const TokenEmail = "nuevo123";
 const uri = process.env.APP_URI;
 
 const DaylyTime = process.env.APP_DAYTIME || 86400;
-const habilitarMisionDiaria = process.env.APP_DAYMISION || false;
 
 const TimeToMarket = process.env.APP_TIMEMARKET || 86400 * 7;
 
@@ -73,7 +76,7 @@ const explorador = process.env.APP_EXPLORER || "https://bscscan.com/tx/";
 const RED = process.env.APP_RED || "https://bsc-dataseed.binance.org/";
 const addressContract = process.env.APP_CONTRACT || "0xfF7009EF7eF85447F6A5b3f835C81ADd60a321C9";
 
-const versionAPP = process.env.APP_VERSIONAPP || "1.0.0.9";
+const versionAPP = process.env.APP_VERSIONAPP || "1.0.1.0";
 const imgDefault = "https://cryptosoccermarket.com/assets/img/default-user-csg.png";
 
 let web3 = new Web3(RED);
@@ -309,7 +312,7 @@ app.post('/api/v1/sesion/create/:wallet',async(req,res) => {
 
             usuario.sesionPlayID.push(respuesta);
         
-            await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+            await user.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
         
             res.send(respuesta);
 
@@ -329,42 +332,6 @@ app.post('/api/v1/sesion/create/:wallet',async(req,res) => {
     }
 
     
-});
-
-app.get('/api/v1/user/:wallet',async(req,res) => {
-
-    let wallet = req.params.wallet.toLowerCase();
-    let emailApp = req.query.email.toLowerCase();
-
-    if(!web3.utils.isAddress(wallet)){
-        console.log("wallet incorrecta: "+wallet+ " email: "+emailApp )
-        res.send("false");
-    }else{
-
-        var investor =
-        await  contractMarket.methods
-            .investors(wallet)
-            .call({ from: cuenta.address });
-
-        var email = investor.correo;
-
-
-        if (email === "" || email.length < 100) {
-            res.send("true");
-            //res.send("false");
-        }else{
-            email = cryptr.decrypt(email).toLowerCase();
-
-            if(emailApp === email){
-                res.send("true");
-            }else{
-                res.send("true");
-                //res.send("false");
-            }
-        
-        }
-    }
-
 });
 
 app.get('/api/v1/user/teams/:wallet',async(req,res) => {
@@ -1046,7 +1013,7 @@ app.get('/api/v1/sendmail',async(req,res) => {
 app.get('/api/v1/enlinea',async(req,res) => {
 
     var appstatus = await appstatuses.find({});
-        appstatus = appstatus[0]
+    appstatus = appstatus[appstatus.length-1]
 
     if(req.query.rango){
 
@@ -1080,13 +1047,8 @@ app.get('/api/v1/enlinea',async(req,res) => {
 
 app.get('/api/v1/ben10',async(req,res) => {
 
-    var version = versionAPP;
-    if (req.query.version) {
-        version = req.query.version;
-    }
-
-    var aplicacion = await appstatuses.find({version: version });
-    aplicacion = aplicacion[0];
+    var aplicacion = await appstatuses.find({});
+    aplicacion = aplicacion[aplicacion.length-1]
 
     if(req.query.ganado){
 
@@ -1183,6 +1145,8 @@ app.get('/api/v1/misionesdiarias/tiempo/:wallet',async(req,res) => {
             if (usuario.length >= 1) {
                 var usuario = usuario[0];
 
+                resetChecpoint(wallet);
+
                 if(usuario.checkpoint === 0){
                     usuario.checkpoint=Date.now();
 
@@ -1197,79 +1161,82 @@ app.get('/api/v1/misionesdiarias/tiempo/:wallet',async(req,res) => {
     }
 });
 
+async function resetChecpoint(wallet){
+    var usuario = await user.find({ wallet: uc.upperCase(wallet) });
+    usuario = usuario[0];
+
+    if(Date.now() >= usuario.checkpoint){
+
+        // resetear daily mision
+        
+        usuario.checkpoint =  Date.now()  + DaylyTime*1000;
+        console.log("new time Dayly: "+usuario.checkpoint)
+        usuario.reclamado = false;
+
+        var nuevoUsuario = new user(usuario)
+        await nuevoUsuario.save();
+
+        //await user.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
+    }
+}
+
 app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet.toLowerCase();
-    var version = versionAPP;
     var MisionDiaria = false;
-    if (req.query.version) {
-        version = req.query.version;
-    }
 
-    var aplicacion = await appstatuses.find({version: version});
+    var aplicacion = await appstatuses.find({});
+    
+    if(aplicacion.length >= 1 && web3.utils.isAddress(wallet)){
 
-    if (aplicacion.length >= 1) {
-        aplicacion = aplicacion[0];
+        aplicacion = aplicacion[aplicacion.length-1]
         MisionDiaria = aplicacion.misiondiaria;
-    }
-
-    if(web3.utils.isAddress(wallet) && MisionDiaria && habilitarMisionDiaria === "true"){
 
         var usuario = await user.find({ wallet: uc.upperCase(wallet) });
-
         var data = await playerData.find({wallet: uc.upperCase(wallet)});
 
-        if (data.length >= 1 && usuario.length >= 1) {
+        if (data.length >= 1 && usuario.length >= 1 && MisionDiaria ) {
+
             data = data[0];
             usuario = usuario[0];
     
-            if(parseInt(data.TournamentsPlays) >= 0 && parseInt(data.DuelsPlays) >= 4 && parseInt(data.FriendLyWins) >= 10){
+            if(usuario.active && parseInt(data.TournamentsPlays) >= 0 && parseInt(data.DuelsPlays) >= 4 && parseInt(data.FriendLyWins) >= 10){
               
-                if(usuario.active ){
-                    
-                    if( (Date.now() < usuario.checkpoint || usuario.checkpoint === 0) && !usuario.reclamado ){
+
+
+                    if( (Date.now() < usuario.checkpoint || usuario.checkpoint === 0 || Date.now() >= usuario.checkpoint) && !usuario.reclamado ){
     
-                        console.log("asignar mision diaria");
+                        //console.log("si cumple mision diaria");
         
                         res.send("true");
                     }else{
 
-                        if(Date.now() >= usuario.checkpoint){
-
-                            // resetear datos y tiempo
-
-                            usuario.checkpoint =  usuario.checkpoint + DaylyTime*1000;
-                            usuario.reclamado = false;
-
-                            data.DuelsPlays = "0";
-                            data.FriendLyWins = "0";
-                            data.TournamentsPlays = "0";
-
-                            await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
-                            await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
-
-                        }
-
                         res.send("false");
-
+                        
 
                     }
+
+                      
     
-                }else{
-    
-                    console.log("no cumple mision diaria: "+uc.upperCase(wallet)+" TP: "+data.TournamentsPlays+" DP: "+data.DuelsPlays+" Training: "+data.FriendLyWins);
-                    res.send("false");
-    
-                }
-        
             }else{
-                res.send("false")
+
+                console.log("f2");
+    
+                //console.log("no cumple mision diaria: "+uc.upperCase(wallet)+" TP: "+data.TournamentsPlays+" DP: "+data.DuelsPlays+" Training: "+data.FriendLyWins);
+                res.send("false");
+    
             }
+
+            resetChecpoint(wallet);
+        
+
         }else{
+            console.log("f3");
             res.send("false")
         }
 
     }else{
+        console.log("f4");
         res.send("false");
     }
 
@@ -1278,13 +1245,9 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
 app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet.toLowerCase();
-    var version = versionAPP;
 
-    if (req.query.version) {
-        version = req.query.version;
-    }
-    var aplicacion = await appstatuses.find({version: version });
-    aplicacion = aplicacion[0];
+    var aplicacion = await appstatuses.find({});
+    aplicacion = aplicacion[aplicacion.length-1]
     
     if(req.body.token == TOKEN  && web3.utils.isAddress(wallet)){
 
@@ -1300,10 +1263,7 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
                 if(datos.active ){
 
                     var coins = await recompensaDiaria(wallet);
-                    if(Date.now() >= datos.checkpoint){
-                        datos.checkpoint = datos.checkpoint+ DaylyTime*1000;
-                    }
-                    datos.reclamado = false;
+                    datos.reclamado = true;
 
                     datos.balance = datos.balance + coins;
                     datos.ingresado = datos.ingresado + coins;
@@ -1319,8 +1279,10 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
 
                     aplicacion.entregado += coins;
 
-                    await appstatuses.updateOne({ version: version }, aplicacion)
-                    await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+                    await appstatuses.updateOne({ version: aplicacion.version }, aplicacion)
+                    var nuevoUsuario = new user(datos)
+                    await nuevoUsuario.save();
+                    //await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
                     await playerData.updateOne({ wallet: uc.upperCase(wallet) }, dataPlay);
 
                     console.log("Daily mision coins: "+coins+" # "+wallet);
@@ -1408,6 +1370,21 @@ app.get('/api/v1/user/username/:wallet',async(req,res) => {
     }
 });
 
+app.get('/api/v1/user/wallet/',async(req,res) => {
+    var username =  req.query.username;
+     
+    usuario = await user.find({ username: username });
+
+    if (usuario.length >= 1) {
+        usuario = usuario[0];
+
+        res.send(usuario.wallet);
+    }else{
+        res.send("false");
+    }
+    
+});
+
 app.get('/api/v1/user/email/:wallet',async(req,res) => {
     var wallet =  req.params.wallet.toLowerCase();
      
@@ -1453,6 +1430,8 @@ app.get('/api/v1/imagen/user',async(req,res) => {
 
     if (usuario.length >= 1) {
         usuario = usuario[0];
+
+        resetChecpoint(usuario.wallet);
 
         if(usuario.imagen){
             if(usuario.imagen.indexOf('https://')>=0){
@@ -1670,36 +1649,42 @@ app.get('/api/v1/email/disponible/',async(req,res) => {
 
 app.get('/api/v1/app/init/',async(req,res) => {
 
-    var version = versionAPP;
-    if (req.query.version) {
-        version = req.query.version;
-    }
+    
 
-    var aplicacion = await appstatuses.find({version: version});
-
+    var aplicacion = await appstatuses.find({version: req.query.version});
+    
     if (aplicacion.length >= 1) {
-        aplicacion = aplicacion[0];
+        aplicacion = aplicacion[aplicacion.length-1]
         res.send(aplicacion.liga+","+aplicacion.mantenimiento+","+aplicacion.version+","+aplicacion.link+","+aplicacion.duelo+","+aplicacion.torneo+","+aplicacion.updates);
 
     }else{
-        
-        aplicacion = new appstatuses({
-            version: req.query.version,
-            torneo: "on",
-            duelo: "on",
-            liga: "on",
-            mantenimiento: "off",
-            link: "https://cryptosoccermarket.com/download",
-            ganado: 0, 
-            entregado: 0,
-            linea: [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            updates:["V"+req.query.version+" READY!","thanks for download",moment(Date.now()).format('DD/MM/YYYY HH:mm:ss [UTC]')],
-            misiondiaria: true
-        });
 
-        aplicacion.save().then(()=>{
-            res.send("nueva version creada");
-        })
+        if(!req.query.version){
+            aplicacion = await appstatuses.find({});
+            aplicacion = aplicacion[aplicacion.length-1]
+            res.send(aplicacion.liga+","+aplicacion.mantenimiento+","+aplicacion.version+","+aplicacion.link+","+aplicacion.duelo+","+aplicacion.torneo+","+aplicacion.updates);
+    
+        }else{
+            aplicacion = new appstatuses({
+                version: req.query.version,
+                torneo: "on",
+                duelo: "on",
+                liga: "on",
+                mantenimiento: "off",
+                link: "https://cryptosoccermarket.com/download",
+                ganado: 0, 
+                entregado: 0,
+                linea: [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                updates:["V"+req.query.version+" READY!","thanks for download",moment(Date.now()).format('DD/MM/YYYY HH:mm:ss [UTC]')],
+                misiondiaria: true
+            });
+    
+            aplicacion.save().then(()=>{
+                res.send("nueva version creada");
+            })
+        }
+        
+        
             
     }
 
@@ -1708,7 +1693,15 @@ app.get('/api/v1/app/init/',async(req,res) => {
 
 app.get('/api/v1/consulta/leadboard',async(req,res) => {
 
-    var cantidad = 10;
+    var cantidad;
+
+    if(!req.query.cantidad){
+        cantidad = 20;
+    }else{
+        cantidad = parseInt(req.query.cantidad);
+    }
+
+    
     var lista = [];
 
     var aplicacion = await playerData.find({}).limit(cantidad).sort([['CupsWin', -1]]);
@@ -1826,21 +1819,676 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
     
 });
 
+app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet;
+    
+    if(req.body.token == TOKEN ){
+
+        var usuario = await playerData.find({wallet: uc.upperCase(wallet)});
+        
+        if (usuario.length >= 1) {
+            var data = usuario[0];
+            
+            if(req.body.clave === "BallonSet"){
+                data.BallonSet = req.body.valor;
+            }
+
+            if(req.body.clave === "DificultConfig"){
+                data.DificultConfig = req.body.valor;
+            }
+
+            if(req.body.clave === "LastDate"){
+                data.LastDate = req.body.valor;
+            }
+
+            if(req.body.clave === "LastDate"){
+                data.LastDate = req.body.valor;
+            }
+
+            if(req.body.clave === "FriendlyTiming"){
+                data.FriendlyTiming = req.body.valor;
+            }
+
+            if(req.body.clave === "LeagueDate"){
+                data.LeagueDate = req.body.valor;
+            }
+
+            if(req.body.clave === "Music"){
+                data.Music  = req.body.valor;
+            }
+
+            if(req.body.clave === "QualityConfig"){
+                data.QualityConfig  = req.body.valor;
+            }
+            
+            if(req.body.clave === "StadiumSet"){
+                data.StadiumSet  = req.body.valor;
+            }
+
+            if(req.body.clave === "Version"){
+                data.Version = req.body.valor;
+            }
+            
+            if(req.body.clave === "VolumeConfig"){
+                data.VolumeConfig = req.body.valor;
+            }
+
+            if(req.body.clave === "Plataforma"){
+                data.Plataforma = req.body.valor;
+            }
+
+            if(req.body.clave === "FirstTime"){
+                data.FirstTime = req.body.valor;
+            }
+
+            if(req.body.clave === "Analiticas"){
+                data.Analiticas = req.body.valor;
+            }
+
+            if(req.body.clave === "Fxs"){
+                data.Fxs = req.body.valor;
+            }
+
+            //// las de arriba solo textos /|\
+
+            var accionar; 
+            var respuesta = "true";
+
+                if(req.body.clave === "CupsWin"){
+
+                    accionar = data.CupsWin;
+
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.CupsWin = accionar;
+                    
+                }
+
+                if(req.body.clave === "DiscountMomment"){
+                    accionar = data.DiscountMomment;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.DiscountMomment = accionar+"";
+                }
+
+                if(req.body.clave === "DuelsOnlineWins"){
+                    accionar = data.DuelsOnlineWins;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.DuelsOnlineWins = accionar+"";
+                }
+
+                if(req.body.clave === "DuelsPlays"){
+                    accionar = data.DuelsPlays;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.DuelsPlays = accionar+"";
+                }
+
+                if(req.body.clave === "FriendLyWins"){
+                    accionar = data.FriendLyWins;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.FriendLyWins = accionar+"";
+                }
+
+                if(req.body.clave === "LeagueOpport"){
+                    accionar = data.LeagueOpport;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.LeagueOpport = accionar+"";
+                }
+                
+                if(req.body.clave === "LeaguesOnlineWins"){
+                    accionar = data.LeaguesOnlineWins;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.LeaguesOnlineWins = accionar+"";
+                }
+                
+                if(req.body.clave === "MatchLose"){
+                    accionar = data.MatchLose;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.MatchLose = accionar+"";
+                }
+                
+                if(req.body.clave === "MatchWins"){
+                    accionar = data.MatchWins;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.MatchWins = accionar+"";
+                }
+                
+                if(req.body.clave === "MatchesOnlineWins"){
+                    accionar = data.MatchesOnlineWins;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.MatchesOnlineWins = accionar+"";
+                }
+                
+                if(req.body.clave === "PhotonDisconnected"){
+                    accionar = data.PhotonDisconnected;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.PhotonDisconnected = accionar+"";
+                }
+                
+                if(req.body.clave === "PlaysOnlineTotal"){
+                    accionar = data.PlaysOnlineTotal;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.PlaysOnlineTotal = accionar+"";
+                }
+                
+                if(req.body.clave === "PlaysTotal"){
+                    accionar = data.PlaysTotal;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.PlaysTotal = accionar+"";
+                }
+                
+                if(req.body.clave === "TournamentsPlays"){
+                    accionar = data.TournamentsPlays;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.TournamentsPlays = accionar+"";
+                }
+
+                if(req.body.clave === "GolesEnContra"){
+                    accionar = data.GolesEnContra;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.GolesEnContra = accionar+"";
+                }
+
+                if(req.body.clave === "GolesAFavor"){
+                    accionar = data.GolesAFavor;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.GolesAFavor = accionar+"";
+                }
+
+                if(req.body.clave === "DrawMatchs"){
+                    accionar = data.DrawMatchs;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.DrawMatchs = accionar+"";
+                }
+
+                if(req.body.clave === "DrawMatchsOnline"){
+                    accionar = data.DrawMatchsOnline;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.DrawMatchsOnline = accionar+"";
+                }
+
+                if(req.body.clave === "LeaguePlay"){
+                    accionar = data.LeaguePlay;
+
+                    switch (req.body.accion) {
+                        case "sumar":
+                            accionar = parseInt(accionar)+parseInt(req.body.valor);
+                            break;
+
+                        case "restar":
+                            accionar = parseInt(accionar)-parseInt(req.body.valor);
+                            break;
+
+                        case "setear":
+                            accionar = parseInt(req.body.valor);
+                            break;
+
+                    
+                        default:
+                            respuesta = "false";
+                            break;
+                    }
+
+                    data.LeaguePlay = accionar+"";
+                }
+
+
+            if(req.body.clave && req.body.valor){
+
+                //console.log(data)
+
+                data.UserOnline = Date.now();
+
+                if( Date.now() >= parseInt(data.LeagueTimer) + 86400*1000){
+                    data.LeagueOpport = "0";
+                    data.LeagueTimer = Date.now();
+                }
+
+                var playernewdata = new playerData(data)
+                await playernewdata.save();
+
+                //update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, data);
+
+                //console.log(update);
+
+                switch (req.body.clave) {
+                    case "LeagueOpport":
+                        if(respuesta === "false"){
+                            res.send("false");
+                        }else{
+                            res.send(data.LeagueOpport+"");
+                        }
+                        break;
+                
+                    default:
+                        if(respuesta === "false"){
+                            res.send("false");
+                        }else{
+                            res.send("true");
+                        }
+                        break;
+                }
+
+            }else{
+                res.send("false");
+            }
+
+        }else{
+
+            var playernewdata = new playerData({
+                wallet: uc.upperCase(wallet),
+                BallonSet: "0",
+                CupsWin: 0,
+                DificultConfig:  "3",
+                DiscountMomment:  "0",
+                DuelsOnlineWins:  "0",
+                DuelsPlays:  "0",
+                FriendLyWins:  "0",
+                FriendlyTiming: "2",
+                LastDate:  "0",
+                LeagueDate:  moment(Date.now()).format(formatoliga),
+                LeagueOpport:  "0",
+                LeagueTimer:  moment(Date.now()).format('HH:mm:ss'),
+                LeaguesOnlineWins:  "0",
+                MatchLose:  "0",
+                MatchWins:  "0",
+                MatchesOnlineWins:  "0",
+                Music:  "0",
+                PhotonDisconnected:  "0",
+                PlaysOnlineTotal:  "0",
+                PlaysTotal:  "0",
+                QualityConfig:  "0",
+                StadiumSet:  "0",
+                TournamentsPlays:  "0",
+                Version:  "mainet",
+                VolumeConfig:  "0",
+                Plataforma: "PC",
+                GolesEnContra: "0",
+                GolesAFavor: "0",
+                FirstTime: "0",
+                DrawMatchs: "0",
+                DrawMatchsOnline: "0",
+                LeaguePlay: "0",
+                Analiticas: "0",
+                Fxs: "0",
+                UserOnline: Date.now(),
+                Resolucion: "0",
+                Fullscreen: "0",
+                Soporte: "J&S"
+                
+            })
+
+            playernewdata.save().then(()=>{
+                res.send("false");
+            })
+                
+            
+        }
+    }
+
+    
+});
+
 app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet;
 
     var json = req.body;
 
-    json = Buffer.from(json);
-    json = json.toString('utf8');
-    json = JSON.parse(json);
+    if(!json.misDat){
+
+        json = Buffer.from(json);
+        json = json.toString('utf8');
+        json = JSON.parse(json);
+
+    }
     
     if( json.misDat ){
 
         json = json.misDat;
 
-        console.log(json)
+        //console.log(json)
 
         var usuario = await playerData.find({wallet: uc.upperCase(wallet)});
         
@@ -1851,17 +2499,17 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
                 switch (json[index].action) {
                     case "sumar":
-                        usuario[json[index].variable] = (parseFloat(usuario[json[index].variable].replace(",", "."))+parseFloat(json[index].valorS.replace(",", ".")))+"";
+                        usuario[json[index].variable] = (parseFloat((usuario[json[index].variable]+"").replace(",", "."))+parseFloat((json[index].valorS+"").replace(",", ".")))+"";
                      
                         break;
 
                     case "restar":
-                        usuario[json[index].variable] = (parseFloat(usuario[json[index].variable].replace(",", "."))-parseFloat(json[index].valorS.replace(",", ".")))+"";
+                        usuario[json[index].variable] = (parseFloat((usuario[json[index].variable]+"").replace(",", "."))-parseFloat((json[index].valorS+"").replace(",", ".")))+"";
   
                         break;
 
                     case "setear":
-                            usuario[json[index].variable] = (json[index].valorS).replace(",", ".");
+                            usuario[json[index].variable] = (json[index].valorS+"").replace(",", ".");
                          
                         break;
 
@@ -1890,8 +2538,7 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
             var consulta = await playerData.find({wallet: uc.upperCase(wallet)},{_id:0,wallet:0,__v:0,UserOnline:0});
             consulta = consulta[0];
 
-            console.log(consulta)
-
+            //console.log(consulta)
 
             res.send(consulta);
         
