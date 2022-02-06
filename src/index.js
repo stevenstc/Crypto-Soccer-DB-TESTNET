@@ -2029,10 +2029,16 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
 
 app.post('/api/v1/reset/leadboard',async(req,res) => {
 
-    //var dataUsuarios = await playerData.find({}).sort([['CupsWin', 1]]);
+    if(req.body.token == TOKEN ){
 
-    playerData.where().update({ CupsWin: /^match/ }, { $set: 0}, { multi: true }, callback)
-     
+        //var dataUsuarios = await playerData.find({}).sort([['CupsWin', 1]]);
+
+        await playerData.find({}).sort([['CupsWin', 1]]).update({ $set: {CupsWin:0}}).exec();
+        
+        res.send("true");
+    }else{
+        res.send("false");
+    }
     
 });
 
