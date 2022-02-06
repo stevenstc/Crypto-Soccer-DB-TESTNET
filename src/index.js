@@ -2027,7 +2027,7 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
     
 });
 
-app.pot('/api/v1/reset/leadboard',async(req,res) => {
+app.post('/api/v1/reset/leadboard',async(req,res) => {
 
     //var dataUsuarios = await playerData.find({}).sort([['CupsWin', 1]]);
 
