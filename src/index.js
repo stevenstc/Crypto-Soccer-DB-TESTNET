@@ -76,7 +76,6 @@ const explorador = process.env.APP_EXPLORER || "https://bscscan.com/tx/";
 const RED = process.env.APP_RED || "https://bsc-dataseed.binance.org/";
 const addressContract = process.env.APP_CONTRACT || "0xfF7009EF7eF85447F6A5b3f835C81ADd60a321C9";
 
-const versionAPP = process.env.APP_VERSIONAPP || "1.0.1.0";
 const imgDefault = "https://cryptosoccermarket.com/assets/img/default-user-csg.png";
 
 let web3 = new Web3(RED);
@@ -157,12 +156,24 @@ const appstatuses = mongoose.model('appstatuses', {
     link: String,
     entregado: Number,
     ganado: Number, 
-    entregado: Number,
+    ganadoliga: Number,
     linea: [Number],
     updates: [String],
-    misiondiaria: Boolean
+    misiondiaria: Boolean,
+    apuestas:[Boolean]
     
 });
+
+const appdatos = mongoose.model('appdatos', {
+
+    entregado: Number,
+    ganado: Number, 
+    ganadoliga: Number,
+    misiondiaria: Boolean,
+    finliga: Number
+
+});
+
 
 const playerData = mongoose.model('playerdatas', {
     wallet: String,
@@ -305,7 +316,7 @@ app.post('/api/v1/sesion/create/:wallet',async(req,res) => {
 
             usuario = await userplayonline.find({ wallet: uc.upperCase(wallet) });
 
-            var respuesta = "CSC:"+Math.floor(Math.random() * 999)+":"+Math.floor(Math.random() * 999)+":"+Math.floor(Math.random() * 999)+":"+versionAPP;
+            var respuesta = "CSC:"+Math.floor(Math.random() * 999)+":"+Math.floor(Math.random() * 999)+":"+Math.floor(Math.random() * 999);
 
         if (usuario.length >= 1) {
             usuario = usuario[0];
@@ -329,6 +340,8 @@ app.post('/api/v1/sesion/create/:wallet',async(req,res) => {
             res.send(respuesta);
         }
 
+    }else{
+        res.send("false");
     }
 
     
@@ -1012,58 +1025,115 @@ app.get('/api/v1/sendmail',async(req,res) => {
 
 app.get('/api/v1/enlinea',async(req,res) => {
 
-    var appstatus = await appstatuses.find({});
-    appstatus = appstatus[appstatus.length-1]
+    if(req.query.version){
 
-    if(req.query.rango){
+        var appstatus = await appstatuses.find({version: req.query.version});
+        appstatus = appstatus[appstatus.length-1]
 
-        for (let index = 0; index < appstatus.linea.length; index++) {
+        if(req.query.rango){
 
-            if(parseInt(req.query.rango) == index){
-                if (parseInt(req.query.activo) >= 0 ) {
-                    appstatus.linea[index] = parseInt(req.query.activo);
-                }else{
-                    appstatus.linea[index] = 0;
+            for (let index = 0; index < appstatus.linea.length; index++) {
+
+                if(parseInt(req.query.rango) == index){
+                    if (parseInt(req.query.activo) >= 0 ) {
+                        appstatus.linea[index] = parseInt(req.query.activo);
+                    }else{
+                        appstatus.linea[index] = 0;
+                    }
+                    
                 }
                 
             }
-            
-        }
 
-        datos = {};
-        datos.linea = appstatus.linea;
+            datos = {};
+            datos.linea = appstatus.linea;
 
-        update = await appstatuses.updateOne({ _id: appstatus._id }, datos)
+            update = await appstatuses.updateOne({ _id: appstatus._id }, datos)
 
-        res.send("true");
+            res.send("true");
 
+        }else{
+
+            res.send((appstatus.linea).toString());
+
+        }   
     }else{
 
-        res.send((appstatus.linea).toString());
+        var appstatus = await appstatuses.find({});
+        appstatus = appstatus[appstatus.length-1]
 
-    }   
+        if(req.query.rango){
+
+            for (let index = 0; index < appstatus.linea.length; index++) {
+
+                if(parseInt(req.query.rango) == index){
+                    if (parseInt(req.query.activo) >= 0 ) {
+                        appstatus.linea[index] = parseInt(req.query.activo);
+                    }else{
+                        appstatus.linea[index] = 0;
+                    }
+                    
+                }
+                
+            }
+
+            datos = {};
+            datos.linea = appstatus.linea;
+
+            update = await appstatuses.updateOne({ _id: appstatus._id }, datos)
+
+            res.send("true");
+
+        }else{
+
+            res.send((appstatus.linea).toString());
+
+        }   
+
+    }
     
 });
 
 app.get('/api/v1/ben10',async(req,res) => {
 
-    var aplicacion = await appstatuses.find({});
+    var aplicacion = await appdatos.find({});
     aplicacion = aplicacion[aplicacion.length-1]
 
-    if(req.query.ganado){
+    if(req.query.ganadoliga){
 
-        datos = {};
-        datos.ganado = aplicacion.ganado+parseInt(req.query.ganado);
+        if(aplicacion.ganadoliga){
+            aplicacion.ganadoliga += parseInt(req.query.ganadoliga);
+        }else{
+            aplicacion.ganadoliga = parseInt(req.query.ganadoliga);
+        }
 
-        update = await appstatuses.updateOne({ _id: aplicacion._id }, datos)
+        //update = await appdatos.updateOne({ _id: aplicacion._id }, datos)
+
+        aplicacion = await new appdatos(aplicacion);
+        await aplicacion.save();
 
         res.send("true");
 
     }else{
-        
-        res.send(appstatus.ganado+","+appstatus.entregado);
+
+    
+        if(req.query.ganado){
+
+            aplicacion.ganado += parseInt(req.query.ganado);
+
+            //update = await appdatos.updateOne({ _id: aplicacion._id }, datos)
+
+            aplicacion = await new appdatos(aplicacion);
+            await aplicacion.save();
+
+            res.send("true");
+
+        }else{
+            
+            res.send(appstatus.ganado+","+appstatus.entregado);
 
 
+        }
     }
     
 });
@@ -1142,6 +1212,8 @@ app.get('/api/v1/misionesdiarias/tiempo/:wallet',async(req,res) => {
 
             var usuario = await user.find({ wallet: uc.upperCase(wallet) });
 
+            var cuando = "Earlier than";
+
             if (usuario.length >= 1) {
                 var usuario = usuario[0];
 
@@ -1152,10 +1224,14 @@ app.get('/api/v1/misionesdiarias/tiempo/:wallet',async(req,res) => {
 
                 }
 
-                res.send(moment(usuario.checkpoint).format('D/M/YY HH:mm:ss [UTC]'));
+                if(usuario.reclamado){
+                    cuando = "Later than";
+                }
+
+                res.send(moment(usuario.checkpoint).format('['+cuando+',] D/M/YY HH:mm:ss [UTC]'));
                 
             }else{
-                res.send(moment(Date.now()).format('D/M/YY HH:mm:ss [UTC]'));
+                res.send(moment(Date.now()).format('['+cuando+',] D/M/YY HH:mm:ss [UTC]'));
             }
         
     }
@@ -1185,7 +1261,7 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
     var wallet =  req.params.wallet.toLowerCase();
     var MisionDiaria = false;
 
-    var aplicacion = await appstatuses.find({});
+    var aplicacion = await appdatos.find({});
     
     if(aplicacion.length >= 1 && web3.utils.isAddress(wallet)){
 
@@ -1220,7 +1296,7 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
     
             }else{
 
-                console.log("f2");
+                //console.log("f2");
     
                 //console.log("no cumple mision diaria: "+uc.upperCase(wallet)+" TP: "+data.TournamentsPlays+" DP: "+data.DuelsPlays+" Training: "+data.FriendLyWins);
                 res.send("false");
@@ -1231,12 +1307,12 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
         
 
         }else{
-            console.log("f3");
+            //console.log("f3");
             res.send("false")
         }
 
     }else{
-        console.log("f4");
+        //console.log("f4");
         res.send("false");
     }
 
@@ -1246,7 +1322,7 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet.toLowerCase();
 
-    var aplicacion = await appstatuses.find({});
+    var aplicacion = await appdatos.find({});
     aplicacion = aplicacion[aplicacion.length-1]
     
     if(req.body.token == TOKEN  && web3.utils.isAddress(wallet)){
@@ -1279,7 +1355,7 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
 
                     aplicacion.entregado += coins;
 
-                    await appstatuses.updateOne({ version: aplicacion.version }, aplicacion)
+                    await appdatos.updateOne({ version: aplicacion.version }, aplicacion)
                     var nuevoUsuario = new user(datos)
                     await nuevoUsuario.save();
                     //await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
@@ -1649,22 +1725,56 @@ app.get('/api/v1/email/disponible/',async(req,res) => {
 
 app.get('/api/v1/app/init/',async(req,res) => {
 
-    
+    if(req.query.version){
+        var aplicacion = await appstatuses.find({version: req.query.version});
 
-    var aplicacion = await appstatuses.find({version: req.query.version});
-    
-    if (aplicacion.length >= 1) {
-        aplicacion = aplicacion[aplicacion.length-1]
-        res.send(aplicacion.liga+","+aplicacion.mantenimiento+","+aplicacion.version+","+aplicacion.link+","+aplicacion.duelo+","+aplicacion.torneo+","+aplicacion.updates);
+        if (aplicacion.length >= 1) {
 
-    }else{
-
-        if(!req.query.version){
-            aplicacion = await appstatuses.find({});
             aplicacion = aplicacion[aplicacion.length-1]
-            res.send(aplicacion.liga+","+aplicacion.mantenimiento+","+aplicacion.version+","+aplicacion.link+","+aplicacion.duelo+","+aplicacion.torneo+","+aplicacion.updates);
-    
+
+            var appData = await appdatos.find({});
+
+            if (appData.length >= 1) {
+                appData = appData[appData.length-1]
+
+                appData.finliga = parseInt((appData.finliga-Date.now())/(86400*1000));
+
+                if(appData.finliga < 0){
+                    appData.finliga = 0;
+
+                    aplicacion.liga = "off"
+
+                }else{
+                    aplicacion.liga = "on"
+                }
+
+            }else{
+
+                appData = new appdatos({
+                    entregado: 0,
+                    ganado: 0, 
+                    ganadoliga: 0,
+                    misiondiaria: true,
+                    finliga: Date.now() + 86400 * 1000 * 30 
+                });
+            
+                await appData.save();
+
+                appData.finliga = 30;
+
+            }
+
+            aplicacion = new appstatuses(aplicacion);
+            await aplicacion.save();
+
+            aplicacion = await appstatuses.find({version: req.query.version});
+            aplicacion = aplicacion[aplicacion.length-1]
+        
+        
+            res.send(aplicacion.liga+","+aplicacion.mantenimiento+","+aplicacion.version+","+aplicacion.link+","+aplicacion.duelo+","+aplicacion.torneo+","+aplicacion.updates+","+appData.finliga);
+
         }else{
+
             aplicacion = new appstatuses({
                 version: req.query.version,
                 torneo: "on",
@@ -1672,20 +1782,41 @@ app.get('/api/v1/app/init/',async(req,res) => {
                 liga: "on",
                 mantenimiento: "off",
                 link: "https://cryptosoccermarket.com/download",
-                ganado: 0, 
-                entregado: 0,
                 linea: [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                 updates:["V"+req.query.version+" READY!","thanks for download",moment(Date.now()).format('DD/MM/YYYY HH:mm:ss [UTC]')],
-                misiondiaria: true
+                apuestas:[true,true,true,true,true]
+
             });
     
-            aplicacion.save().then(()=>{
-                res.send("nueva version creada");
-            })
+            await aplicacion.save();
+
+            aplicacion = await appstatuses.find({});
+            aplicacion = aplicacion[aplicacion.length-1]
+            res.send(aplicacion.liga+","+aplicacion.mantenimiento+","+aplicacion.version+","+aplicacion.link+","+aplicacion.duelo+","+aplicacion.torneo+","+aplicacion.updates+",30");
+                    
         }
+    }else{
+        res.send("null")
+    }
+
+});
+
+app.get('/api/v1/app/apuestas/',async(req,res) => {
+
+    if(req.query.version){
+        var aplicacion = await appstatuses.find({version: req.query.version});
         
-        
-            
+        if (aplicacion.length >= 1) {
+            aplicacion = aplicacion[aplicacion.length-1]
+         
+            res.send(aplicacion.apuestas.toLocaleString());
+
+        }else{
+
+            res.send("null")
+        }
+    }else{
+        res.send("null")
     }
 
 });
@@ -1719,6 +1850,83 @@ app.get('/api/v1/consulta/leadboard',async(req,res) => {
             
     }
     
+});
+
+app.get('/api/v1/consulta/redwardleague',async(req,res) => {
+
+    if(req.query.version){
+        var aplicacion = await appstatuses.find({version: req.query.version});
+
+        var appData = await appdatos.find({});
+
+        if (appData.length >= 1) {
+            appData = appData[appData.length-1]
+        }else{
+            appData.ganadoliga = 0;
+        }
+        
+        if (aplicacion.length >= 1) {
+            aplicacion = aplicacion[aplicacion.length-1]
+
+            var cantidad;
+
+            if(!req.query.cantidad){
+                cantidad = 20;
+            }else{
+                cantidad = parseInt(req.query.cantidad);
+            }
+
+            var poolliga = appData.ganadoliga;
+
+            poolliga = poolliga*0.7
+
+            var porcentajes = [0.4,0.2,0.15,0.05,0.04,0.04,0.04,0.03,0.03,0.02]
+            var lista = [];
+
+            var usuarios = await playerData.find({}).limit(cantidad).sort([['CupsWin', -1]]);
+            
+            if (usuarios.length >= 1) {
+                
+                for (let index = 0; index < usuarios.length; index++) {
+        
+                    lista[index] = parseInt(poolliga*porcentajes[index]);
+                
+                    if(isNaN(lista[index])){
+                        lista[index] = 0;
+                    }
+                    
+                }
+                res.send(lista.toLocaleString());
+
+            }else{
+                res.send("null");
+                    
+            }
+    
+        }else{
+            res.send("null");
+        }
+    }else{
+        res.send("null");
+    }
+
+});
+
+app.get('/api/v1/consulta/poolliga',async(req,res) => {
+
+
+    var appData = await appdatos.find({});
+
+    if (appData.length >= 1) {
+        appData = appData[appData.length-1]
+    }else{
+        appData.ganadoliga = 0;
+    }
+
+
+    res.send(appData.ganadoliga+"");
+
+
 });
 
 app.get('/api/v1/consulta/miranking/:wallet',async(req,res) => {
@@ -1816,6 +2024,15 @@ app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
         
     }
 
+    
+});
+
+app.pot('/api/v1/reset/leadboard',async(req,res) => {
+
+    //var dataUsuarios = await playerData.find({}).sort([['CupsWin', 1]]);
+
+    playerData.where().update({ CupsWin: /^match/ }, { $set: 0}, { multi: true }, callback)
+     
     
 });
 
@@ -2465,6 +2682,10 @@ app.post('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 
             
         }
+    }else{
+        
+        res.send("false");
+        
     }
 
     
@@ -2477,6 +2698,8 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
     var json = req.body;
 
     if(!json.misDat){
+
+        //console.log("recibiendo data desde el juego: "+uc.upperCase(wallet))
 
         json = Buffer.from(json);
         json = json.toString('utf8');
@@ -2496,6 +2719,10 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
             var usuario = usuario[0];
         
             for (let index = 0; index < json.length; index++) {
+
+                if(usuario[json[index].variable] === "NaN"){
+                    usuario[json[index].variable] = "0"
+                }
 
                 switch (json[index].action) {
                     case "sumar":
