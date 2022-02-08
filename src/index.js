@@ -1630,6 +1630,8 @@ app.get('/api/v1/app/init/',async(req,res) => {
     if(req.query.version){
         var aplicacion = await appstatuses.find({version: req.query.version});
 
+        console.log(aplicacion)
+
         if (aplicacion.length >= 1) {
 
             aplicacion = aplicacion[aplicacion.length-1]

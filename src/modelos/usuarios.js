@@ -1,18 +1,34 @@
 const mongoose = require('mongoose');
 
-module.exports = mongoose.model('appstatuses', {
-    version: String,
-    torneo: String,
-    duelo: String,
-    liga: String,
-    mantenimiento: String,
-    link: String,
-    entregado: Number,
-    ganado: Number, 
-    ganadoliga: Number,
-    linea: [Number],
-    updates: [String],
-    misiondiaria: Boolean,
-    apuestas:[Boolean]
-    
+module.exports = mongoose.model('usuarios', {
+    wallet: String,
+    email: String,
+    password: String,
+    username: String,
+    active: Boolean,
+    payAt: Number,
+    checkpoint: Number,
+    reclamado: Boolean,
+    balance: Number,
+    ingresado: Number,
+    retirado: Number,
+    deposit: [{
+      amount: Number,
+      date: Number,
+      finalized: Boolean,
+      txhash: String
+
+    }],
+    retiro: [{
+      amount: Number,
+      date: Number,
+      done: Boolean,
+      dateSend: Number,
+      txhash: String
+
+    }],
+    txs: [String],
+    pais: String,
+    imagen: String
+
 });
