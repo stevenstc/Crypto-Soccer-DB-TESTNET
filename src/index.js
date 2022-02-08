@@ -233,12 +233,9 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
         if(sesionPlay.length > 0){
             console.log(sesionPlay.length-1)
-            console.log(sesionPlay)
-
 
             sesionPlay = sesionPlay[sesionPlay.length-1];
 
-            
             if(!sesionPlay.finalizada){
                 var datos = sesionPlay;
 
