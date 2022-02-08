@@ -229,7 +229,7 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
     if(req.body.sesionID && req.body.token == TOKEN ){
 
-        var sesionPlay = await userplayonline.find({sesionID: req.body.sesionID},{_id:0}).sort({identificador:-1});
+        var sesionPlay = await userplayonline.find({$and: [{ sesionID: req.body.sesionID }, { finalizada: false }]},{_id:0}).sort({identificador:-1});
 
         if(sesionPlay.length > 0){
             console.log(sesionPlay.length-1)
