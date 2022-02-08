@@ -198,7 +198,7 @@ app.post('/api/v1/sesion/crear/',async(req,res) => {
             finalizada: false,
             ganador: "",
             tipo: req.body.tipo,
-            saqueInicial: Math.floor(Math.random() * 2),
+            saqueInicial: Math.floor(Math.random() * Math.floor(Math.random() * 3)),
             csc: req.body.csc,
             u1: req.body.u1,
             u2: req.body.u2,
