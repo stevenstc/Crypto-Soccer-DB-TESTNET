@@ -209,10 +209,10 @@ app.post('/api/v1/sesion/crear/',async(req,res) => {
 
         await playOnline.save();
 
-        res.send(playOnline.id);
+        res.send("true");
 
     }else{
-        res.send("null")
+        res.send("false")
     }
     
 });
