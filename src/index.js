@@ -135,10 +135,10 @@ app.get('/api/v1/datefuture',async(req,res) => {
 
 app.get('/api/v1/sesion/consultar/',async(req,res) => {
 
-    if( req.query.id ){
+    if( req.query.sesionID ){
 
-        var sesion = await userplayonline.find({ id: req.query.id });
-        res.send(sesion[0]);
+        var sesion = await userplayonline.find({ sesionID: req.query.sesionID });
+        res.send(sesion[sesion.length-1]);
     }else{
         res.send("null");
     }
@@ -147,10 +147,10 @@ app.get('/api/v1/sesion/consultar/',async(req,res) => {
 
 app.get('/api/v1/sesion/consultar/saque',async(req,res) => {
 
-    if( req.query.id ){
+    if( req.query.sesionID ){
 
-        var sesion = await userplayonline.find({ id: req.query.id });
-        res.send(sesion[0].saqueInicial+"");
+        var sesion = await userplayonline.find({ sesionID: req.query.sesionID });
+        res.send(sesion[sesion.length-1].saqueInicial+"");
     }else{
         res.send("null");
     }
@@ -192,9 +192,9 @@ app.post('/api/v1/sesion/crear/',async(req,res) => {
 
 app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
-    if(req.body.id && req.body.token == TOKEN ){
+    if(req.body.sesionID && req.body.token == TOKEN ){
 
-        var sesion = await userplayonline.find({id: req.body.id});
+        var sesion = await userplayonline.find({id: req.body.sesionID});
         sesion = sesion[0];
 
         if(!sesion.finalizada){
