@@ -229,14 +229,16 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
     if(req.body.sesionID && req.body.token == TOKEN ){
 
-        var sesionPlay = await userplayonline.find({sesionID: req.body.sesionID},{_id:0});
+        var sesionPlay = await userplayonline.find({sesionID: req.body.sesionID},{_id:0}).sort({identificador:1});
 
-        console.log(req.body)
-        console.log(sesionPlay.length > 0)
         if(sesionPlay.length > 0){
+            console.log(sesionPlay.length-1)
+            console.log(sesionPlay)
+
+
             sesionPlay = sesionPlay[sesionPlay.length-1];
 
-            console.log(sesionPlay)
+            
             if(!sesionPlay.finalizada){
                 var datos = sesionPlay;
 
@@ -250,7 +252,7 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
                 await userplayonline.updateOne({ sesionID: req.body.sesionID }, datos);
 
-                await userplayonline.updateMany({ sesionID: req.body.sesionID, finalizada: false }, { finalizada: true });
+                await userplayonline.updateMany({ $and: [{ sesionID: req.body.sesionID }, { finalizada: false }]}, { finalizada: true, fin: Date.now()});
 
                 res.send("true");
             }else{
