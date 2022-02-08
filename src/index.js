@@ -231,7 +231,7 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
         var sesion = await userplayonline.find({sesionID: req.body.sesionID});
         console.log(req.body)
-        sesion = sesion[0];
+        sesion = sesion[sesion.length-1];
 
         if(!sesion.finalizada){
             var datos = sesion;
