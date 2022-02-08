@@ -138,7 +138,12 @@ app.get('/api/v1/sesion/consultar/',async(req,res) => {
     if( req.query.sesionID ){
 
         var sesion = await userplayonline.find({ sesionID: req.query.sesionID });
-        res.send(sesion[sesion.length-1]);
+        if(sesion.length > 0){
+            res.send(sesion[sesion.length-1]);
+        }else{
+            res.send("null");
+
+        }
     }else{
         res.send("null");
     }
@@ -150,7 +155,29 @@ app.get('/api/v1/sesion/consultar/saque',async(req,res) => {
     if( req.query.sesionID ){
 
         var sesion = await userplayonline.find({ sesionID: req.query.sesionID });
-        res.send(sesion[sesion.length-1].saqueInicial+"");
+        if(sesion.length > 0){
+            res.send(sesion[sesion.length-1].saqueInicial+"");
+        }else{
+            res.send("null");
+        }
+        
+    }else{
+        res.send("null");
+    }
+
+});
+
+app.get('/api/v1/sesion/consultar/id',async(req,res) => {
+
+    if( req.query.sesionID ){
+
+        var sesion = await userplayonline.find({ sesionID: req.query.sesionID });
+        if(sesion.length > 0){
+            res.send(sesion[sesion.length-1].id+"");
+        }else{
+            res.send("null");
+        }
+        
     }else{
         res.send("null");
     }
