@@ -154,7 +154,7 @@ app.get('/api/v1/sesion/consultar/saque',async(req,res) => {
 
     if( req.query.sesionID ){
 
-        var sesion = await userplayonline.find({ sesionID: req.query.sesionID });
+        var sesion = await userplayonline.find({ $and: [{sesionID: req.query.sesionID }, { finalizada: false }]},{_id:0}).sort([['identificador', 1]]);
         if(sesion.length > 0){
             res.send(sesion[sesion.length-1].saqueInicial+"");
         }else{
@@ -171,7 +171,7 @@ app.get('/api/v1/sesion/consultar/id',async(req,res) => {
 
     if( req.query.sesionID ){
 
-        var sesion = await userplayonline.find({ sesionID: req.query.sesionID });
+        var sesion = await userplayonline.find({$and: [{ sesionID: req.body.sesionID }, { finalizada: false }]},{_id:0}).sort([['identificador', 1]]);
         if(sesion.length > 0){
             res.send(sesion[sesion.length-1].identificador+"");
         }else{
@@ -229,25 +229,28 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
     if(req.body.sesionID && req.body.token == TOKEN ){
 
-        var sesionPlay = await userplayonline.find({$and: [{ sesionID: req.body.sesionID }, { finalizada: false }]},{_id:0}).sort({identificador:-1});
+        var sesionPlay = await userplayonline.find({$and: [{ sesionID: req.body.sesionID }, { finalizada: false }]}).sort([['identificador', 1]]);
 
         if(sesionPlay.length > 0){
             console.log(sesionPlay.length-1)
+            console.log(sesionPlay[sesionPlay.length-1]);
 
             sesionPlay = sesionPlay[sesionPlay.length-1];
 
             if(!sesionPlay.finalizada){
-                var datos = sesionPlay;
 
-                datos.fin = Date.now();
+                sesionPlay.fin = Date.now();
                 if(req.body.finalizada === "false"){
                     datos.finalizada = true
                 }
-                datos.ganador = req.body.ganador;
-                datos.soporte1 = req.body.soporte1;
-                datos.soporte2 = req.body.soporte2;
+                sesionPlay.ganador = req.body.ganador;
+                sesionPlay.soporte1 = req.body.soporte1;
+                sesionPlay.soporte2 = req.body.soporte2;
 
-                await userplayonline.updateOne({ sesionID: req.body.sesionID }, datos);
+                var userPlay = new userplayonline(sesionPlay);
+                await userPlay.save();
+
+                //await userplayonline.updateOne({ sesionID: req.body.sesionID }, datos);
 
                 await userplayonline.updateMany({ $and: [{ sesionID: req.body.sesionID }, { finalizada: false }]}, { finalizada: true, fin: Date.now()});
 
