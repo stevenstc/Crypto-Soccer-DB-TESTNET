@@ -207,9 +207,17 @@ app.post('/api/v1/sesion/crear/',async(req,res) => {
             
         });
 
-        await playOnline.save();
+        if(req.body.u1 === req.body.u2){
+            var datos = {}
+            datos.active = false;
+            update = await user.updateOne({ username: req.body.u1 }, datos);
+        }else{
+            await playOnline.save();
 
-        res.send("true");
+            res.send("true");
+        }
+
+        
 
     }else{
         res.send("false")
@@ -246,6 +254,8 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
     
 });
+
+
 
 app.get('/api/v1/user/teams/:wallet',async(req,res) => {
 
@@ -1629,8 +1639,6 @@ app.get('/api/v1/app/init/',async(req,res) => {
 
     if(req.query.version){
         var aplicacion = await appstatuses.find({version: req.query.version});
-
-        console.log(aplicacion)
 
         if (aplicacion.length >= 1) {
 
