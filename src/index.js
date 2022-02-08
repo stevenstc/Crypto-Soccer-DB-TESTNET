@@ -234,15 +234,16 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
         sesion = sesion[0];
 
         if(!sesion.finalizada){
+            var datos = sesion;
 
-            sesion.fin = Date.now();
+            datos.fin = Date.now();
             if(req.body.finalizada === "true"){
-                sesion.finalizada = true
+                datos.finalizada = true
             }
-            sesion.ganador = req.body.ganador;
-            sesion.soporte1 = req.body.soporte1;
+            datos.ganador = req.body.ganador;
+            datos.soporte1 = req.body.soporte1;
 
-            await userplayonline.updateOne({ sesionID: req.body.sesionID }, sesion);
+            await userplayonline.updateOne({ sesionID: req.body.sesionID }, datos);
 
             res.send("true");
         }else{
