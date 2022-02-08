@@ -230,6 +230,7 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
     if(req.body.sesionID && req.body.token == TOKEN ){
 
         var sesion = await userplayonline.find({sesionID: req.body.sesionID});
+        console.log(req.body)
         sesion = sesion[0];
 
         if(!sesion.finalizada){
