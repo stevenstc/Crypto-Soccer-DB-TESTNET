@@ -1692,7 +1692,7 @@ app.get('/api/v1/app/init/',async(req,res) => {
     
             await aplicacion.save();
 
-            aplicacion = await appstatuses.find({});
+            aplicacion = await appstatuses.find({version: req.query.version});
             aplicacion = aplicacion[aplicacion.length-1]
             res.send(aplicacion.liga+","+aplicacion.mantenimiento+","+aplicacion.version+","+aplicacion.link+","+aplicacion.duelo+","+aplicacion.torneo+","+aplicacion.updates+",30");
                     
