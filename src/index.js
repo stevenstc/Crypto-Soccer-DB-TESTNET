@@ -229,13 +229,14 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
     if(req.body.sesionID && req.body.token == TOKEN ){
 
-        var sesion = await userplayonline.find({sesionID: req.body.sesionID});
-        console.log(req.body)
-        if(sesion.length > 0){
-            sesion = sesion[sesion.length-1];
+        var sesionPlay = await userplayonline.find({sesionID: req.body.sesionID},{_id:0});
 
-            if(!sesion.finalizada){
-                var datos = sesion;
+        console.log(sesionPlay)
+        if(sesionPlay.length > 0){
+            sesionPlay = sesionPlay[sesionPlay.length-1];
+
+            if(!sesionPlay.finalizada){
+                var datos = sesionPlay;
 
                 datos.fin = Date.now();
                 if(req.body.finalizada === "true"){
@@ -243,6 +244,7 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
                 }
                 datos.ganador = req.body.ganador;
                 datos.soporte1 = req.body.soporte1;
+                datos.soporte2 = req.body.soporte2;
 
                 await userplayonline.updateOne({ sesionID: req.body.sesionID }, datos);
 
