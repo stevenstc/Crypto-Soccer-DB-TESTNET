@@ -1,4 +1,3 @@
-
 const express = require('express');
 const fetch = require('node-fetch');
 const mongoose = require('mongoose');
@@ -9,6 +8,8 @@ require('dotenv').config();
 var moment = require('moment');
 const BigNumber = require('bignumber.js');
 const uc = require('upper-case');
+
+const abiMarket = require("./abiMarket.js");
 
 //console.log(("HolA Que Haze").toUpperCase())
 //console.log(("HolA Que Haze").toLowerCase())
@@ -21,27 +22,9 @@ const Cryptr = require('cryptr');
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-const abiMarket = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"admin","type":"address"}],"name":"AdminRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"admin","type":"address"}],"name":"NewAdmin","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[{"internalType":"address","name":"_tokenERC20","type":"address"}],"name":"ChangePrincipalToken","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_tokenERC20","type":"address"}],"name":"ChangeTokenOTRO","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_nombre","type":"string"},{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"bool","name":"_acumulable","type":"bool"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"addItem","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"addOption","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"admin","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"adminWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"address","name":"_user","type":"address"}],"name":"asignarCoinsTo","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"buyCoins","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"}],"name":"buyItem","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"},{"internalType":"string","name":"_nombre","type":"string"},{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"bool","name":"_acumulable","type":"bool"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"editItem","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_id","type":"uint256"},{"internalType":"string","name":"_tipo","type":"string"},{"internalType":"bool","name":"_ilimitado","type":"bool"},{"internalType":"uint256","name":"_cantidad","type":"uint256"}],"name":"editOption","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"gastarCoins","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"},{"internalType":"address","name":"_user","type":"address"}],"name":"gastarCoinsfrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"inventario","outputs":[{"internalType":"string","name":"nombre","type":"string"},{"internalType":"string","name":"tipo","type":"string"},{"internalType":"uint256","name":"valor","type":"uint256"},{"internalType":"bool","name":"acumulable","type":"bool"},{"internalType":"bool","name":"ilimitado","type":"bool"},{"internalType":"uint256","name":"cantidad","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"investors","outputs":[{"internalType":"bool","name":"registered","type":"bool"},{"internalType":"string","name":"correo","type":"string"},{"internalType":"uint256","name":"balance","type":"uint256"},{"internalType":"uint256","name":"gastado","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"items","outputs":[{"internalType":"string","name":"nombre","type":"string"},{"internalType":"string","name":"tipo","type":"string"},{"internalType":"uint256","name":"valor","type":"uint256"},{"internalType":"bool","name":"acumulable","type":"bool"},{"internalType":"bool","name":"ilimitado","type":"bool"},{"internalType":"uint256","name":"cantidad","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"largoInventario","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"largoItems","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"largoOptions","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address payable","name":"_newadmin","type":"address"}],"name":"makeNewAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"_oldadmin","type":"address"}],"name":"makeRemoveAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"opciones","outputs":[{"internalType":"string","name":"tipo","type":"string"},{"internalType":"bool","name":"ilimitados","type":"bool"},{"internalType":"uint256","name":"cantidad","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address payable","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"redimETH","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"redimOTRO","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"redimTokenPrincipal01","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"redimTokenPrincipal02","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_correo","type":"string"}],"name":"registro","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_value","type":"uint256"}],"name":"sellCoins","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"token","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address payable","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_correo","type":"string"}],"name":"updateRegistro","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"string","name":"_correo","type":"string"}],"name":"updateRegistroMaster","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"ventaPublica","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
+var superUser = require("./superUser");
 
-
-var superUser = [
-    "0x11134Bd1dd0219eb9B4Ab931c508834EA29C0F8d",
-    "0x306A75c3E33603f69F4178C2c40EAF0734DE4F64"
-];
-
-var testers = ["0x11134Bd1dd0219eb9B4Ab931c508834EA29C0F8d","0xe7064D523fD9f95ce9E66274E8ca77B4AA505aC1","0xe605646007FFd2851744fa65c7116a3a995ED287","0x48fC3f756d15ca6aB00e45B5c2fD4613C0781611","0x39e3c49De002E05b4F64bB3F33E4d92e3990a9D1","0x306A75c3E33603f69F4178C2c40EAF0734DE4F64",
-    "0x211eF420C5aec2476Fa17E323474373fcC0229Fe","0x1180868C4BA7391118122d6B2d8152354Bce7D75",
-    "0x43e3B4631d8F9850135759304Ee8AAbF241a6cd8","0x15c1eEA37a0B87Af59175c0159264b42A0E2E744",
-    "0x621132D2b308Fc5898201ef133290dB0E0BA5BDC","0x4437C517F1ddaEb22Bff670eD31f02E4Ec585930",
-    "0x0C47e44c183C3Ec10a390a5b2ca4f6897243087a","0x27faCf8D3fe82F6a466877fcFf52cadadf0C5313",
-    "0x838A885b7f7aD295F6F884dEB26E801Ac5488ac7","0x206C247B47693D0B1334933fe075fcCDd8297283",
-    "0x454E6E0c65593d6cDe42dE4f02eF11EA1156c804","0x53b66cCD02d280d0b52fb3486f9Fc547C0e7f78f",
-    "0x0e4aD10F1170573D2ec94352749b09f31d40ADea","0xd4507F14AB5494D796eD35577cf456fDbaf42852",
-    "0x3e04C5ED31220EC5e48EeAAE3202958b6bE73f3A","0xC67EaaA52342188AFe897108Bba3b71707f3BCBe",
-    "0xd26d7AcB0210a0C031B1fcF1A7F403Acdfb4ABe5","0x743eD748673C6F40d2b9793A8554Ecdb010Eb618",
-    "0x0e0a924d7F103B647EC7aE512b39f3B83bCeEd2F","0x276C1f59E1e1e01373B5d795Fa920fE066CcEea6",
-    "0x29d280ef942E0D8B92F1814E4Aa9797a6bE3866a"
-]
+var testers = require("./betaTesters")
 
 const app = express();
 app.use(cors());
@@ -81,9 +64,6 @@ const imgDefault = "https://cryptosoccermarket.com/assets/img/default-user-csg.p
 let web3 = new Web3(RED);
 let cuenta = web3.eth.accounts.privateKeyToAccount(PEKEY);
 
-var nonceGlobal = 0;
-var used = false;
-
 web3.eth.accounts.wallet.add(PEKEY);
 
 const contractMarket = new web3.eth.Contract(abiMarket,addressContract);
@@ -109,121 +89,16 @@ var formatoliga = 'MDYYYY';
 mongoose.connect(uri, options).then(
     async() => { console.log("Conectado Exitodamente!");
     console.log("nonce: "+await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address));
-    nonceGlobal = await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address);
+
 },
     err => { console.log(err); }
   );
 
-const user = mongoose.model('usuarios', {
-    wallet: String,
-    email: String,
-    password: String,
-    username: String,
-    active: Boolean,
-    payAt: Number,
-    checkpoint: Number,
-    reclamado: Boolean,
-    balance: Number,
-    ingresado: Number,
-    retirado: Number,
-    deposit: [{
-      amount: Number,
-      date: Number,
-      finalized: Boolean,
-      txhash: String
-
-    }],
-    retiro: [{
-      amount: Number,
-      date: Number,
-      done: Boolean,
-      dateSend: Number,
-      txhash: String
-
-    }],
-    txs: [String],
-    pais: String,
-    imagen: String
-
-});
-
-const appstatuses = mongoose.model('appstatuses', {
-    version: String,
-    torneo: String,
-    duelo: String,
-    liga: String,
-    mantenimiento: String,
-    link: String,
-    entregado: Number,
-    ganado: Number, 
-    ganadoliga: Number,
-    linea: [Number],
-    updates: [String],
-    misiondiaria: Boolean,
-    apuestas:[Boolean]
-    
-});
-
-const appdatos = mongoose.model('appdatos', {
-
-    entregado: Number,
-    ganado: Number, 
-    ganadoliga: Number,
-    misiondiaria: Boolean,
-    finliga: Number
-
-});
-
-
-const playerData = mongoose.model('playerdatas', {
-    wallet: String,
-    BallonSet: String,
-    CupsWin: Number,
-    DificultConfig: String,
-    DiscountMomment: String,
-    DuelsOnlineWins: String,
-    DuelsPlays: String,
-    FriendLyWins: String,
-    FriendlyTiming: String,
-    LastDate: String,
-    LeagueDate: String,
-    LeagueOpport: String,
-    LeagueTimer: String,
-    LeaguesOnlineWins: String,
-    MatchLose: String,
-    MatchWins: String,
-    MatchesOnlineWins: String,
-    Music: String,
-    PhotonDisconnected: String,
-    PlaysOnlineTotal: String,
-    PlaysTotal: String,
-    QualityConfig: String,
-    StadiumSet: String,
-    TournamentsPlays: String,
-    Version: String,
-    VolumeConfig: String,
-    Plataforma: String,
-    GolesEnContra: String,
-    GolesAFavor: String,
-    FirstTime: String,
-    DrawMatchs: String,
-    DrawMatchsOnline: String,
-    LeaguePlay: String,
-    Analiticas: String,
-    Fxs: String,
-    UserOnline: Number,
-    Resolucion: String,
-    Fullscreen: String,
-    Soporte: String
-
-});
-
-
-const userplayonline = mongoose.model('userplayonline', {
-    wallet: String,
-    sesionPlayID: [String]
-});
-
+const user = require("./modelos/usuarios");
+const appstatuses = require("./modelos/appstatuses");
+const appdatos = require("./modelos/appdatos");
+const playerData = require("./modelos/playerdatas");
+const userplayonline = require("./modelos/userplayonline")
 
 app.get('/',async(req,res) => {
 
@@ -235,113 +110,111 @@ app.get('/api',async(req,res) => {
     res.send("Conectado y funcionando");
 });
 
-app.get('/api/v1',async(req,res) => {
+app.get('/api/v1', require("./v1/funcionando"));
 
-    res.send("true");
-});
+app.use('/api/v2', require("./v2"));
 
-app.get('/api/v1/tiempo',async(req,res) => {
-
-	data = moment(Date.now()).format('MM-DD-YYYY/HH:mm:ss')
-
-    res.send(data);
+app.get('api/v1/tiempo', async(req,res) => {
+    res.send(moment(Date.now()).format('MM-DD-YYYY/HH:mm:ss'));
 });
 
 app.get('/api/v1/date',async(req,res) => {
-
-	data = ""+Date.now();
-
-    res.send(data);
+    res.send(Date.now()+"");
 });
 
 app.get('/api/v1/convertdate/:date',async(req,res) => {
 
-    date = parseInt(req.params.date);
-
-	data = moment(date).format('MM-DD-YYYY/HH:mm:ss');
-
-    res.send(data); 
+    res.send(moment(parseInt(req.params.date)).format('MM-DD-YYYY/HH:mm:ss')); 
 });
 
 app.get('/api/v1/datefuture',async(req,res) => {
 
-	data = Date.now()+604800*1000;
-    data = ""+data;
-
-    res.send(data); 
+	var data = Date.now()+604800*1000;
+    res.send(data+""); 
 });
 
-app.get('/api/v1/sesion/active/:wallet',async(req,res) => {
+app.get('/api/v1/sesion/consultar/',async(req,res) => {
 
-    let wallet =  req.params.wallet.toLowerCase();
-    let sesion = req.query.sesion;
+    if( req.query.id ){
 
-    if(!web3.utils.isAddress(wallet)){
-        console.log("wallet incorrecta: "+wallet)
-        res.send("0");
+        var sesion = await userplayonline.find({ id: req.query.id });
+        res.send(sesion[0]);
     }else{
-            usuario = await userplayonline.find({ wallet: uc.upperCase(wallet) });
-
-        if (usuario.length >= 1) {
-            usuario = usuario[0];
-
-            var respuesta = "false"
-
-            for (let index = 0; index < usuario.sesionPlayID.length; index++) {
-                if(sesion === usuario.sesionPlayID[index]){
-                   
-                    respuesta = "true"
-                }
-                
-            }
-
-            res.send(respuesta);
-
-
-        }else{
-            res.send("false");    
-            
-        }
-
+        res.send("null");
     }
 
+});
+
+app.get('/api/v1/sesion/consultar/saque',async(req,res) => {
+
+    if( req.query.id ){
+
+        var sesion = await userplayonline.find({ id: req.query.id });
+        res.send(sesion[0].saqueInicial+"");
+    }else{
+        res.send("null");
+    }
+
+});
+
+app.post('/api/v1/sesion/crear/',async(req,res) => {
+
+    if(req.body.sesionID && req.body.token == TOKEN ){
+
+        var ids = await userplayonline.find({});
+
+        var playOnline = new userplayonline({
+            id: ids.length,
+            sesionID: req.body.sesionID,
+            incio: Date.now(),
+            fin: 0,
+            finalizada: false,
+            ganador: "",
+            tipo: req.body.tipo,
+            saqueInicial: Math.floor(Math.random() * 2),
+            csc: req.body.csc,
+            u1: req.body.u1,
+            u2: req.body.u2,
+            soporte1: "",
+            soporte2: ""
+            
+        });
+
+        await playOnline.save();
+
+        res.send(playOnline.id);
+
+    }else{
+        res.send("null")
+    }
     
 });
 
-app.post('/api/v1/sesion/create/:wallet',async(req,res) => {
+app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
-    let wallet =  req.params.wallet.toLowerCase();
+    if(req.body.id && req.body.token == TOKEN ){
 
-    if( req.body.token == TOKEN && web3.utils.isAddress(wallet)){
+        var sesion = await userplayonline.find({id: req.body.id});
+        sesion = sesion[0];
 
-            usuario = await userplayonline.find({ wallet: uc.upperCase(wallet) });
+        if(!sesion.finalizada){
 
-            var respuesta = "CSC:"+Math.floor(Math.random() * 999)+":"+Math.floor(Math.random() * 999)+":"+Math.floor(Math.random() * 999);
+            sesion.fin = Date.now();
+            if(req.body.finalizada === "true"){
+                sesion.finalizada = true
+            }
+            sesion.ganador = req.body.ganador;
+            sesion.soporte1 = req.body.soporte1;
 
-        if (usuario.length >= 1) {
-            usuario = usuario[0];
+            await userplayonline.updateOne({ id: req.body.id }, sesion);
 
-            usuario.sesionPlayID.push(respuesta);
-        
-            await user.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
-        
-            res.send(respuesta);
-
-
+            res.send("true");
         }else{
-
-            var users = new userplayonline({
-                wallet: uc.upperCase(wallet),   
-                sesionPlayID: [respuesta]
-            });
-
-            await users.save();
-   
-            res.send(respuesta);
+            res.send("false");
         }
 
     }else{
-        res.send("false");
+        res.send("false")
     }
 
     
@@ -363,7 +236,6 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
         inventario[index] = 0;
     }
         
-
     if (!testNet) {
         for (let index = 0; index < result; index++) {
 
@@ -532,10 +404,10 @@ app.post('/api/v1/asignar/:wallet',async(req,res) => {
                 datos.deposit.push({amount: req.body.coins,
                     date: Date.now(),
                     finalized: true,
-                    txhash: "Win coins: "+req.body.coins+" # "+req.params.wallet
+                    txhash: "Win coins: "+req.body.coins+" # "+uc.upperCase(wallet)
                 })
                 update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
-                console.log("Win coins: "+req.body.coins+" # "+req.params.wallet);
+                console.log("Win coins: "+req.body.coins+" # "+uc.upperCase(wallet));
                 res.send("true");
             }else{
                 res.send("false");
@@ -603,11 +475,11 @@ app.post('/api/v1/quitar/:wallet',async(req,res) => {
                         date: Date.now(),
                         done: true,
                         dateSend: Date.now(),
-                        txhash: "Lost coins: "+req.body.coins+" # "+req.params.wallet
+                        txhash: "Lost coins: "+req.body.coins+" # "+uc.upperCase(wallet)
                   
                       })
                     update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
-                    console.log("Lost coins: "+req.body.coins+" # "+req.params.wallet);
+                    console.log("Lost coins: "+req.body.coins+" # "+uc.upperCase(wallet));
                     res.send("true");
 
                 }else{
@@ -857,7 +729,7 @@ async function monedasAlMarket(coins,wallet,intentos){
         .asignarCoinsTo(coins, wallet)
         .send({ from: web3.eth.accounts.wallet[0].address, gas: COMISION, gasPrice: gases })
         .then(result => {
-            nonceGlobal = nonceGlobal+1;
+
             console.log("Monedas ENVIADAS en "+intentos+" intentos");
             
             user.find({ wallet: uc.upperCase(wallet) }).then(usuario =>{
@@ -1002,8 +874,6 @@ async function recompensaDiaria(wallet){
     return coins;
 
 }
-
-
 
 app.get('/api/v1/sendmail',async(req,res) => {
     //console.log(req.query);
@@ -1228,10 +1098,10 @@ app.get('/api/v1/misionesdiarias/tiempo/:wallet',async(req,res) => {
                     cuando = "Later than";
                 }
 
-                res.send(moment(usuario.checkpoint).format('['+cuando+',] D/M/YY HH:mm:ss [UTC]'));
+                res.send(moment(usuario.checkpoint).format('['+cuando+',] D/M/YY HH:mm:ss [,UTC]'));
                 
             }else{
-                res.send(moment(Date.now()).format('['+cuando+',] D/M/YY HH:mm:ss [UTC]'));
+                res.send(moment(Date.now()).format('['+cuando+',] D/M/YY HH:mm:ss [,UTC]'));
             }
         
     }
@@ -1532,14 +1402,19 @@ app.get('/api/v1/user/ban/:wallet',async(req,res) => {
     if(web3.utils.isAddress(wallet)){
 
         usuario = await user.find({ wallet: uc.upperCase(wallet) });
+        
+  
+            if (usuario.length >= 1) {
+                usuario = usuario[0];
 
-        if (usuario.length >= 1) {
-            usuario = usuario[0];
+                res.send(!usuario.active+"");
+            }else{
+                res.send("false");
+            }
 
-            res.send(!usuario.active+"");
-        }else{
-            res.send("true");
-        }
+
+
+            
     }else{
         res.send("true");
     }
@@ -1745,7 +1620,7 @@ app.get('/api/v1/app/init/',async(req,res) => {
                     aplicacion.liga = "off"
 
                 }else{
-                    aplicacion.liga = "on"
+                    ////aplicacion.liga = "on"
                 }
 
             }else{
@@ -1764,8 +1639,8 @@ app.get('/api/v1/app/init/',async(req,res) => {
 
             }
 
-            aplicacion = new appstatuses(aplicacion);
-            await aplicacion.save();
+            await appstatuses.updateOne({version: req.query.version}, aplicacion);
+
 
             aplicacion = await appstatuses.find({version: req.query.version});
             aplicacion = aplicacion[aplicacion.length-1]
@@ -1780,7 +1655,7 @@ app.get('/api/v1/app/init/',async(req,res) => {
                 torneo: "on",
                 duelo: "on",
                 liga: "on",
-                mantenimiento: "off",
+                mantenimiento: "on",
                 link: "https://cryptosoccermarket.com/download",
                 linea: [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                 updates:["V"+req.query.version+" READY!","thanks for download",moment(Date.now()).format('DD/MM/YYYY HH:mm:ss [UTC]')],
@@ -2033,7 +1908,9 @@ app.post('/api/v1/reset/leadboard',async(req,res) => {
 
         //var dataUsuarios = await playerData.find({}).sort([['CupsWin', 1]]);
 
-        await playerData.find({}).sort([['CupsWin', 1]]).update({ $set: {CupsWin:0}}).exec();
+        await playerData.find({}).update({ $set: {CupsWin:0}}).exec();
+        await playerData.find({}).update({ $set: {LeagueOpport:"0"}}).exec();
+        
         
         res.send("true");
     }else{
@@ -2958,5 +2835,66 @@ app.put('/prueba/', (req, res, next) => {
     res.send(respuesta);
 
 });
+
+app.get('/api/v1/consultar/wcsc/lista/', async(req, res, next) => {
+
+   var usuarios;
+   var csc = "";
+
+   var cantidad = parseInt(req.query.cantidad);
+    if(req.query.cantidad){
+        if(cantidad > 300){
+            cantidad = 300;
+        }
+            usuarios = await user.find({},{password: 0, _id: 0, checkpoint:0, ingresado: 0, retirado: 0, deposit: 0, retiro:0, txs:0,email:0,reclamado:0}).limit(cantidad).sort([['balance', -1]]);
+            csc = true
+        
+    }else{
+        usuarios = await user.find({},{password: 0, _id: 0, checkpoint:0, ingresado: 0, retirado: 0, deposit: 0, retiro:0, txs:0,email:0,reclamado:0}).sort([['balance', -1]]);
+        csc = false
+    }
+
+    //console.log(usuarios.length)
+
+    var julio = "";
+    var text = "";
+
+    for (let index = 0; index < usuarios.length; index++) {
+        if (csc) {
+            text = await consultarCscExchange((usuarios[index].wallet).toLowerCase());
+        }else{
+            text = "<a id='"+usuarios[index].wallet+"' href='/api/v1/consultar/csc/exchange/"+usuarios[index].wallet+"'>consultar</a>";
+        }
+        
+        julio = julio+"<tr><td>"+usuarios[index].username+"</td><td>"+usuarios[index].active+"</td><td>"+usuarios[index].wallet+"</td><td>"+usuarios[index].balance+"</td><td>"+text+"</td></tr>";
+        
+    }
+
+    res.send('<table border="1"><tr><th>username</th><th>activo</th><th>wallet</th><th>GAME WCSC</th> <th>EXCHANGE CSC</th> </tr>'+julio+'</table>');
+
+});
+
+async function consultarCscExchange(wallet){
+    var investor = await contractMarket.methods
+                .investors(wallet.toLowerCase())
+                .call({ from: cuenta.address });
+    return (investor.balance-investor.gastado)/10**18 ; 
+}
+
+app.get('/api/v1/consultar/csc/exchange/:wallet', async(req, res, next) => {
+
+    var csc = await consultarCscExchange(req.params.wallet);
+ 
+    res.send(csc+'');
+ 
+ });
+
+ app.get('/api/v1/consultar/numero/aleatorio', async(req, res, next) => {
+
+ 
+    res.send(Math.floor(Math.random() * 2)+'');
+ 
+ });
+
 
 app.listen(port, ()=> console.log('Escuchando Puerto: ' + port))
