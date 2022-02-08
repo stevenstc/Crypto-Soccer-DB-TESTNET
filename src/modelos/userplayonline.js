@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 module.exports = mongoose.model('userplayonline', {
-  id: String,
+  identificador: String,
   sesionID: String,
   incio: Number,
   fin: Number,
