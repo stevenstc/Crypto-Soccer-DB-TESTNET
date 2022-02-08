@@ -231,15 +231,17 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
         var sesionPlay = await userplayonline.find({sesionID: req.body.sesionID},{_id:0});
 
-        console.log(sesionPlay)
+        console.log(req.body)
+        console.log(sesionPlay.length > 0)
         if(sesionPlay.length > 0){
             sesionPlay = sesionPlay[sesionPlay.length-1];
 
+            console.log(sesionPlay)
             if(!sesionPlay.finalizada){
                 var datos = sesionPlay;
 
                 datos.fin = Date.now();
-                if(req.body.finalizada === "true"){
+                if(req.body.finalizada === "false"){
                     datos.finalizada = true
                 }
                 datos.ganador = req.body.ganador;
@@ -247,6 +249,8 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
                 datos.soporte2 = req.body.soporte2;
 
                 await userplayonline.updateOne({ sesionID: req.body.sesionID }, datos);
+
+                await userplayonline.update({ finalizada: false }, { finalizada: true });
 
                 res.send("true");
             }else{
