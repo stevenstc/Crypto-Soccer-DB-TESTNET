@@ -11,16 +11,29 @@ ruta
   .post(require("../v1/funcionando"));
 
 ruta
-  .route("/tiempo")
+  .route('/tiempo')
   .get(async(req,res) => {
     res.send(moment(Date.now()).format('MM-DD-YYYY/HH:mm:ss'));
   });
 
 ruta
-  .route("/date")
+  .route('/date')
   .get(async(req,res) => {
   
     res.send(Date.now()+"");
+  });
+
+ruta
+  .route('/convertdate/:date')
+  .get(async(req,res) => {
+    res.send(moment(parseInt(req.params.date)).format('MM-DD-YYYY/HH:mm:ss')); 
+});
+
+ruta
+  .route('/datefuture')
+  .get(async(req,res) => {
+
+    res.send( Date.now()+604800*1000+""); 
   });
 
 module.exports = ruta;

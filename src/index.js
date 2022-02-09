@@ -18,8 +18,6 @@ const abiMarket = require("./abiMarket.js");
 
 //console.log(cosa["cosita"].replace(",","."))
 
-const Cryptr = require('cryptr');
-
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 var superUser = require("./superUser");
@@ -37,7 +35,6 @@ app.use(bodyParser.text());
 const port = process.env.PORT || 3004;
 const PEKEY = process.env.APP_PRIVATEKEY;
 const TOKEN = process.env.APP_TOKEN;
-const cryptr = new Cryptr(process.env.APP_MAIL);
 
 const TokenEmail = "nuevo123";
 const uri = process.env.APP_URI;
@@ -147,8 +144,8 @@ app.get('/api/v1/sesion/consultar/',async(req,res) => {
     }else{
 
         var sesion = await userplayonline.find({ },{_id:0, soporte1:0,soporte2:0}).sort({identificador: 1});
-        console.log(sesion[0].identificador);
-        console.log(sesion[sesion.length-1].identificador);
+        //console.log(sesion[0].identificador);
+        //console.log(sesion[sesion.length-1].identificador);
         if(sesion.length > 0){
             res.send(sesion[sesion.length-1]);
         }else{
@@ -164,7 +161,7 @@ app.get('/api/v1/sesion/consultar/saque',async(req,res) => {
 
     if( req.query.sesionID ){
 
-        var sesion = await userplayonline.find({ $and: [{sesionID: req.query.sesionID },{finalizada: false}] },{_id:0}).sort({identificador: 1});
+        var sesion = await userplayonline.find({sesionID: req.query.sesionID },{_id:0}).sort({identificador: 1});
 
         if(sesion.length > 0){
             res.send(sesion[sesion.length-1].saqueInicial+"");
@@ -182,11 +179,34 @@ app.get('/api/v1/sesion/consultar/id',async(req,res) => {
 
     if( req.query.sesionID ){
  
-        var sesion = await userplayonline.find({ $and: [{sesionID: req.query.sesionID },{finalizada: false}] },{_id:0}).sort({identificador: 1});
-        console.log(sesion);
-        console.log(sesion[sesion.length-1].identificador);
+        var sesion = await userplayonline.find({ sesionID: req.query.sesionID },{_id:0}).sort({identificador: 1});
+        console.log(req.query.sesionID);
+        //console.log(sesion[sesion.length-1].identificador);
         if(sesion.length > 0){
             res.send(sesion[sesion.length-1].identificador+"");
+        }else{
+            res.send("null");
+        }
+        
+    }else{
+        res.send("null");
+    }
+
+});
+
+app.get('/api/v1/sesion/consultar/porid',async(req,res) => {
+
+    if( req.query.id ){
+        var soporte = 0;
+        if(req.query.soporte){
+            soporte = 1;
+        }
+ 
+        var sesion = await userplayonline.find({identificador: req.query.id},{__v:0,_id:0,soporte1:soporte,soporte2:soporte});
+        //console.log(sesion);
+        //console.log(sesion[sesion.length-1].identificador);
+        if(sesion.length > 0){
+            res.send(sesion[sesion.length-1]);
         }else{
             res.send("null");
         }
@@ -282,8 +302,6 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
     
 });
-
-
 
 app.get('/api/v1/user/teams/:wallet',async(req,res) => {
 
