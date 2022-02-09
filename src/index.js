@@ -198,9 +198,9 @@ app.get('/api/v1/sesion/consultar/turno',async(req,res) => {
 
 app.post('/api/v1/sesion/actualizar/turno',async(req,res) => {
 
-    if( req.query.sesionID && req.body.token == TOKEN){
+    if( req.body.sesionID && req.body.token == TOKEN){
 
-        var sesion = await userplayonline.find({sesionID: req.query.sesionID }).sort({identificador: 1});
+        var sesion = await userplayonline.find({sesionID: req.body.sesionID }).sort({identificador: 1});
 
         if(sesion.length > 0){
             if(sesion[sesion.length-1].turno === "1"){
