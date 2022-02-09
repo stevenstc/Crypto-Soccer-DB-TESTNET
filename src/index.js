@@ -18,7 +18,7 @@ const abiMarket = require("./abiMarket.js");
 
 //console.log(cosa["cosita"].replace(",","."))
 
-var aleatorio = 0;
+var aleatorio = 1;
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -178,6 +178,51 @@ app.get('/api/v1/sesion/consultar/saque',async(req,res) => {
 
 });
 
+app.get('/api/v1/sesion/consultar/turno',async(req,res) => {
+
+    if( req.query.sesionID ){
+
+        var sesion = await userplayonline.find({sesionID: req.query.sesionID },{_id:0}).sort({identificador: 1});
+
+        if(sesion.length > 0){
+            res.send(sesion[sesion.length-1].turno+"");
+        }else{
+            res.send("null");
+        }
+        
+    }else{
+        res.send("null");
+    }
+
+});
+
+app.post('/api/v1/sesion/actualizar/turno',async(req,res) => {
+
+    if( req.query.sesionID && req.body.token == TOKEN){
+
+        var sesion = await userplayonline.find({sesionID: req.query.sesionID }).sort({identificador: 1});
+
+        if(sesion.length > 0){
+            if(sesion[sesion.length-1].turno === "1"){
+                sesion[sesion.length-1].turno = "2";
+            }else{
+                sesion[sesion.length-1].turno = "1";
+            }
+
+            var userPlay = new userplayonline(sesion[sesion.length-1]);
+            await userPlay.save();
+
+            res.send(sesion[sesion.length-1].turno+"");
+        }else{
+            res.send("null");
+        }
+        
+    }else{
+        res.send("null");
+    }
+
+});
+
 app.get('/api/v1/sesion/consultar/id',async(req,res) => {
 
     if( req.query.sesionID ){
@@ -243,6 +288,7 @@ app.post('/api/v1/sesion/crear/',async(req,res) => {
             ganador: "",
             tipo: req.body.tipo,
             saqueInicial: aleatorio,
+            turno: aleatorio,
             csc: req.body.csc,
             u1: req.body.u1,
             u2: req.body.u2,
@@ -251,11 +297,11 @@ app.post('/api/v1/sesion/crear/',async(req,res) => {
             
         });
 
-        if(aleatorio === 0){
+        if(aleatorio === 2){
             aleatorio = 1;
 
         }else{
-            aleatorio = 0;
+            aleatorio = 1;
 
         }
         

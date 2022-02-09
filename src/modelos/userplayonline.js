@@ -9,6 +9,7 @@ module.exports = mongoose.model('userplayonline', {
   ganador: String,
   tipo: String,
   saqueInicial: String,
+  turno: String,
   csc: Number,
   u1: String,
   u2: String,
