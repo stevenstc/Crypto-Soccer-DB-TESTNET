@@ -97,7 +97,8 @@ const user = require("./modelos/usuarios");
 const appstatuses = require("./modelos/appstatuses");
 const appdatos = require("./modelos/appdatos");
 const playerData = require("./modelos/playerdatas");
-const userplayonline = require("./modelos/userplayonline")
+const userplayonline = require("./modelos/userplayonline");
+const playerdatas = require('./modelos/playerdatas');
 
 app.get('/',async(req,res) => {
 
@@ -225,6 +226,14 @@ app.post('/api/v1/sesion/crear/',async(req,res) => {
 
         var ids = await userplayonline.find({});
 
+        usuario1 = await user.find({ username: req.body.u1 });
+        usuario1 = await playerdatas.find({ wallet: usuario1[0].wallet });
+        usuario1 = usuario1[0];
+
+        usuario2 = await user.find({ username: req.body.u2 });
+        usuario2 = await playerdatas.find({ wallet: usuario2[0].wallet });
+        usuario2 = usuario2[0];
+
         var playOnline = new userplayonline({
             identificador: ids.length,
             sesionID: req.body.sesionID,
@@ -237,8 +246,8 @@ app.post('/api/v1/sesion/crear/',async(req,res) => {
             csc: req.body.csc,
             u1: req.body.u1,
             u2: req.body.u2,
-            soporte1: "",
-            soporte2: ""
+            soporte1: usuario1.Soporte,
+            soporte2: usuario2.Soporte
             
         });
 
@@ -289,9 +298,27 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
                     datos.finalizada = true
                 }
                 sesionPlay.ganador = req.body.ganador;
-                sesionPlay.soporte1 = req.body.soporte1;
-                sesionPlay.soporte2 = req.body.soporte2;
+                if(req.body.soporte1 === ""){
+                    usuario1 = await user.find({ username: req.body.u1 });
+                    usuario1 = await playerdatas.find({ wallet: usuario1[0].wallet });
+                    usuario1 = usuario1[0];
 
+                    sesionPlay.soporte1 = usuario1.Soporte;
+                }else{
+                    sesionPlay.soporte1 = req.body.soporte1;
+                }
+
+                if(req.body.soporte2 === ""){
+                    usuario2 = await user.find({ username: req.body.u2 });
+                    usuario2 = await playerdatas.find({ wallet: usuario2[0].wallet });
+                    usuario2 = usuario2[0];
+
+                    sesionPlay.soporte2 = usuario2.Soporte;
+                }else{
+                    sesionPlay.soporte2 = req.body.soporte2;
+                }
+
+                
                 var userPlay = new userplayonline(sesionPlay);
                 await userPlay.save();
 
