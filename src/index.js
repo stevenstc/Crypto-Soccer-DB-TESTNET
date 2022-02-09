@@ -286,7 +286,7 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
                 //await userplayonline.updateOne({ sesionID: req.body.sesionID }, datos);
 
-                await userplayonline.updateMany({ $and: [{ sesionID: req.body.sesionID }, { finalizada: false }]}, { finalizada: true, fin: Date.now(), ganador: "No finalizado"});
+                await userplayonline.updateMany({ $and: [{ sesionID: req.body.sesionID }, { finalizada: false },{ganador:""}]}, { finalizada: true, fin: Date.now(), ganador: "No finalizado"});
 
                 res.send("true");
             }else{
