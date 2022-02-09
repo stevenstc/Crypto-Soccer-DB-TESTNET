@@ -294,10 +294,9 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
             if(!sesionPlay.finalizada){
 
                 sesionPlay.fin = Date.now();
-                if(req.body.finalizada === "false"){
-                    datos.finalizada = true
-                }
+                datos.finalizada = true
                 sesionPlay.ganador = req.body.ganador;
+
                 if(req.body.soporte1 === ""){
                     usuario1 = await user.find({ username: sesionPlay.u1 });
                     usuario1 = await playerdatas.find({ wallet: usuario1[0].wallet });
@@ -324,7 +323,7 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
 
                 //await userplayonline.updateOne({ sesionID: req.body.sesionID }, datos);
 
-                await userplayonline.updateMany({ $and: [{ sesionID: req.body.sesionID }, { finalizada: false },{ganador:""}]}, { finalizada: true, fin: Date.now(), ganador: "No finalizado"});
+                await userplayonline.updateMany({ $and: [{ sesionID: req.body.sesionID }, { finalizada: false }]}, { finalizada: true, fin: Date.now(), ganador: "No finalizado"});
 
                 res.send("true");
             }else{
