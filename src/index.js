@@ -18,6 +18,8 @@ const abiMarket = require("./abiMarket.js");
 
 //console.log(cosa["cosita"].replace(",","."))
 
+var aleatorio = 0;
+
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 var superUser = require("./superUser");
@@ -231,7 +233,7 @@ app.post('/api/v1/sesion/crear/',async(req,res) => {
             finalizada: false,
             ganador: "",
             tipo: req.body.tipo,
-            saqueInicial: Math.floor(Math.random() * Math.floor(Math.random() * 3)),
+            saqueInicial: aleatorio,
             csc: req.body.csc,
             u1: req.body.u1,
             u2: req.body.u2,
@@ -239,6 +241,15 @@ app.post('/api/v1/sesion/crear/',async(req,res) => {
             soporte2: ""
             
         });
+
+        if(aleatorio === 0){
+            aleatorio = 1;
+
+        }else{
+            aleatorio = 0;
+
+        }
+        
 
         if(req.body.u1 === req.body.u2){
             var datos = {}
