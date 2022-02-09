@@ -299,7 +299,7 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
                 }
                 sesionPlay.ganador = req.body.ganador;
                 if(req.body.soporte1 === ""){
-                    usuario1 = await user.find({ username: req.body.u1 });
+                    usuario1 = await user.find({ username: sesionPlay.u1 });
                     usuario1 = await playerdatas.find({ wallet: usuario1[0].wallet });
                     usuario1 = usuario1[0];
 
@@ -309,7 +309,7 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
                 }
 
                 if(req.body.soporte2 === ""){
-                    usuario2 = await user.find({ username: req.body.u2 });
+                    usuario2 = await user.find({ username: sesionPlay.u2 });
                     usuario2 = await playerdatas.find({ wallet: usuario2[0].wallet });
                     usuario2 = usuario2[0];
 
