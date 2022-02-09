@@ -286,8 +286,8 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
         var sesionPlay = await userplayonline.find({$and: [{ sesionID: req.body.sesionID }, { finalizada: false }]}).sort([['identificador', 1]]);
 
         if(sesionPlay.length > 0){
-            console.log(sesionPlay.length-1)
-            console.log(sesionPlay[sesionPlay.length-1]);
+            //console.log(sesionPlay.length-1)
+            //console.log(sesionPlay[sesionPlay.length-1]);
 
             sesionPlay = sesionPlay[sesionPlay.length-1];
 
