@@ -722,7 +722,7 @@ async function monedasAlJuego(coins,wallet,intentos){
 
     var usuario = await contractMarket.methods
     .investors(wallet)
-    .call({ from: web3.eth.accounts.wallet[0].address });
+    .call({ from: cuenta.address});
 
     balance = new BigNumber(usuario.balance);
     balance = balance.shiftedBy(-18);
