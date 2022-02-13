@@ -15,7 +15,6 @@ const abiMarket = require("./abiMarket.js");
 //console.log(("HolA Que Haze").toLowerCase())
 
 //var cosa = {cosita: "1,23456"}
-
 //console.log(cosa["cosita"].replace(",","."))
 
 var aleatorio = 1;
