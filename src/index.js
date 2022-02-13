@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const Web3 = require('web3');
-var cors = require('cors')
+var cors = require('cors');
 require('dotenv').config();
 var moment = require('moment');
 const BigNumber = require('bignumber.js');
