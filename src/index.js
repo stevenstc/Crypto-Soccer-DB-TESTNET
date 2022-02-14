@@ -1314,18 +1314,17 @@ app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
             if(usuario.active && parseInt(data.TournamentsPlays) >= 0 && parseInt(data.DuelsPlays) >= 4 && parseInt(data.FriendLyWins) >= 10){
               
 
+                if( (Date.now() < usuario.checkpoint || usuario.checkpoint === 0 || Date.now() >= usuario.checkpoint) && !usuario.reclamado ){
 
-                    if( (Date.now() < usuario.checkpoint || usuario.checkpoint === 0 || Date.now() >= usuario.checkpoint) && !usuario.reclamado ){
+                    //console.log("si cumple mision diaria");
     
-                        //console.log("si cumple mision diaria");
-        
-                        res.send("true");
-                    }else{
+                    res.send("true");
+                }else{
 
-                        res.send("false");
-                        
+                    res.send("false");
+                    
 
-                    }
+                }
 
                       
     
