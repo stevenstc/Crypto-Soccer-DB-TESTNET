@@ -384,7 +384,9 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
     var result = await contractMarket.methods
         .largoInventario(wallet)
         .call({ from: cuenta.address })
-        .catch(err => {console.log(err); return 0})
+        //.catch(err => {console.log(err); return 0})
+
+    console.log(result);
   
     var inventario = [];
 
@@ -400,7 +402,9 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
             var item = await contractMarket.methods
             .inventario(wallet, index)
             .call({ from: cuenta.address })
-            .catch(err => {console.log(err); return 0})
+            .catch(err => {console.log(err); return {nombre: "ninguno"}})
+
+            console.log(item)
     
             if(item.nombre.indexOf("t") === 0){
     
@@ -497,6 +501,119 @@ app.get('/api/v1/formations/:wallet',async(req,res) => {
     }
 
     res.send("1,"+inventario.toString());
+});
+
+app.get('/api/v1/formations-teams/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet.toLowerCase();
+
+    var result = await contractMarket.methods
+        .largoInventario(wallet)
+        .call({ from: cuenta.address });
+  
+    var formaciones = [];
+
+    for (let index = 0; index < 4; index++) {
+        formaciones[index] = 0;
+    }
+
+    if (!testNet) {
+  
+        for (let index = 0; index < result; index++) {
+
+            var item = await contractMarket.methods
+                .inventario(wallet, index)
+                .call({ from: cuenta.address });
+
+
+            if(item.nombre.indexOf("f") === 0){
+
+                formaciones[parseInt(item.nombre.slice(item.nombre.indexOf("f")+1,item.nombre.indexOf("-")))-1] =  1;
+
+            }
+
+        }
+    }
+
+    var result = await contractMarket.methods
+        .largoInventario(wallet)
+        .call({ from: cuenta.address })
+
+    console.log(result);
+  
+    var inventario = [];
+
+    var cantidad = 43;
+
+    for (let index = 0; index < cantidad; index++) {
+        inventario[index] = 0;
+    }
+        
+    if (!testNet) {
+        for (let index = 0; index < result; index++) {
+
+            var item = await contractMarket.methods
+            .inventario(wallet, index)
+            .call({ from: cuenta.address });
+
+            console.log(item)
+    
+            if(item.nombre.indexOf("t") === 0){
+    
+                inventario[parseInt(item.nombre.slice(item.nombre.indexOf("t")+1,item.nombre.indexOf("-")))-1] =  1;
+    
+            }
+    
+        }
+
+    }
+
+    if (quitarLegandarios === "true") { // quitar legendarios
+        for (let index = 0; index < 3; index++) {
+
+            inventario[index] = 0;
+
+        }
+
+    }
+
+    if (quitarEpicos === "true") { // quitar epicos
+
+        for (let index = 3; index < 10; index++) {
+
+            inventario[index] = 0;
+
+        }
+        
+    }
+
+    if (quitarComunes === "true") { // quitar Comunes
+
+        for (let index = 10; index < cantidad; index++) {
+
+            inventario[index] = 0;
+
+        }
+        
+    }
+
+    for (let t = 0; t < testers.length; t++) {
+            
+        if(testers[t].toLowerCase() == wallet){
+            inventario[cantidad] = 1;
+        }
+    }
+
+    for (let t = 0; t < superUser.length; t++) {
+        if(superUser[t].toLowerCase() == wallet){
+            for (let index = 0; index < cantidad; index++) {
+                inventario[index] = 1;
+            }
+        }
+        
+    }
+
+    res.send("1,"+formaciones.toString()+","+inventario.toString());
 });
 
 app.get('/api/v1/coins/:wallet',async(req,res) => {
