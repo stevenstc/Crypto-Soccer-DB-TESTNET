@@ -507,7 +507,8 @@ app.get('/api/v1/formations-teams/:wallet',async(req,res) => {
 
     var largoInventario = await contractMarket.methods
         .largoInventario(wallet)
-        .call({ from: cuenta.address });
+        .call({ from: cuenta.address })
+        .catch(err => console.log(err))
   
     var formaciones = [];
 
@@ -529,7 +530,8 @@ app.get('/api/v1/formations-teams/:wallet',async(req,res) => {
 
             var item = await contractMarket.methods
                 .inventario(wallet, index)
-                .call({ from: cuenta.address });
+                .call({ from: cuenta.address })
+                .catch(() => {return {nombre: "ninguno"}})
 
 
             if(item.nombre.indexOf("f") === 0){
