@@ -84,13 +84,9 @@ const options = { useNewUrlParser: true, useUnifiedTopology: true };
 
 var formatoliga = 'MDYYYY';
 
-mongoose.connect(uri, options).then(
-    async() => { console.log("Conectado Exitodamente!");
-    console.log("nonce: "+await web3.eth.getTransactionCount(web3.eth.accounts.wallet[0].address));
-
-},
-    err => { console.log(err); }
-  );
+mongoose.connect(uri, options)
+    .then(async() => { console.log("Conectado Exitodamente!");})
+    .catch(err => { console.log(err); });
 
 const user = require("./modelos/usuarios");
 const appstatuses = require("./modelos/appstatuses");
