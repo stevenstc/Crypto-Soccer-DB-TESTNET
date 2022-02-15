@@ -60,9 +60,7 @@ const addressContract = process.env.APP_CONTRACT || "0xfF7009EF7eF85447F6A5b3f83
 const imgDefault = "https://cryptosoccermarket.com/assets/img/default-user-csg.png";
 
 let web3 = new Web3(RED);
-let cuenta = web3.eth.accounts.privateKeyToAccount(PEKEY);
-
-console.log(cuenta.address)
+let cuenta = web3.eth.accounts.privateKeyToAccount(PEKEY); 
 
 web3.eth.accounts.wallet.add(PEKEY);
 
@@ -507,19 +505,27 @@ app.get('/api/v1/formations-teams/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet.toLowerCase();
 
-    var result = await contractMarket.methods
+    var largoInventario = await contractMarket.methods
         .largoInventario(wallet)
         .call({ from: cuenta.address });
   
     var formaciones = [];
 
+    var inventario = [];
+
+    var cantidad = 43;
+
     for (let index = 0; index < 4; index++) {
         formaciones[index] = 0;
     }
 
+    for (let index = 0; index < cantidad; index++) {
+        inventario[index] = 0;
+    }
+
     if (!testNet) {
   
-        for (let index = 0; index < result; index++) {
+        for (let index = 0; index < largoInventario; index++) {
 
             var item = await contractMarket.methods
                 .inventario(wallet, index)
@@ -531,32 +537,6 @@ app.get('/api/v1/formations-teams/:wallet',async(req,res) => {
                 formaciones[parseInt(item.nombre.slice(item.nombre.indexOf("f")+1,item.nombre.indexOf("-")))-1] =  1;
 
             }
-
-        }
-    }
-
-    var result = await contractMarket.methods
-        .largoInventario(wallet)
-        .call({ from: cuenta.address })
-
-    console.log(result);
-  
-    var inventario = [];
-
-    var cantidad = 43;
-
-    for (let index = 0; index < cantidad; index++) {
-        inventario[index] = 0;
-    }
-        
-    if (!testNet) {
-        for (let index = 0; index < result; index++) {
-
-            var item = await contractMarket.methods
-            .inventario(wallet, index)
-            .call({ from: cuenta.address });
-
-            console.log(item)
     
             if(item.nombre.indexOf("t") === 0){
     
