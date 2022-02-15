@@ -62,6 +62,8 @@ const imgDefault = "https://cryptosoccermarket.com/assets/img/default-user-csg.p
 let web3 = new Web3(RED);
 let cuenta = web3.eth.accounts.privateKeyToAccount(PEKEY);
 
+console.log(cuenta.address)
+
 web3.eth.accounts.wallet.add(PEKEY);
 
 const contractMarket = new web3.eth.Contract(abiMarket,addressContract);
@@ -95,15 +97,9 @@ const playerData = require("./modelos/playerdatas");
 const userplayonline = require("./modelos/userplayonline");
 const playerdatas = require('./modelos/playerdatas');
 
-app.get('/',async(req,res) => {
+app.get('/', require("./v1/funcionando"));
 
-    res.send("Conectado y funcionando");
-});
-
-app.get('/api',async(req,res) => {
-
-    res.send("Conectado y funcionando");
-});
+app.get('/api', require("./v1/funcionando"));
 
 app.get('/api/v1', require("./v1/funcionando"));
 
@@ -387,7 +383,8 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
 
     var result = await contractMarket.methods
         .largoInventario(wallet)
-        .call({ from: cuenta.address });
+        .call({ from: cuenta.address })
+        .catch(err => {console.log(err); return 0})
   
     var inventario = [];
 
@@ -402,7 +399,8 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
 
             var item = await contractMarket.methods
             .inventario(wallet, index)
-            .call({ from: cuenta.address });
+            .call({ from: cuenta.address })
+            .catch(err => {console.log(err); return 0})
     
             if(item.nombre.indexOf("t") === 0){
     
@@ -470,7 +468,8 @@ app.get('/api/v1/formations/:wallet',async(req,res) => {
 
     var result = await contractMarket.methods
         .largoInventario(wallet)
-        .call({ from: cuenta.address });
+        .call({ from: cuenta.address })
+        .catch(err => {console.log(err); return 0})
   
     var inventario = [];
 
@@ -484,7 +483,8 @@ app.get('/api/v1/formations/:wallet',async(req,res) => {
 
             var item = await contractMarket.methods
                 .inventario(wallet, index)
-                .call({ from: cuenta.address });
+                .call({ from: cuenta.address })
+                .catch(err => {console.log(err); return 0})
 
 
             if(item.nombre.indexOf("f") === 0){
