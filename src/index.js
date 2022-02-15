@@ -508,7 +508,7 @@ app.get('/api/v1/formations-teams/:wallet',async(req,res) => {
     var largoInventario = await contractMarket.methods
         .largoInventario(wallet)
         .call({ from: cuenta.address })
-        .catch(err => console.log(err))
+        .catch(err => {console.log(err); return 0})
   
     var formaciones = [];
 
