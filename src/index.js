@@ -62,10 +62,10 @@ const imgDefault = "https://cryptosoccermarket.com/assets/img/default-user-csg.p
 let web3 = new Web3(RED);
 let cuenta = web3.eth.accounts.privateKeyToAccount(PEKEY); 
 
-web3.eth.accounts.wallet.add(PEKEY);
-
 const contractMarket = new web3.eth.Contract(abiMarket,addressContract);
 //const contractToken = new web3.eth.Contract(abiToken,addressContractToken);
+
+web3.eth.accounts.wallet.add(PEKEY);
 
 //console.log(web3.eth.accounts.wallet[0].address);
 
@@ -382,7 +382,7 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
     var result = await contractMarket.methods
         .largoInventario(wallet)
         .call({ from: cuenta.address })
-        //.catch(err => {console.log(err); return 0})
+        .catch(err => {console.log(err); return 0})
 
     console.log(result);
   
@@ -402,7 +402,6 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
             .call({ from: cuenta.address })
             .catch(err => {console.log(err); return {nombre: "ninguno"}})
 
-            console.log(item)
     
             if(item.nombre.indexOf("t") === 0){
     
@@ -505,26 +504,31 @@ app.get('/api/v1/formations-teams/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet.toLowerCase();
 
-    var largoInventario = await contractMarket.methods
-        .largoInventario(wallet)
-        .call({ from: cuenta.address })
-        .catch(err => {console.log(err); return 0})
-  
     var formaciones = [];
 
     var inventario = [];
 
     var cantidad = 43;
 
+    var isSuper = 0;
+
+    if(superUser[wallet].toLowerCase() === wallet){
+        isSuper = 1;
+    }
+
     for (let index = 0; index < 4; index++) {
-        formaciones[index] = 0;
+        formaciones[index] = isSuper;
     }
 
     for (let index = 0; index < cantidad; index++) {
-        inventario[index] = 0;
+        inventario[index] = isSuper;
     }
-
-    if (!testNet) {
+        
+    if (isSuper === 0) {
+        var largoInventario = await contractMarket.methods
+        .largoInventario(wallet)
+        .call({ from: cuenta.address })
+        .catch(err => {console.log(err); return 0})
   
         for (let index = 0; index < largoInventario; index++) {
 
@@ -548,35 +552,36 @@ app.get('/api/v1/formations-teams/:wallet',async(req,res) => {
     
         }
 
-    }
-
-    if (quitarLegandarios === "true") { // quitar legendarios
-        for (let index = 0; index < 3; index++) {
-
-            inventario[index] = 0;
-
-        }
-
-    }
-
-    if (quitarEpicos === "true") { // quitar epicos
-
-        for (let index = 3; index < 10; index++) {
-
-            inventario[index] = 0;
-
-        }
         
-    }
 
-    if (quitarComunes === "true") { // quitar Comunes
+        if (quitarLegandarios === "true") { // quitar legendarios
+            for (let index = 0; index < 3; index++) {
 
-        for (let index = 10; index < cantidad; index++) {
+                inventario[index] = 0;
 
-            inventario[index] = 0;
+            }
 
         }
-        
+
+        if (quitarEpicos === "true") { // quitar epicos
+
+            for (let index = 3; index < 10; index++) {
+
+                inventario[index] = 0;
+
+            }
+            
+        }
+
+        if (quitarComunes === "true") { // quitar Comunes
+
+            for (let index = 10; index < cantidad; index++) {
+
+                inventario[index] = 0;
+
+            }
+            
+        }
     }
 
     for (let t = 0; t < testers.length; t++) {
@@ -584,15 +589,6 @@ app.get('/api/v1/formations-teams/:wallet',async(req,res) => {
         if(testers[t].toLowerCase() == wallet){
             inventario[cantidad] = 1;
         }
-    }
-
-    for (let t = 0; t < superUser.length; t++) {
-        if(superUser[t].toLowerCase() == wallet){
-            for (let index = 0; index < cantidad; index++) {
-                inventario[index] = 1;
-            }
-        }
-        
     }
 
     res.send("1,"+formaciones.toString()+","+inventario.toString());
