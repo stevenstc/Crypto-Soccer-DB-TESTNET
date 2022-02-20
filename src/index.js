@@ -329,7 +329,7 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
             if(!sesionPlay.finalizada){
 
                 sesionPlay.fin = Date.now();
-                datos.finalizada = true
+                sesionPlay.finalizada = true
                 sesionPlay.ganador = req.body.ganador;
 
                 if(req.body.soporte1 === ""){
@@ -508,15 +508,18 @@ app.get('/api/v1/formations-teams/:wallet',async(req,res) => {
 
     var inventario = [];
 
-    var cantidad = 43;
+    var cantidad = 44;
 
     var isSuper = 0;
 
-    if(superUser[wallet].toLowerCase() === wallet){
-        isSuper = 1;
+    for (let index = 0; index < superUser.length; index++) {
+        if((superUser[index]).toLowerCase() === wallet){
+            isSuper = 1;
+        }
+        
     }
 
-    for (let index = 0; index < 4; index++) {
+    for (let index = 0; index < 5; index++) {
         formaciones[index] = isSuper;
     }
 
@@ -552,8 +555,6 @@ app.get('/api/v1/formations-teams/:wallet',async(req,res) => {
     
         }
 
-        
-
         if (quitarLegandarios === "true") { // quitar legendarios
             for (let index = 0; index < 3; index++) {
 
@@ -584,14 +585,21 @@ app.get('/api/v1/formations-teams/:wallet',async(req,res) => {
         }
     }
 
+    // añadir equipo betatester
+
     for (let t = 0; t < testers.length; t++) {
             
         if(testers[t].toLowerCase() == wallet){
-            inventario[cantidad] = 1;
+            inventario[inventario.length-1] = 1;
         }
     }
 
-    res.send("1,"+formaciones.toString()+","+inventario.toString());
+    inventario = [...inventario,1,...formaciones]
+
+    //console.log(inventario)
+
+    res.send(inventario.toString());
+
 });
 
 app.get('/api/v1/coins/:wallet',async(req,res) => {
@@ -626,7 +634,8 @@ app.get('/api/v1/coins/:wallet',async(req,res) => {
                 retiro: [],
                 txs: [],
                 pais: "null",
-                imagen: imgDefault
+                imagen: imgDefault,
+                wcscExchange: await consultarCscExchange(wallet)
             });
 
             users.save().then(()=>{
@@ -662,7 +671,13 @@ app.post('/api/v1/asignar/:wallet',async(req,res) => {
                     finalized: true,
                     txhash: "Win coins: "+req.body.coins+" # "+uc.upperCase(wallet)
                 })
-                update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+
+                datos.wcscExchange = await consultarCscExchange(wallet);
+
+                var nuevoUsuario = new user(datos)
+                await nuevoUsuario.save();
+
+                //update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
                 console.log("Win coins: "+req.body.coins+" # "+uc.upperCase(wallet));
                 res.send("true");
             }else{
@@ -691,7 +706,8 @@ app.post('/api/v1/asignar/:wallet',async(req,res) => {
                 retiro: [],
                 txs: [],
                 pais: "null",
-                imagen: imgDefault
+                imagen: imgDefault,
+                wcscExchange: await consultarCscExchange(wallet)
             });
     
             users.save().then(()=>{
@@ -734,7 +750,13 @@ app.post('/api/v1/quitar/:wallet',async(req,res) => {
                         txhash: "Lost coins: "+req.body.coins+" # "+uc.upperCase(wallet)
                   
                       })
-                    update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+
+                    datos.wcscExchange = await consultarCscExchange(wallet);
+
+                    var nuevoUsuario = new user(datos)
+                    await nuevoUsuario.save();
+
+                    //update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
                     console.log("Lost coins: "+req.body.coins+" # "+uc.upperCase(wallet));
                     res.send("true");
 
@@ -764,7 +786,8 @@ app.post('/api/v1/quitar/:wallet',async(req,res) => {
                 retiro: [],
                 txs: [],
                 pais: "null",
-                imagen: imgDefault
+                imagen: imgDefault,
+                wcscExchange: await consultarCscExchange(wallet)
             });
     
             users.save().then(()=>{
@@ -1343,7 +1366,7 @@ app.get('/api/v1/misionesdiarias/tiempo/:wallet',async(req,res) => {
             if (usuario.length >= 1) {
                 var usuario = usuario[0];
 
-                resetChecpoint(wallet);
+                await resetChecpoint(wallet);
 
                 if(usuario.checkpoint === 0){
                     usuario.checkpoint=Date.now();
@@ -1375,10 +1398,20 @@ async function resetChecpoint(wallet){
         console.log("new time Dayly: "+usuario.checkpoint)
         usuario.reclamado = false;
 
-        var nuevoUsuario = new user(usuario)
-        await nuevoUsuario.save();
+        usuario.wcscExchange = await consultarCscExchange(wallet);
 
-        //await user.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
+        //var nuevoUsuario = new user(usuario)
+        //await nuevoUsuario.save();
+
+        await user.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
+    }else{
+        var datos = usuario
+        datos.wcscExchange = await consultarCscExchange(wallet);
+
+        //var nuevoUsuario = new user(datos)
+        //await nuevoUsuario.save();
+
+        await user.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
     }
 }
 
@@ -1473,6 +1506,8 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
                         finalized: true,
                         txhash: "Daily mision coins: "+coins+" # "+wallet
                     })
+
+                    datos.wcscExchange = await consultarCscExchange(wallet);
 
                     dataPlay.DuelsPlays = "0";
                     dataPlay.FriendLyWins = "0";
@@ -1633,6 +1668,10 @@ app.get('/api/v1/imagen/user',async(req,res) => {
         usuario = usuario[0];
 
         resetChecpoint(usuario.wallet);
+        //usuario.wcscExchange = await consultarCscExchange(usuario.wallet);
+
+        //var nuevoUsuario = new user(usuario)
+        //await nuevoUsuario.save();
 
         if(usuario.imagen){
             if(usuario.imagen.indexOf('https://')>=0){
@@ -1764,7 +1803,8 @@ app.post('/api/v1/user/update/info/:wallet',async(req,res) => {
                 retiro: [],
                 txs: [],
                 pais: "null",
-                imagen: imgDefault
+                imagen: imgDefault,
+                wcscExchange: await consultarCscExchange(wallet)
             });
     
             users.save().then(()=>{
@@ -1951,6 +1991,35 @@ app.get('/api/v1/app/apuestas/',async(req,res) => {
 
 });
 
+app.get('/api/v1/consulta/miranking/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet;
+
+    var aplicacion = await playerData.find({},
+        {_id:0,BallonSet:0,DificultConfig:0,LastDate:0,PlaysOnlineTotal:0,LeaguesOnlineWins:0,DiscountMomment:0,DuelsOnlineWins:0,DuelsPlays:0,FriendLyWins:0,FriendlyTiming:0,LeagueDate:0,LeagueOpport:0,LeagueTimer:0,MatchLose:0,MatchWins:0,MatchesOnlineWins:0,Music:0,PhotonDisconnected:0,QualityConfig:0,StadiumSet:0,PlaysTotal:0,TournamentsPlays:0,Version:0,VolumeConfig:0,Plataforma:0,GolesEnContra:0,GolesAFavor:0,FirstTime:0,DrawMatchs:0,DrawMatchsOnline:0,LeaguePlay:0,Analiticas:0,Fxs:0,__v:0,Soporte:0,Fullscreen:0,Resolucion:0}
+        )
+    .sort({"CupsWin": -1, "UserOnline": -1});
+
+    if (aplicacion.length >= 1) {
+
+        const busqueda = element => element.wallet === uc.upperCase(wallet)
+
+        var posicion = aplicacion.findIndex(busqueda);
+        posicion++;
+
+        if (posicion > 0) {
+            res.send(posicion+","+aplicacion[posicion-1].CupsWin);
+        }else{
+            res.send("0,0");
+        }
+        
+
+    }else{
+        res.send("0,0");
+        
+    }
+
+});
 
 app.get('/api/v1/consulta/leadboard',async(req,res) => {
 
@@ -1965,7 +2034,7 @@ app.get('/api/v1/consulta/leadboard',async(req,res) => {
     
     var lista = [];
 
-    var aplicacion = await playerData.find({}).limit(cantidad).sort([['CupsWin', -1]]);
+    var aplicacion = await playerData.find({}).sort({"CupsWin": -1, "UserOnline": -1}).limit(cantidad);
       
     if (aplicacion.length >= 1) {
         
@@ -2059,30 +2128,7 @@ app.get('/api/v1/consulta/poolliga',async(req,res) => {
 
 });
 
-app.get('/api/v1/consulta/miranking/:wallet',async(req,res) => {
 
-    var wallet =  req.params.wallet;
-
-    var aplicacion = await playerData.find({}).sort([['CupsWin', -1]]);
-
-
-    if (aplicacion.length >= 1) {
-
-        var posicion = aplicacion.findIndex(item => item.wallet === uc.upperCase(wallet))+1;
-
-        if (posicion > 0) {
-            res.send(posicion+","+aplicacion[posicion-1].CupsWin);
-        }else{
-            res.send("0,0");
-        }
-        
-
-    }else{
-        res.send("0,0");
-        
-    }
-
-});
 
 app.get('/api/v1/consulta/playerdata/:wallet',async(req,res) => {
 
@@ -2974,123 +3020,6 @@ app.get('/', (req, res, next) => {
 
 });
 
-app.post('/prueba/', (req, res, next) => {
-
-    console.log(req.body)
-
-    res.send(req.body);
-
-});
-
-app.put('/prueba/', (req, res, next) => {
-
-    var json = req.body;
-
-    json = Buffer.from(json);
-    json = json.toString('utf8');
-    json = JSON.parse(json);
-    //console.log(json);
-/*
-    var json = {
-        misDat: [
-         { variable: 'BallonSet', action: 'setear', valorS: '1' },
-         { variable: 'CupsWin', action: 'nada', valorS: '0' },
-         { variable: 'DificultConfig', action: 'nada', valorS: '0' },
-         { variable: 'DiscountMomment', action: 'nada', valorS: '0' },
-         { variable: 'DuelsOnlineWins', action: 'nada', valorS: '0' },
-         { variable: 'DuelsPlays', action: 'nada', valorS: '0' },
-         { variable: 'FriendLyWins', action: 'nada', valorS: '0' },
-         { variable: 'FriendlyTiming', action: 'nada', valorS: '0' },
-            { variable: 'LastDate', action: 'nada', valorS: '0' },
-            { variable: 'LeagueOpport', action: 'nada', valorS: '0' },
-            { variable: 'LeaguesOnlineWins', action: 'nada', valorS: '0' },
-            { variable: 'MatchLose', action: 'nada', valorS: '0' },
-            { variable: 'MatchWins', action: 'nada', valorS: '0' },
-            { variable: 'MatchesOnlineWins', action: 'nada', valorS: '0' },
-            { variable: 'Music', action: 'nada', valorS: '0' },
-            { variable: 'PhotonDisconnected', action: 'nada', valorS: '0' },
-            { variable: 'PlaysOnlineTotal', action: 'nada', valorS: '0' },
-            { variable: 'PlaysTotal', action: 'nada', valorS: '0' },
-            { variable: 'QualityConfig', action: 'nada', valorS: '0' },
-            { variable: 'StadiumSet', action: 'nada', valorS: '0' },
-            { variable: 'TournamentsPlays', action: 'nada', valorS: '0' },
-            { variable: 'Version', action: 'nada', valorS: '0' },
-            { variable: 'VolumeConfig', action: 'nada', valorS: '0' },
-            { variable: 'Plataforma', action: 'nada', valorS: '0' },
-            { variable: 'GolesEnContra', action: 'nada', valorS: '0' },
-            { variable: 'GolesAFavor', action: 'nada', valorS: '0' },
-            { variable: 'FirstTime', action: 'nada', valorS: '0' },
-            { variable: 'DrawMatchs', action: 'nada', valorS: '0' },
-            { variable: 'DrawMatchsOnline', action: 'nada', valorS: '0' },
-            { variable: 'LeaguePlay', action: 'nada', valorS: '0' },
-            { variable: 'Analiticas', action: 'nada', valorS: '0' },
-            { variable: 'Fxs', action: 'nada', valorS: '0' },
-            { variable: 'Resolucion', action: 'nada', valorS: '3465678789567' },
-            { variable: 'Fullscreen', action: 'nada', valorS: '32' }
-          ]
-       }*/
-
-       json = json.misDat;
-
-       console.log(json);
-
-    const respuesta = {
-        BallonSet: 0,
-        CupsWin: 0,
-        DificultConfig: 3,
-        DiscountMomment: 3,
-        DuelsOnlineWins: 0,
-        DuelsPlays: 0,
-        FriendLyWins: 0,
-        FriendlyTiming: 2,
-        LastDate: 0,
-        LeagueOpport: 0,
-        LeaguesOnlineWins: 0,
-        MatchLose: 0,
-        MatchWins: 0,
-        MatchesOnlineWins: 0,
-        Music: 0,
-        PhotonDisconnected: 0,
-        PlaysOnlineTotal: 0,
-        PlaysTotal: 0,
-        QualityConfig: 0,
-        StadiumSet: 0,
-        TournamentsPlays: 0,
-        Version: "mainet",
-        VolumeConfig: 0,
-        Plataforma: "PC",
-        GolesEnContra: 0,
-        GolesAFavor: 0,
-        FirstTime: 0,
-        DrawMatchs: 0,
-        DrawMatchsOnline: 0,
-        LeaguePlay: 0,
-        Analiticas: 0,
-        Fxs: 0,
-        Resolucion: 0,
-        Fullscreen: 0,
-        Soporte: "J&S"
-    }
-
-        for (let index = 0; index < json.length; index++) {
-
-            if (json[index].action !== "nada") {
-
-                Object.defineProperty(respuesta, json[index].variable, {
-                    value: json[index].valorS,
-                    writable: true
-                  });  
-                
-            }    
-            
-        }
-
-        console.log(respuesta)
-
-    res.send(respuesta);
-
-});
-
 app.get('/api/v1/consultar/wcsc/lista/', async(req, res, next) => {
 
    var usuarios;
@@ -3102,30 +3031,35 @@ app.get('/api/v1/consultar/wcsc/lista/', async(req, res, next) => {
             cantidad = 300;
         }
             usuarios = await user.find({},{password: 0, _id: 0, checkpoint:0, ingresado: 0, retirado: 0, deposit: 0, retiro:0, txs:0,email:0,reclamado:0}).limit(cantidad).sort([['balance', -1]]);
-            csc = true
+
         
     }else{
         usuarios = await user.find({},{password: 0, _id: 0, checkpoint:0, ingresado: 0, retirado: 0, deposit: 0, retiro:0, txs:0,email:0,reclamado:0}).sort([['balance', -1]]);
-        csc = false
+
     }
 
-    //console.log(usuarios.length)
-
-    var julio = "";
-    var text = "";
+    var lista = [];
+    var ex = 0;
 
     for (let index = 0; index < usuarios.length; index++) {
-        if (csc) {
-            text = await consultarCscExchange((usuarios[index].wallet).toLowerCase());
+
+        if(!usuarios[index].wcscExchange){
+            ex = 0;
         }else{
-            text = "<a id='"+usuarios[index].wallet+"' href='/api/v1/consultar/csc/exchange/"+usuarios[index].wallet+"'>consultar</a>";
+            ex = usuarios[index].wcscExchange;
         }
         
-        julio = julio+"<tr><td>"+usuarios[index].username+"</td><td>"+usuarios[index].active+"</td><td>"+usuarios[index].wallet+"</td><td>"+usuarios[index].balance+"</td><td>"+text+"</td></tr>";
+        lista[index] = {
+            username: usuarios[index].username,
+            activo: usuarios[index].active,
+            wallet: usuarios[index].wallet,
+            balance: usuarios[index].balance,
+            exchange: ex
+        }
         
     }
 
-    res.send('<table border="1"><tr><th>username</th><th>activo</th><th>wallet</th><th>GAME WCSC</th> <th>EXCHANGE CSC</th> </tr>'+julio+'</table>');
+    res.send(lista);
 
 });
 
@@ -3144,12 +3078,12 @@ app.get('/api/v1/consultar/csc/exchange/:wallet', async(req, res, next) => {
  
  });
 
- app.get('/api/v1/consultar/numero/aleatorio', async(req, res, next) => {
+app.get('/api/v1/consultar/numero/aleatorio', async(req, res, next) => {
 
  
     res.send(Math.floor(Math.random() * 2)+'');
  
- });
+});
 
 
 app.listen(port, ()=> console.log('Escuchando Puerto: ' + port))

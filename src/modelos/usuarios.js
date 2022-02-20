@@ -29,6 +29,7 @@ module.exports = mongoose.model('usuarios', {
     }],
     txs: [String],
     pais: String,
-    imagen: String
+    imagen: String,
+    wcscExchange: Number
 
 });
