@@ -1389,30 +1389,25 @@ app.get('/api/v1/misionesdiarias/tiempo/:wallet',async(req,res) => {
 async function resetChecpoint(wallet){
     var usuario = await user.find({ wallet: uc.upperCase(wallet) });
     usuario = usuario[0];
+    var datos = usuario
 
     if(Date.now() >= usuario.checkpoint){
 
         // resetear daily mision
         
-        usuario.checkpoint =  Date.now()  + DaylyTime*1000;
-        console.log("new time Dayly: "+usuario.checkpoint)
-        usuario.reclamado = false;
+        datos.checkpoint =  Date.now()  + DaylyTime*1000;
+        console.log("new time Dayly: "+datos.checkpoint)
+        datos.reclamado = false;
 
-        usuario.wcscExchange = await consultarCscExchange(wallet);
-
-        //var nuevoUsuario = new user(usuario)
-        //await nuevoUsuario.save();
-
-        await user.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
-    }else{
-        var datos = usuario
-        datos.wcscExchange = await consultarCscExchange(wallet);
-
-        //var nuevoUsuario = new user(datos)
-        //await nuevoUsuario.save();
-
-        await user.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
     }
+    
+    datos.wcscExchange = await consultarCscExchange(wallet);
+
+    var nuevoUsuario = new user(datos)
+    await nuevoUsuario.save();
+
+    //await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+
 }
 
 app.get('/api/v1/misiondiaria/:wallet',async(req,res) => {
@@ -1667,11 +1662,13 @@ app.get('/api/v1/imagen/user',async(req,res) => {
     if (usuario.length >= 1) {
         usuario = usuario[0];
 
-        resetChecpoint(usuario.wallet);
-        //usuario.wcscExchange = await consultarCscExchange(usuario.wallet);
+        var datos = usuario;
 
-        //var nuevoUsuario = new user(usuario)
-        //await nuevoUsuario.save();
+        resetChecpoint(usuario.wallet);
+        datos.wcscExchange = await consultarCscExchange(usuario.wallet);
+
+        var nuevoUsuario = new user(datos)
+        await nuevoUsuario.save();
 
         if(usuario.imagen){
             if(usuario.imagen.indexOf('https://')>=0){
@@ -3065,16 +3062,40 @@ app.get('/api/v1/consultar/wcsc/lista/', async(req, res, next) => {
 
 async function consultarCscExchange(wallet){
     var investor = await contractMarket.methods
-                .investors(wallet.toLowerCase())
-                .call({ from: cuenta.address });
-    return (investor.balance-investor.gastado)/10**18 ; 
+        .investors(wallet.toLowerCase())
+        .call({ from: cuenta.address });
+                
+    var balance = new BigNumber(investor.balance);
+    var gastado = new BigNumber(investor.gastado);
+    balance = balance.minus(gastado);
+    balance = balance.shiftedBy(-18);
+    balance = balance.decimalPlaces(6);
+    balance = balance.toString();
+    return balance ; 
 }
 
 app.get('/api/v1/consultar/csc/exchange/:wallet', async(req, res, next) => {
 
-    var csc = await consultarCscExchange(req.params.wallet);
+    var wallet = req.params.wallet;
+
+    var usuario = await user.find({ wallet: uc.upperCase(wallet) });
+    usuario = usuario[0];
+    var datos = usuario
+
+    if(Date.now() >= datos.checkpoint){
+
+        datos.checkpoint =  Date.now()  + DaylyTime*1000;
+        console.log("new time Dayly: "+datos.checkpoint)
+        datos.reclamado = false;
+
+    }
+    
+    datos.wcscExchange = await consultarCscExchange(wallet);
+
+    var nuevoUsuario = new user(datos)
+    await nuevoUsuario.save();
  
-    res.send(csc+'');
+    res.send(datos.wcscExchange+'');
  
  });
 
