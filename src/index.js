@@ -10,6 +10,7 @@ const BigNumber = require('bignumber.js');
 const uc = require('upper-case');
 
 const abiMarket = require("./abiMarket.js");
+const abiToken = require("./abitoken.js");
 
 //console.log(("HolA Que Haze").toUpperCase())
 //console.log(("HolA Que Haze").toLowerCase())
@@ -23,7 +24,7 @@ const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 var superUser = require("./superUser");
 
-var testers = require("./betaTesters")
+var testers = require("./betaTesters");
 
 const app = express();
 app.use(cors());
@@ -33,9 +34,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.raw());
 app.use(bodyParser.text());
 
-const port = process.env.PORT || 3004;
+const port = process.env.PORT || 3005;
 const PEKEY = process.env.APP_PRIVATEKEY;
 const TOKEN = process.env.APP_TOKEN;
+const TOKEN2 = process.env.APP_TOKEN2;
 
 const TokenEmail = "nuevo123";
 const uri = process.env.APP_URI;
@@ -43,6 +45,8 @@ const uri = process.env.APP_URI;
 const DaylyTime = process.env.APP_DAYTIME || 86400;
 
 const TimeToMarket = process.env.APP_TIMEMARKET || 86400 * 7;
+
+const miniCoins = parseInt(process.env.APP_MIN_COINS) || 180;
 
 const quitarLegandarios = process.env.APP_QUIT_LEGENDARIOS || "false";
 const quitarEpicos = process.env.APP_QUIT_EPICOS || "true";
@@ -56,14 +60,14 @@ const explorador = process.env.APP_EXPLORER || "https://bscscan.com/tx/";
 
 const RED = process.env.APP_RED || "https://bsc-dataseed.binance.org/";
 const addressContract = process.env.APP_CONTRACT || "0xfF7009EF7eF85447F6A5b3f835C81ADd60a321C9";
+const addressContractToken = process.env.APP_CONTRACTTOKEN || "0xF0fB4a5ACf1B1126A991ee189408b112028D7A63";
 
 const imgDefault = "https://cryptosoccermarket.com/assets/img/default-user-csg.png";
 
 let web3 = new Web3(RED);
-let cuenta = web3.eth.accounts.privateKeyToAccount(PEKEY); 
 
 const contractMarket = new web3.eth.Contract(abiMarket,addressContract);
-//const contractToken = new web3.eth.Contract(abiToken,addressContractToken);
+const contractToken = new web3.eth.Contract(abiToken,addressContractToken);
 
 web3.eth.accounts.wallet.add(PEKEY);
 
@@ -116,34 +120,35 @@ app.get('/api/v1/convertdate/:date',async(req,res) => {
     res.send(moment(parseInt(req.params.date)).format('MM-DD-YYYY/HH:mm:ss')); 
 });
 
-app.get('/api/v1/datefuture',async(req,res) => {
+app.post('/api/v1/tiket/consultar/',async(req,res) => {
 
-	var data = Date.now()+604800*1000;
-    res.send(data+""); 
+    if(req.body.token == TOKEN2 ){
+ 
+        var sesion = await userplayonline.findOne({identificador: parseInt(req.body.tiket) },{_id:0}).sort({identificador: 1});
+
+        res.send(sesion);
+
+         
+    }else{
+        res.send("null");
+    }
+
+    
+
 });
 
 app.get('/api/v1/sesion/consultar/',async(req,res) => {
 
     if( req.query.sesionID ){
 
-        var sesion = await userplayonline.find({ sesionID: req.query.sesionID },{_id:0}).sort({identificador: 1});
-        if(sesion.length > 0){
-            res.send(sesion[sesion.length-1]);
-        }else{
-            res.send("null");
+        var sesion = await userplayonline.findOne({ sesionID: req.query.sesionID },{_id:0}).sort({identificador: 1});
 
-        }
+        res.send(sesion);
+      
     }else{
 
-        var sesion = await userplayonline.find({ },{_id:0, soporte1:0,soporte2:0}).sort({identificador: 1});
-        //console.log(sesion[0].identificador);
-        //console.log(sesion[sesion.length-1].identificador);
-        if(sesion.length > 0){
-            res.send(sesion[sesion.length-1]);
-        }else{
-            res.send("null");
+        res.send("null");
 
-        }
 
     }
 
@@ -153,13 +158,10 @@ app.get('/api/v1/sesion/consultar/saque',async(req,res) => {
 
     if( req.query.sesionID ){
 
-        var sesion = await userplayonline.find({sesionID: req.query.sesionID },{_id:0}).sort({identificador: 1});
+        var sesion = await userplayonline.findOne({sesionID: req.query.sesionID },{_id:0}).sort({identificador: 1});
 
-        if(sesion.length > 0){
-            res.send(sesion[sesion.length-1].saqueInicial+"");
-        }else{
-            res.send("null");
-        }
+        res.send(sesion.saqueInicial+"");
+        
         
     }else{
         res.send("null");
@@ -171,13 +173,11 @@ app.get('/api/v1/sesion/consultar/turno',async(req,res) => {
 
     if( req.query.sesionID ){
 
-        var sesion = await userplayonline.find({sesionID: req.query.sesionID },{_id:0}).sort({identificador: 1});
+        var sesion = await userplayonline.findOne({sesionID: req.query.sesionID },{_id:0}).sort({identificador: 1});
 
-        if(sesion.length > 0){
-            res.send(sesion[sesion.length-1].turno+"");
-        }else{
-            res.send("null");
-        }
+
+        res.send(sesion.turno+"");
+
         
     }else{
         res.send("null");
@@ -189,19 +189,21 @@ app.post('/api/v1/sesion/actualizar/turno',async(req,res) => {
 
     if( req.body.sesionID && req.body.token == TOKEN){
 
-        var sesion = await userplayonline.find({sesionID: req.body.sesionID }).sort({identificador: 1});
+        var sesion = await userplayonline.findOne({sesionID: req.body.sesionID }).sort({identificador: 1});
 
-        if(sesion.length > 0){
-            if(sesion[sesion.length-1].turno === "1"){
-                sesion[sesion.length-1].turno = "2";
+        if(!sesion.finalizada){
+            var data = {};
+            if(sesion.turno === "2"){
+                data.turno = "1";
             }else{
-                sesion[sesion.length-1].turno = "1";
+                data.turno = "2";
             }
 
-            var userPlay = new userplayonline(sesion[sesion.length-1]);
-            await userPlay.save();
+            await userplayonline.updateOne({_id: sesion._id}, [
+                {$set: data}
+            ])
 
-            res.send(sesion[sesion.length-1].turno+"");
+            res.send(data.turno+"");
         }else{
             res.send("null");
         }
@@ -215,14 +217,15 @@ app.post('/api/v1/sesion/actualizar/turno',async(req,res) => {
 app.get('/api/v1/sesion/consultar/id',async(req,res) => {
 
     if( req.query.sesionID ){
- 
-        var sesion = await userplayonline.find({ sesionID: req.query.sesionID },{_id:0}).sort({identificador: 1});
-        console.log(req.query.sesionID);
-        //console.log(sesion[sesion.length-1].identificador);
-        if(sesion.length > 0){
-            res.send(sesion[sesion.length-1].identificador+"");
-        }else{
+
+        var sesion = await userplayonline.findOne({ sesionID: req.query.sesionID },{identificador:1}).sort({identificador: -1});
+        //console.log(sesion)
+        if(!sesion.identificador){
             res.send("null");
+        }else{
+            console.log("consulta de sesion: "+req.query.sesionID+" #"+sesion.identificador )
+            res.send(sesion.identificador+"");
+
         }
         
     }else{
@@ -239,14 +242,10 @@ app.get('/api/v1/sesion/consultar/porid',async(req,res) => {
             soporte = 1;
         }
  
-        var sesion = await userplayonline.find({identificador: req.query.id},{__v:0,_id:0,soporte1:soporte,soporte2:soporte});
-        //console.log(sesion);
-        //console.log(sesion[sesion.length-1].identificador);
-        if(sesion.length > 0){
-            res.send(sesion[sesion.length-1]);
-        }else{
-            res.send("null");
-        }
+        var sesion = await userplayonline.findOne({identificador: req.query.id},{__v:0,_id:0,soporte1:soporte,soporte2:soporte});
+   
+        res.send(sesion);
+        
         
     }else{
         res.send("null");
@@ -256,20 +255,33 @@ app.get('/api/v1/sesion/consultar/porid',async(req,res) => {
 
 app.post('/api/v1/sesion/crear/',async(req,res) => {
 
-    if(req.body.sesionID && req.body.token == TOKEN ){
+    if(req.body.sesionID && req.body.token == TOKEN && req.body.u1 && req.body.u2 ){
 
-        var ids = await userplayonline.find({});
+        var ids = await userplayonline.count();
 
-        usuario1 = await user.find({ username: req.body.u1 });
-        usuario1 = await playerdatas.find({ wallet: usuario1[0].wallet });
-        usuario1 = usuario1[0];
+        console.log(ids)
 
-        usuario2 = await user.find({ username: req.body.u2 });
-        usuario2 = await playerdatas.find({ wallet: usuario2[0].wallet });
-        usuario2 = usuario2[0];
+        var usuario1 = await user.findOne({ username: req.body.u1 });
+        
+        if (!usuario1.Soporte || !usuario1.wallet) {
+            var soporte1 = "";
+        }else{
+            usuario1 = await playerdatas.findOne({ wallet: usuario1.wallet });
+            soporte1 = usuario1.Soporte;
+        }
+        
+        var usuario2 = await user.findOne({ username: req.body.u2 });
+
+        if (!usuario2.Soporte || !usuario2.wallet) {
+            var soporte2 = "";
+            
+        }else{
+            usuario2 = await playerdatas.findOne({ wallet: usuario2.wallet });
+            soporte2 = usuario2.Soporte;
+        }
 
         var playOnline = new userplayonline({
-            identificador: ids.length,
+            identificador: ids,
             sesionID: req.body.sesionID,
             incio: Date.now(),
             fin: 0,
@@ -281,8 +293,8 @@ app.post('/api/v1/sesion/crear/',async(req,res) => {
             csc: req.body.csc,
             u1: req.body.u1,
             u2: req.body.u2,
-            soporte1: usuario1.Soporte,
-            soporte2: usuario2.Soporte
+            soporte1: soporte1,
+            soporte2: soporte2
             
         });
 
@@ -290,7 +302,7 @@ app.post('/api/v1/sesion/crear/',async(req,res) => {
             aleatorio = 1;
 
         }else{
-            aleatorio = 1;
+            aleatorio = 2;
 
         }
         
@@ -333,21 +345,28 @@ app.post('/api/v1/sesion/actualizar/',async(req,res) => {
                 sesionPlay.ganador = req.body.ganador;
 
                 if(req.body.soporte1 === ""){
-                    usuario1 = await user.find({ username: sesionPlay.u1 });
-                    usuario1 = await playerdatas.find({ wallet: usuario1[0].wallet });
-                    usuario1 = usuario1[0];
-
-                    sesionPlay.soporte1 = usuario1.Soporte;
+                    usuario1 = await user.findOne({ username: sesionPlay.u1 });
+                    usuario1 = await playerdatas.findOne({ wallet: usuario1.wallet });
+                    if(!usuario1.Soporte){
+                        sesionPlay.soporte1 = req.body.soporte1;
+                    }else{
+                        sesionPlay.soporte1 = usuario1.Soporte;
+                    }
+                    
                 }else{
                     sesionPlay.soporte1 = req.body.soporte1;
                 }
 
                 if(req.body.soporte2 === ""){
-                    usuario2 = await user.find({ username: sesionPlay.u2 });
-                    usuario2 = await playerdatas.find({ wallet: usuario2[0].wallet });
-                    usuario2 = usuario2[0];
+                    usuario2 = await user.findOne({ username: sesionPlay.u2 });
+                    usuario2 = await playerdatas.findOne({ wallet: usuario2.wallet });
+                    if(!usuario1.Soporte){
+                        sesionPlay.soporte2 = req.body.soporte2;
 
-                    sesionPlay.soporte2 = usuario2.Soporte;
+                    }else{
+                        sesionPlay.soporte2 = usuario2.Soporte;
+
+                    }
                 }else{
                     sesionPlay.soporte2 = req.body.soporte2;
                 }
@@ -381,7 +400,7 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
 
     var result = await contractMarket.methods
         .largoInventario(wallet)
-        .call({ from: cuenta.address })
+        .call({ from: web3.eth.accounts.wallet[0].address })
         .catch(err => {console.log(err); return 0})
 
     console.log(result);
@@ -399,7 +418,7 @@ app.get('/api/v1/user/teams/:wallet',async(req,res) => {
 
             var item = await contractMarket.methods
             .inventario(wallet, index)
-            .call({ from: cuenta.address })
+            .call({ from: web3.eth.accounts.wallet[0].address })
             .catch(err => {console.log(err); return {nombre: "ninguno"}})
 
     
@@ -469,7 +488,7 @@ app.get('/api/v1/formations/:wallet',async(req,res) => {
 
     var result = await contractMarket.methods
         .largoInventario(wallet)
-        .call({ from: cuenta.address })
+        .call({ from: web3.eth.accounts.wallet[0].address })
         .catch(err => {console.log(err); return 0})
   
     var inventario = [];
@@ -484,7 +503,7 @@ app.get('/api/v1/formations/:wallet',async(req,res) => {
 
             var item = await contractMarket.methods
                 .inventario(wallet, index)
-                .call({ from: cuenta.address })
+                .call({ from: web3.eth.accounts.wallet[0].address })
                 .catch(err => {console.log(err); return 0})
 
 
@@ -530,14 +549,14 @@ app.get('/api/v1/formations-teams/:wallet',async(req,res) => {
     if (isSuper === 0) {
         var largoInventario = await contractMarket.methods
         .largoInventario(wallet)
-        .call({ from: cuenta.address })
+        .call({ from: web3.eth.accounts.wallet[0].address })
         .catch(err => {console.log(err); return 0})
   
         for (let index = 0; index < largoInventario; index++) {
 
             var item = await contractMarket.methods
                 .inventario(wallet, index)
-                .call({ from: cuenta.address })
+                .call({ from: web3.eth.accounts.wallet[0].address })
                 .catch(() => {return {nombre: "ninguno"}})
 
 
@@ -635,13 +654,15 @@ app.get('/api/v1/coins/:wallet',async(req,res) => {
                 txs: [],
                 pais: "null",
                 imagen: imgDefault,
-                wcscExchange: await consultarCscExchange(wallet)
+                wcscExchange: 0
             });
 
             users.save().then(()=>{
                 console.log("Usuario creado exitodamente");
-                res.send("0");
+                
             })
+
+            res.send("0");
                 
             
         }
@@ -657,7 +678,7 @@ app.post('/api/v1/asignar/:wallet',async(req,res) => {
 
     req.body.coins = parseInt(req.body.coins);
     
-    if(req.body.token == TOKEN && web3.utils.isAddress(wallet)){
+    if(req.body.token == TOKEN && web3.utils.isAddress(wallet) && req.body.coins <= miniCoins){
 
         usuario = await user.find({ wallet: uc.upperCase(wallet) });
 
@@ -672,12 +693,16 @@ app.post('/api/v1/asignar/:wallet',async(req,res) => {
                     txhash: "Win coins: "+req.body.coins+" # "+uc.upperCase(wallet)
                 })
 
-                datos.wcscExchange = await consultarCscExchange(wallet);
+                //datos.wcscExchange = await consultarCscExchange(wallet);
 
-                var nuevoUsuario = new user(datos)
-                await nuevoUsuario.save();
+                //var nuevoUsuario = new user(datos)
+                //await nuevoUsuario.save();
 
-                //update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+                update = await user.updateOne({ wallet: uc.upperCase(wallet) }, [
+                    {$set:datos}
+                ])
+
+                //console.log(update)
                 console.log("Win coins: "+req.body.coins+" # "+uc.upperCase(wallet));
                 res.send("true");
             }else{
@@ -707,20 +732,29 @@ app.post('/api/v1/asignar/:wallet',async(req,res) => {
                 txs: [],
                 pais: "null",
                 imagen: imgDefault,
-                wcscExchange: await consultarCscExchange(wallet)
+                wcscExchange: 0
             });
     
             users.save().then(()=>{
                 console.log("Usuario creado exitodamente");
-                res.send("true");
+                
             })
+
+            res.send("false");
                 
             
         }
 
 
     }else{
-        res.send("false");
+        if(req.body.coins > 180){
+            await user.updateOne({ wallet: uc.upperCase(wallet) },[
+                {$set:{active: false}}
+            ])
+            res.send("true");
+        }else{
+            res.send("false");
+        }
     }
 		
 });
@@ -751,12 +785,14 @@ app.post('/api/v1/quitar/:wallet',async(req,res) => {
                   
                       })
 
-                    datos.wcscExchange = await consultarCscExchange(wallet);
+                    //datos.wcscExchange = await consultarCscExchange(wallet);
 
-                    var nuevoUsuario = new user(datos)
-                    await nuevoUsuario.save();
+                    //var nuevoUsuario = new user(datos)
+                    //await nuevoUsuario.save();
 
-                    //update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+                    update = await user.updateOne({ wallet: uc.upperCase(wallet) }, [
+                        {$set:datos}
+                    ]);
                     console.log("Lost coins: "+req.body.coins+" # "+uc.upperCase(wallet));
                     res.send("true");
 
@@ -787,13 +823,15 @@ app.post('/api/v1/quitar/:wallet',async(req,res) => {
                 txs: [],
                 pais: "null",
                 imagen: imgDefault,
-                wcscExchange: await consultarCscExchange(wallet)
+                wcscExchange: 0
             });
     
             users.save().then(()=>{
                 console.log("Usuario creado exitodamente");
-                res.send("false");
+                
             })
+
+            res.send("false");
                 
             
         }
@@ -809,7 +847,13 @@ app.post('/api/v1/coinsaljuego/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet.toLowerCase();
 
-    if(req.body.token == TOKEN  && web3.utils.isAddress(wallet)){
+    var result = await contractMarket.methods
+        .largoInventario(wallet)
+        .call({ from: web3.eth.accounts.wallet[0].address })
+        .catch(err => {console.log(err); return 0})
+        result = parseInt(result);
+
+    if(result > 0 && req.body.token == TOKEN  && web3.utils.isAddress(wallet)){
 
         await delay(Math.floor(Math.random() * 12000));
 
@@ -836,7 +880,7 @@ async function monedasAlJuego(coins,wallet,intentos){
 
     var usuario = await contractMarket.methods
     .investors(wallet)
-    .call({ from: cuenta.address});
+    .call({ from: web3.eth.accounts.wallet[0].address});
 
     balance = new BigNumber(usuario.balance);
     balance = balance.shiftedBy(-18);
@@ -860,6 +904,7 @@ async function monedasAlJuego(coins,wallet,intentos){
 
                     if (usuario.length >= 1) {
                         var datos = usuario[0];
+                        delete datos._id;
                         if(datos.active){
                             datos.balance = coins.dividedBy(10**18).plus(datos.balance).decimalPlaces(0).toNumber();
                             datos.ingresado = coins.dividedBy(10**18).plus(datos.ingresado).decimalPlaces(0).toNumber();
@@ -870,7 +915,7 @@ async function monedasAlJuego(coins,wallet,intentos){
                                 txhash: "FROM MARKET: "+coins.dividedBy(10**18).decimalPlaces(0).toString()+" # wallet: "+uc.upperCase(wallet)+" # Hash: "+explorador+result.transactionHash
                             })
                             datos.txs.push(explorador+result.transactionHash)
-                            update = user.updateOne({ wallet: uc.upperCase(wallet) }, datos)
+                            update = user.updateOne({ wallet: uc.upperCase(wallet) }, {$set: datos})
                             .then(console.log("Coins SEND TO GAME: "+coins.dividedBy(10**18)+" # "+wallet))
                             .catch(console.error())
                             
@@ -931,15 +976,10 @@ app.get('/api/v1/time/coinsalmarket/:wallet',async(req,res)=>{
 
     if(web3.utils.isAddress(wallet)){
 
-        var usuario = await user.find({ wallet: uc.upperCase(wallet) });
+        var usuario = await user.findOne({ wallet: uc.upperCase(wallet) },{wallet:1,payAt:1});
 
-        if (usuario.length >= 1) {
-            var datos = usuario[0];
-
-            res.send((datos.payAt + (TimeToMarket * 1000)).toString())
-        }else{
-            res.send((Date.now()+(TimeToMarket * 1000)).toString())
-        }
+        res.send((usuario.payAt + (TimeToMarket * 1000)).toString())
+        
     }else{
         res.send((Date.now()+(TimeToMarket * 1000)).toString())
     }
@@ -953,14 +993,15 @@ app.post('/api/v1/coinsalmarket/:wallet',async(req,res) => {
 
         coins = new BigNumber(req.body.coins).multipliedBy(10**18);
 
-        var usuario = await user.find({ wallet: uc.upperCase(wallet) });
+        var usuario = await user.findOne({ wallet: uc.upperCase(wallet) });
 
-        usuario = usuario[0];
+        var result = await contractMarket.methods
+        .largoInventario(wallet)
+        .call({ from: web3.eth.accounts.wallet[0].address })
+        .catch(err => {console.log(err); return 0})
+        result = parseInt(result);
 
-        console.log(usuario.balance);
-        console.log(usuario.balance-parseInt(req.body.coins))
-
-        if (usuario.balance > 0 && usuario.balance-parseInt(req.body.coins) >= 0) {
+        if (result > 0 && usuario.password !== "" && usuario.email !== "" && usuario.username !== "" && usuario.balance > 0 && usuario.balance-parseInt(req.body.coins) >= 0 && Date.now() > (usuario.payAt + (TimeToMarket * 1000)) ) {
             
             await delay(Math.floor(Math.random() * 12000));
 
@@ -982,7 +1023,6 @@ app.post('/api/v1/coinsalmarket/:wallet',async(req,res) => {
         res.send("false");
     }
 		
-    
 });
 
 async function monedasAlMarket(coins,wallet,intentos){
@@ -993,6 +1033,8 @@ async function monedasAlMarket(coins,wallet,intentos){
     var paso = false;
 
     var gases = await web3.eth.getGasPrice(); 
+
+    var gasLimit = await contractMarket.methods.asignarCoinsTo(coins, wallet).estimateGas({from: web3.eth.accounts.wallet[0].address});
 
     var usuario = await user.find({ wallet: uc.upperCase(wallet) });
 
@@ -1006,7 +1048,7 @@ async function monedasAlMarket(coins,wallet,intentos){
 
     await contractMarket.methods
         .asignarCoinsTo(coins, wallet)
-        .send({ from: web3.eth.accounts.wallet[0].address, gas: COMISION, gasPrice: gases })
+        .send({ from: web3.eth.accounts.wallet[0].address, gas: gasLimit, gasPrice: gases })
         .then(result => {
 
             console.log("Monedas ENVIADAS en "+intentos+" intentos");
@@ -1015,6 +1057,7 @@ async function monedasAlMarket(coins,wallet,intentos){
 
                 if (usuario.length >= 1) {
                     var datos = usuario[0];
+                    delete datos._id;
                     if(datos.active ){
                         datos.payAt = Date.now();
                         datos.balance = datos.balance-coins.dividedBy(10**18).toNumber();
@@ -1026,7 +1069,10 @@ async function monedasAlMarket(coins,wallet,intentos){
                             txhash: "TO MARKET: "+coins.dividedBy(10**18).decimalPlaces(0).toString()+" # wallet: "+uc.upperCase(wallet)+" # Hash: "+explorador+result.transactionHash
                         })
                         datos.txs.push(explorador+result.transactionHash)
-                        update = user.updateOne({ wallet: uc.upperCase(wallet) }, datos)
+                        
+                        user.updateOne({ wallet: uc.upperCase(wallet) }, [
+                            {$set:datos}
+                        ])
                         .then(console.log("Coins SEND TO MARKET: "+coins.dividedBy(10**18)+" # "+wallet))
                         .catch(console.error())
                     
@@ -1078,13 +1124,13 @@ async function recompensaDiaria(wallet){
 
     var result = await contractMarket.methods
         .largoInventario(wallet)
-        .call({ from: cuenta.address });
+        .call({ from: web3.eth.accounts.wallet[0].address });
   
     var inventario = [];
 
     var cantidad = 43;
 
-    var coins = 48; // CSC coins
+    var coins = 96; // CSC coins
     var bono = false;
 
     for (let index = 0; index < cantidad; index++) {
@@ -1104,7 +1150,7 @@ async function recompensaDiaria(wallet){
 
             var item = await contractMarket.methods
             .inventario(wallet, index)
-            .call({ from: cuenta.address });
+            .call({ from: web3.eth.accounts.wallet[0].address });
 
             if(item.nombre.indexOf("t") === 0){
 
@@ -1122,7 +1168,7 @@ async function recompensaDiaria(wallet){
 
             if(inventario[index]){
 
-                coins += 20;
+                coins += 40;
                 bono = true;
                 break;
 
@@ -1140,7 +1186,7 @@ async function recompensaDiaria(wallet){
 
                 if(inventario[index]){
 
-                    coins += 10;
+                    coins += 20;
                     break;
 
                 }
@@ -1154,11 +1200,11 @@ async function recompensaDiaria(wallet){
 
 }
 
-app.get('/api/v1/sendmail',async(req,res) => {
+app.post('/api/v1/sendmail',async(req,res) => {
     //console.log(req.query);
-    if(req.query.destino && req.query.code){
+    if(req.body.destino && req.body.code){
 
-        var resultado = await fetch("https://brutusgroup.tk/mail.php?destino="+req.query.destino+"&code="+req.query.code+"&token=crypto2021");
+        var resultado = await fetch("https://brutusgroup.tk/mail.php?destino="+req.body.destino+"&code="+req.body.code+"&token=crypto2021");
 
         if (await resultado.text() === "true") {
             res.send("true");
@@ -1194,10 +1240,9 @@ app.get('/api/v1/enlinea',async(req,res) => {
                 
             }
 
-            datos = {};
-            datos.linea = appstatus.linea;
-
-            update = await appstatuses.updateOne({ _id: appstatus._id }, datos)
+            update = await appstatuses.updateOne({ _id: appstatus._id }, [
+                {$set: {linea:appstatus.linea}}
+            ])
 
             res.send("true");
 
@@ -1229,7 +1274,9 @@ app.get('/api/v1/enlinea',async(req,res) => {
             datos = {};
             datos.linea = appstatus.linea;
 
-            update = await appstatuses.updateOne({ _id: appstatus._id }, datos)
+            update = await appstatuses.updateOne({ _id: appstatus._id }, [
+                {$set: datos}
+            ])
 
             res.send("true");
 
@@ -1256,10 +1303,9 @@ app.get('/api/v1/ben10',async(req,res) => {
             aplicacion.ganadoliga = parseInt(req.query.ganadoliga);
         }
 
-        //update = await appdatos.updateOne({ _id: aplicacion._id }, datos)
-
-        aplicacion = await new appdatos(aplicacion);
-        await aplicacion.save();
+        update = await appdatos.updateOne({ _id: aplicacion._id }, [
+                {$set: {ganadoliga: aplicacion.ganadoliga}}
+            ])
 
         res.send("true");
 
@@ -1270,10 +1316,10 @@ app.get('/api/v1/ben10',async(req,res) => {
 
             aplicacion.ganado += parseInt(req.query.ganado);
 
-            //update = await appdatos.updateOne({ _id: aplicacion._id }, datos)
+            update = await appdatos.updateOne({ _id: aplicacion._id }, [
+                {$set:{ganado: aplicacion.ganado}}
+            ])
 
-            aplicacion = await new appdatos(aplicacion);
-            await aplicacion.save();
 
             res.send("true");
 
@@ -1287,68 +1333,30 @@ app.get('/api/v1/ben10',async(req,res) => {
     
 });
 
-app.get('/api/v1/consulta/dailymission/:wallet',async(req,res) => {
+app.post('/api/v1/consulta/dailymission/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet;
 
-    var data = await playerData.find({wallet: uc.upperCase(wallet)});
+    if(web3.utils.isAddress(wallet)){
 
-    if (data.length >= 1) {
-        data = data[0];
-    
-        res.send(data.TournamentsPlays+","+data.DuelsPlays+","+data.FriendLyWins);
+        var data = await playerData.find({wallet: uc.upperCase(wallet)});
+
+        if (data.length >= 1) {
+            data = data[0];
+        
+            res.send(data.TournamentsPlays+","+data.DuelsPlays+","+data.FriendLyWins);
+
+        }else{
+
+            res.send("0,0,0");
+                
+        }
 
     }else{
-
-        var playernewdata = new playerData({
-            wallet: uc.upperCase(wallet),
-            BallonSet: "0",
-            CupsWin: 0,
-            DificultConfig:  "3",
-            DiscountMomment:  "0",
-            DuelsOnlineWins:  "0",
-            DuelsPlays:  "0",
-            FriendLyWins:  "0",
-            FriendlyTiming: "2",
-            LastDate:  "0",
-            LeagueDate:  moment(Date.now()).format(formatoliga),
-            LeagueOpport:  "0",
-            LeagueTimer:  moment(Date.now()).format('HH:mm:ss'),
-            LeaguesOnlineWins:  "0",
-            MatchLose:  "0",
-            MatchWins:  "0",
-            MatchesOnlineWins:  "0",
-            Music:  "0",
-            PhotonDisconnected:  "0",
-            PlaysOnlineTotal:  "0",
-            PlaysTotal:  "0",
-            QualityConfig:  "0",
-            StadiumSet:  "0",
-            TournamentsPlays:  "0",
-            Version:  "mainet",
-            VolumeConfig:  "0",
-            Plataforma: "pc",
-            GolesEnContra: "0",
-            GolesAFavor: "0",
-            FirstTime: "0",
-            DrawMatchs: "0",
-            DrawMatchsOnline: "0",
-            LeaguePlay: "0",
-            Analiticas: "0",
-            Fxs: "0",
-            UserOnline: Date.now(),
-            Resolucion: "0",
-            Fullscreen: "0",
-            Soporte: "J&S"
-            
-        })
-
-        playernewdata.save().then(()=>{
-            res.send("0,0,0");
-        })
-            
-        
+        res.send("0,0,0");
     }
+
+    
 
     
 });
@@ -1387,26 +1395,26 @@ app.get('/api/v1/misionesdiarias/tiempo/:wallet',async(req,res) => {
 });
 
 async function resetChecpoint(wallet){
-    var usuario = await user.find({ wallet: uc.upperCase(wallet) });
+    var usuario = await user.find({ wallet: uc.upperCase(wallet) },{});
     usuario = usuario[0];
-    var datos = usuario
+    var datos = usuario;
+    delete datos._id;
 
     if(Date.now() >= usuario.checkpoint){
 
         // resetear daily mision
         
         datos.checkpoint =  Date.now()  + DaylyTime*1000;
-        console.log("new time Dayly: "+datos.checkpoint)
+        //console.log("new time Dayly: "+datos.checkpoint)
         datos.reclamado = false;
 
     }
     
-    datos.wcscExchange = await consultarCscExchange(wallet);
+    //datos.wcscExchange = await consultarCscExchange(wallet);
 
-    var nuevoUsuario = new user(datos)
-    await nuevoUsuario.save();
-
-    //await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+    await user.updateOne({ wallet: uc.upperCase(wallet) }, [
+        {$set: datos}
+    ]);
 
 }
 
@@ -1502,7 +1510,7 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
                         txhash: "Daily mision coins: "+coins+" # "+wallet
                     })
 
-                    datos.wcscExchange = await consultarCscExchange(wallet);
+                    //datos.wcscExchange = await consultarCscExchange(wallet);
 
                     dataPlay.DuelsPlays = "0";
                     dataPlay.FriendLyWins = "0";
@@ -1516,7 +1524,7 @@ app.post('/api/v1/misionesdiarias/asignar/:wallet',async(req,res) => {
                     //await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
                     await playerData.updateOne({ wallet: uc.upperCase(wallet) }, dataPlay);
 
-                    console.log("Daily mision coins: "+coins+" # "+wallet);
+                    //console.log("Daily mision coins: "+coins+" # "+uc.upperCase(wallet));
                     res.send(coins+"");
                 }else{
                     res.send("0");
@@ -1621,15 +1629,10 @@ app.get('/api/v1/user/email/:wallet',async(req,res) => {
      
     if( req.query.tokenemail === TokenEmail && web3.utils.isAddress(wallet)){
 
-        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+        usuario = await user.findOne({ wallet: uc.upperCase(wallet) });
 
-        if (usuario.length >= 1) {
-            usuario = usuario[0];
-
-            res.send(usuario.email);
-        }else{
-            res.send("false");
-        }
+        res.send(usuario.email);
+        
     }else{
         res.send("false");
     }
@@ -1662,14 +1665,8 @@ app.get('/api/v1/imagen/user',async(req,res) => {
     if (usuario.length >= 1) {
         usuario = usuario[0];
 
-        var datos = usuario;
-
         resetChecpoint(usuario.wallet);
-        datos.wcscExchange = await consultarCscExchange(usuario.wallet);
-
-        var nuevoUsuario = new user(datos)
-        await nuevoUsuario.save();
-
+      
         if(usuario.imagen){
             if(usuario.imagen.indexOf('https://')>=0){
                 res.send(usuario.imagen);
@@ -1700,6 +1697,30 @@ app.get('/api/v1/user/ban/:wallet',async(req,res) => {
 
                 res.send(!usuario.active+"");
             }else{
+                var users = new user({
+                    wallet: uc.upperCase(wallet),
+                    email: "",
+                    password: "",
+                    username: "", 
+                    active: true,
+                    payAt: Date.now(),
+                    checkpoint: 0,
+                    reclamado: false,
+                    balance: 0,
+                    ingresado: 0,
+                    retirado: 0,
+                    deposit: [],
+                    retiro: [],
+                    txs: [],
+                    pais: "null",
+                    imagen: imgDefault,
+                    wcscExchange: 0
+                });
+        
+                users.save().then(()=>{
+                    console.log("Nuevo Usuario creado exitodamente");
+                    
+                })
                 res.send("false");
             }
 
@@ -1715,7 +1736,7 @@ app.post('/api/v1/user/update/info/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet.toLowerCase();
     
-    if(req.body.token == TOKEN && web3.utils.isAddress(wallet)){
+    if(req.body.token == TOKEN && web3.utils.isAddress(wallet)){s
 
         usuario = await user.find({ wallet: uc.upperCase(wallet) });
 
@@ -1753,7 +1774,9 @@ app.post('/api/v1/user/update/info/:wallet',async(req,res) => {
                 }
 
                 if (req.body.email || req.body.username || req.body.password || req.body.pais || req.body.ban || req.body.imagen){
-                    update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+                    update = await user.updateOne({ wallet: uc.upperCase(wallet) }, [
+                        {$set: datos}
+                    ]);
                     res.send("true");
                 }else{
                     res.send("false");
@@ -1801,13 +1824,15 @@ app.post('/api/v1/user/update/info/:wallet',async(req,res) => {
                 txs: [],
                 pais: "null",
                 imagen: imgDefault,
-                wcscExchange: await consultarCscExchange(wallet)
+                wcscExchange: 0
             });
     
             users.save().then(()=>{
                 console.log("Usuario creado exitodamente");
-                res.send("true");
+                
             })
+
+            res.send("false");
                 
             
         }
@@ -1893,7 +1918,7 @@ app.get('/api/v1/email/disponible/',async(req,res) => {
 app.get('/api/v1/app/init/',async(req,res) => {
 
     if(req.query.version){
-        var aplicacion = await appstatuses.find({version: req.query.version});
+        var aplicacion = await appstatuses.find({version: req.query.version},{_id:0});
 
         if (aplicacion.length >= 1) {
 
@@ -1934,11 +1959,11 @@ app.get('/api/v1/app/init/',async(req,res) => {
             await appstatuses.updateOne({version: req.query.version}, aplicacion);
 
 
-            aplicacion = await appstatuses.find({version: req.query.version});
+            aplicacion = await appstatuses.find({version: req.query.version},{_id:0});
             aplicacion = aplicacion[aplicacion.length-1]
         
         
-            res.send(aplicacion.liga+","+aplicacion.mantenimiento+","+aplicacion.version+","+aplicacion.link+","+aplicacion.duelo+","+aplicacion.torneo+","+aplicacion.updates+","+appData.finliga);
+            res.send(aplicacion.liga+","+aplicacion.mantenimiento+","+aplicacion.version+","+aplicacion.link+","+aplicacion.duelo+","+aplicacion.torneo+","+aplicacion.updates+","+appData.finliga+",false");
 
         }else{
 
@@ -1951,13 +1976,13 @@ app.get('/api/v1/app/init/',async(req,res) => {
                 link: "https://cryptosoccermarket.com/download",
                 linea: [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                 updates:["V"+req.query.version+" READY!","thanks for download",moment(Date.now()).format('DD/MM/YYYY HH:mm:ss [UTC]')],
-                apuestas:[true,true,true,true,true]
+                apuestas:[true,true,true,true,true,true]
 
             });
     
             await aplicacion.save();
 
-            aplicacion = await appstatuses.find({version: req.query.version});
+            aplicacion = await appstatuses.find({version: req.query.version},{_id:0});
             aplicacion = aplicacion[aplicacion.length-1]
             res.send(aplicacion.liga+","+aplicacion.mantenimiento+","+aplicacion.version+","+aplicacion.link+","+aplicacion.duelo+","+aplicacion.torneo+","+aplicacion.updates+",30");
                     
@@ -1990,28 +2015,28 @@ app.get('/api/v1/app/apuestas/',async(req,res) => {
 
 app.get('/api/v1/consulta/miranking/:wallet',async(req,res) => {
 
-    var wallet =  req.params.wallet;
+    var wallet =  uc.upperCase(req.params.wallet);
 
-    var aplicacion = await playerData.find({},
+    var myuser = await playerData.findOne({wallet: wallet},
         {_id:0,BallonSet:0,DificultConfig:0,LastDate:0,PlaysOnlineTotal:0,LeaguesOnlineWins:0,DiscountMomment:0,DuelsOnlineWins:0,DuelsPlays:0,FriendLyWins:0,FriendlyTiming:0,LeagueDate:0,LeagueOpport:0,LeagueTimer:0,MatchLose:0,MatchWins:0,MatchesOnlineWins:0,Music:0,PhotonDisconnected:0,QualityConfig:0,StadiumSet:0,PlaysTotal:0,TournamentsPlays:0,Version:0,VolumeConfig:0,Plataforma:0,GolesEnContra:0,GolesAFavor:0,FirstTime:0,DrawMatchs:0,DrawMatchsOnline:0,LeaguePlay:0,Analiticas:0,Fxs:0,__v:0,Soporte:0,Fullscreen:0,Resolucion:0}
-        )
-    .sort({"CupsWin": -1, "UserOnline": -1});
+    )
 
-    if (aplicacion.length >= 1) {
+    var playDat = await playerData.find({CupsWin: {$gte: myuser.CupsWin}},
+        {_id:0,BallonSet:0,DificultConfig:0,LastDate:0,PlaysOnlineTotal:0,LeaguesOnlineWins:0,DiscountMomment:0,DuelsOnlineWins:0,DuelsPlays:0,FriendLyWins:0,FriendlyTiming:0,LeagueDate:0,LeagueOpport:0,LeagueTimer:0,MatchLose:0,MatchWins:0,MatchesOnlineWins:0,Music:0,PhotonDisconnected:0,QualityConfig:0,StadiumSet:0,PlaysTotal:0,TournamentsPlays:0,Version:0,VolumeConfig:0,Plataforma:0,GolesEnContra:0,GolesAFavor:0,FirstTime:0,DrawMatchs:0,DrawMatchsOnline:0,LeaguePlay:0,Analiticas:0,Fxs:0,__v:0,Soporte:0,Fullscreen:0,Resolucion:0}
+    ).sort({"CupsWin": -1, "UserOnline": -1}).limit(300);
 
-        const busqueda = element => element.wallet === uc.upperCase(wallet)
 
-        var posicion = aplicacion.findIndex(busqueda);
-        posicion++;
+    if (playDat.length >= 1) {
 
-        if (posicion > 0) {
-            res.send(posicion+","+aplicacion[posicion-1].CupsWin);
+        if (playDat.length < 300) {
+            res.send(playDat.length+","+myuser.CupsWin);
         }else{
-            res.send("0,0");
+            res.send("0,"+myuser.CupsWin);
         }
         
 
     }else{
+    
         res.send("0,0");
         
     }
@@ -2026,12 +2051,12 @@ app.get('/api/v1/consulta/leadboard',async(req,res) => {
         cantidad = 20;
     }else{
         cantidad = parseInt(req.query.cantidad);
+        if(cantidad > 100 )cantidad= 100;
     }
 
-    
     var lista = [];
 
-    var aplicacion = await playerData.find({}).sort({"CupsWin": -1, "UserOnline": -1}).limit(cantidad);
+    var aplicacion = await playerData.find({}).limit(cantidad).sort({"CupsWin": -1, "UserOnline": -1});
       
     if (aplicacion.length >= 1) {
         
@@ -2069,7 +2094,11 @@ app.get('/api/v1/consulta/redwardleague',async(req,res) => {
             if(!req.query.cantidad){
                 cantidad = 20;
             }else{
-                cantidad = parseInt(req.query.cantidad);
+                if(parseInt(req.query.cantidad) > 300){
+                    cantidad = 300;
+                }else{
+                    cantidad = parseInt(req.query.cantidad);
+                }
             }
 
             var poolliga = appData.ganadoliga;
@@ -2206,8 +2235,8 @@ app.post('/api/v1/reset/leadboard',async(req,res) => {
 
         //var dataUsuarios = await playerData.find({}).sort([['CupsWin', 1]]);
 
-        await playerData.find({}).update({ $set: {CupsWin:0}}).exec();
-        await playerData.find({}).update({ $set: {LeagueOpport:"0"}}).exec();
+        await playerData.updateMany({},{ $set: {CupsWin:0}}).exec();
+        await playerData.updateMany({},{ $set: {LeagueOpport:"0"}}).exec();
         
         
         res.send("true");
@@ -2876,48 +2905,51 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
 
     var wallet =  req.params.wallet;
 
-    var json = req.body;
+    var data = req.body;
 
-    if(!json.misDat){
+    if(!data.misDat){
 
-        //console.log("recibiendo data desde el juego: "+uc.upperCase(wallet))
+        console.log("recibiendo data desde el juego: "+uc.upperCase(wallet))
 
-        json = Buffer.from(json);
-        json = json.toString('utf8');
-        json = JSON.parse(json);
+        data = Buffer.from(data);
+        data = data.toString('utf8');
+        //console.log(data);
+        data = JSON.parse(data);
+        //console.log(data);
 
     }
     
-    if( json.misDat ){
+    if( data.misDat ){
 
-        json = json.misDat;
+        data = data.misDat;
 
-        //console.log(json)
+        //console.log(data)
 
         var usuario = await playerData.find({wallet: uc.upperCase(wallet)});
         
         if (usuario.length >= 1) {
-            var usuario = usuario[0];
+            usuario = usuario[0];
+            var datos = {};
         
-            for (let index = 0; index < json.length; index++) {
+            for (let index = 0; index < data.length; index++) {
 
-                if(usuario[json[index].variable] === "NaN"){
-                    usuario[json[index].variable] = "0"
+                if(usuario[data[index].variable] === "NaN"){
+                    datos[data[index].variable] = "0"
                 }
 
-                switch (json[index].action) {
+                switch (data[index].action) {
                     case "sumar":
-                        usuario[json[index].variable] = (parseFloat((usuario[json[index].variable]+"").replace(",", "."))+parseFloat((json[index].valorS+"").replace(",", ".")))+"";
+                        datos[data[index].variable] = (parseFloat((usuario[data[index].variable]+"").replace(",", "."))+parseFloat((data[index].valorS+"").replace(",", ".")))+"";
                      
                         break;
 
                     case "restar":
-                        usuario[json[index].variable] = (parseFloat((usuario[json[index].variable]+"").replace(",", "."))-parseFloat((json[index].valorS+"").replace(",", ".")))+"";
+                        datos[data[index].variable] = (parseFloat((usuario[data[index].variable]+"").replace(",", "."))-parseFloat((data[index].valorS+"").replace(",", ".")))+"";
   
                         break;
 
                     case "setear":
-                            usuario[json[index].variable] = (json[index].valorS+"").replace(",", ".");
+                        datos[data[index].variable] = (data[index].valorS+"").replace(",", ".");
                          
                         break;
 
@@ -2930,27 +2962,23 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
                 
             }
         
-            usuario.UserOnline = Date.now();
+            datos.UserOnline = Date.now();
 
             if( Date.now() >= parseInt(usuario.LeagueTimer) + 86400*1000){
-                usuario.LeagueOpport = "0";
-                usuario.LeagueTimer = Date.now();
+                datos.LeagueOpport = "0";
+                datos.LeagueTimer = Date.now();
             }
 
-            var playernewdata = new playerData(usuario)
-            await playernewdata.save();
+            playerData.updateOne({ wallet: uc.upperCase(wallet) }, [
+                {$set: datos}
+            ]).then(async()=>{
+                var consulta = await playerData.findOne({wallet: uc.upperCase(wallet)},{_id:0,wallet:0,__v:0,UserOnline:0});
 
-            //update = await playerData.updateOne({ wallet: uc.upperCase(wallet) }, usuario);
-            //console.log(update);
+                res.send(consulta);
 
-            var consulta = await playerData.find({wallet: uc.upperCase(wallet)},{_id:0,wallet:0,__v:0,UserOnline:0});
-            consulta = consulta[0];
-
-            //console.log(consulta)
-
-            res.send(consulta);
-        
-                
+            }).catch(()=>{
+                res.send("false");
+            })   
 
         }else{
             res.send("false");
@@ -3002,8 +3030,10 @@ app.put('/api/v1/update/playerdata/:wallet',async(req,res) => {
             })
 
             playernewdata.save().then(()=>{
-                res.send("false");
+                
             })
+
+            res.send("false");
                 
             
         
@@ -3019,21 +3049,19 @@ app.get('/', (req, res, next) => {
 
 app.get('/api/v1/consultar/wcsc/lista/', async(req, res, next) => {
 
-   var usuarios;
-   var csc = "";
+    var usuarios;
 
-   var cantidad = parseInt(req.query.cantidad);
-    if(req.query.cantidad){
-        if(cantidad > 300){
-            cantidad = 300;
-        }
-            usuarios = await user.find({},{password: 0, _id: 0, checkpoint:0, ingresado: 0, retirado: 0, deposit: 0, retiro:0, txs:0,email:0,reclamado:0}).limit(cantidad).sort([['balance', -1]]);
+    var cantidad
 
-        
-    }else{
-        usuarios = await user.find({},{password: 0, _id: 0, checkpoint:0, ingresado: 0, retirado: 0, deposit: 0, retiro:0, txs:0,email:0,reclamado:0}).sort([['balance', -1]]);
+    if(!req.query.cantidad) cantidad = 10;
 
+    cantidad = parseInt(req.query.cantidad);
+
+    if(cantidad > 300){
+        cantidad = 300;
     }
+    
+    usuarios = await user.find({},{password: 0, _id: 0, checkpoint:0, ingresado: 0, retirado: 0, deposit: 0, retiro:0, txs:0,email:0,reclamado:0}).limit(cantidad).sort([['balance', -1]]);
 
     var lista = [];
     var ex = 0;
@@ -3063,7 +3091,7 @@ app.get('/api/v1/consultar/wcsc/lista/', async(req, res, next) => {
 async function consultarCscExchange(wallet){
     var investor = await contractMarket.methods
         .investors(wallet.toLowerCase())
-        .call({ from: cuenta.address });
+        .call({ from: web3.eth.accounts.wallet[0].address });
                 
     var balance = new BigNumber(investor.balance);
     var gastado = new BigNumber(investor.gastado);
@@ -3078,32 +3106,342 @@ app.get('/api/v1/consultar/csc/exchange/:wallet', async(req, res, next) => {
 
     var wallet = req.params.wallet;
 
-    var usuario = await user.find({ wallet: uc.upperCase(wallet) });
-    usuario = usuario[0];
-    var datos = usuario
+    if(web3.utils.isAddress(wallet)){
+        
+        await user.findOne({ wallet: uc.upperCase(wallet) })
+        .then(async(usuario)=>{
 
-    if(Date.now() >= datos.checkpoint){
+            var datos = {};
 
-        datos.checkpoint =  Date.now()  + DaylyTime*1000;
-        console.log("new time Dayly: "+datos.checkpoint)
-        datos.reclamado = false;
+            if(Date.now() >= datos.checkpoint){
 
+                datos.checkpoint =  Date.now()  + DaylyTime*1000;
+                //console.log("new time Dayly: "+datos.checkpoint)
+                datos.reclamado = false;
+
+            }
+            
+            datos.wcscExchange = await consultarCscExchange(wallet);
+
+
+            user.updateOne({_id: usuario._id}, [
+                {$set: datos}
+            ])
+        
+            res.send(datos.wcscExchange+'');
+
+        })
+        .catch(async()=>{
+            res.send("0");
+        })  
+    }else{
+        res.send("0");
     }
-    
-    datos.wcscExchange = await consultarCscExchange(wallet);
 
-    var nuevoUsuario = new user(datos)
-    await nuevoUsuario.save();
+    
  
-    res.send(datos.wcscExchange+'');
+ });
+
+ app.get('/api/v1/consultar/csc/cuenta/:wallet', async(req, res, next) => {
+
+    var wallet = req.params.wallet;
+
+    var saldo = await contractToken.methods
+    .balanceOf(wallet.toLowerCase())
+    .call({ from: web3.eth.accounts.wallet[0].address });
+
+    saldo = new BigNumber(saldo);
+    saldo = saldo.shiftedBy(-18);
+    saldo = saldo.decimalPlaces(6);
+    saldo = saldo.toString();
+    
+    res.send(saldo+"");
+    
  
  });
 
 app.get('/api/v1/consultar/numero/aleatorio', async(req, res, next) => {
 
- 
     res.send(Math.floor(Math.random() * 2)+'');
  
+});
+
+app.post('/api/v1/asignar2/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet.toLowerCase();
+
+    req.body.coins = parseInt(req.body.coins);
+    
+    if(req.body.token == TOKEN2 && web3.utils.isAddress(wallet)){
+
+        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+
+        if (usuario.length >= 1) {
+            var datos = usuario[0];
+            if(datos.active){
+                datos.balance = datos.balance + req.body.coins;
+                datos.ingresado = datos.ingresado + req.body.coins;
+                datos.deposit.push({amount: req.body.coins,
+                    date: Date.now(),
+                    finalized: true,
+                    txhash: "Ajuste: "+req.body.coins+" # "+uc.upperCase(wallet)
+                })
+
+                //datos.wcscExchange = await consultarCscExchange(wallet);
+
+                var nuevoUsuario = new user(datos)
+                await nuevoUsuario.save();
+
+                //update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+                console.log("Ajuste: "+req.body.coins+" # "+uc.upperCase(wallet));
+                res.send("true");
+            }else{
+                res.send("false");
+            }
+    
+        }else{
+            console.log("creado USUARIO al Ajustar"+wallet)
+            var users = new user({
+                wallet: uc.upperCase(wallet),
+                email: "",
+                password: "",
+                username: "", 
+                active: true,
+                payAt: Date.now(),
+                checkpoint: 0,
+                reclamado: false,
+                balance: req.body.coins,
+                ingresado: req.body.coins,
+                retirado: 0,
+                deposit: [{amount: req.body.coins,
+                    date: Date.now(),
+                    finalized: true,
+                    txhash: "Win coins: "+req.body.coins+" # "+req.params.wallet
+                }],
+                retiro: [],
+                txs: [],
+                pais: "null",
+                imagen: imgDefault,
+                wcscExchange: 0
+            });
+    
+            users.save().then(()=>{
+                console.log("Usuario creado exitodamente");
+                res.send("true");
+            })
+                
+            
+        }
+
+
+    }else{
+        res.send("false");
+    }
+		
+});
+
+app.post('/api/v1/quitar2/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet.toLowerCase();
+
+    req.body.coins = parseInt(req.body.coins);
+
+    if(req.body.token == TOKEN2  && web3.utils.isAddress(wallet)){
+
+        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+
+        if (usuario.length >= 1) { 
+            var datos = usuario[0];
+            if(datos.active){
+                datos.balance = datos.balance-req.body.coins;
+                if(datos.balance >= 0){
+
+                    datos.retirado = datos.retirado+ req.body.coins;
+                    datos.retiro.push({
+                        amount: req.body.coins,
+                        date: Date.now(),
+                        done: true,
+                        dateSend: Date.now(),
+                        txhash: "-Ajuste: "+req.body.coins+" # "+uc.upperCase(wallet)
+                  
+                      })
+
+                    //datos.wcscExchange = await consultarCscExchange(wallet);
+
+                    var nuevoUsuario = new user(datos)
+                    await nuevoUsuario.save();
+
+                    //update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+                    console.log("-Ajuste: "+req.body.coins+" # "+uc.upperCase(wallet));
+                    res.send("true");
+
+                }else{
+                    res.send("false");
+                }
+                
+            }else{
+                res.send("false");
+            }
+    
+        }else{
+            console.log("usuario creado al retirar monedas"+wallet)
+            var users = new user({
+                wallet: uc.upperCase(wallet),  
+                email: "",
+                password: "",
+                username: "",   
+                active: true,
+                payAt: Date.now(),
+                checkpoint: 0,
+                reclamado: false,
+                balance: 0,
+                ingresado: 0,
+                retirado: 0,
+                deposit: [],
+                retiro: [],
+                txs: [],
+                pais: "null",
+                imagen: imgDefault,
+                wcscExchange: 0
+            });
+    
+            users.save().then(()=>{
+                console.log("Usuario creado exitodamente");
+                
+            })
+            res.send("false");
+                
+            
+        }
+
+    }else{
+        res.send("false");
+    }
+		
+    
+});
+
+app.post('/api/v1/ban/unban/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet.toLowerCase();
+
+    req.body.active
+    req.body.ban 
+
+    if(req.body.token == TOKEN2  && web3.utils.isAddress(wallet)){
+
+        usuario = await user.find({ wallet: uc.upperCase(wallet) });
+
+        if (usuario.length >= 1) { 
+            var datos = usuario[0];
+
+            if(req.body.active){
+                datos.active = true;
+            }
+            
+            if(req.body.ban){
+                datos.active = false;
+            }
+            
+            //datos.wcscExchange = await consultarCscExchange(wallet);
+
+            var nuevoUsuario = new user(datos)
+            await nuevoUsuario.save();
+
+            //update = await user.updateOne({ wallet: uc.upperCase(wallet) }, datos);
+            //console.log(" # "+uc.upperCase(wallet));
+            res.send({activo: datos.active});
+    
+        }else{
+            console.log("usuario creado al hacer ban o quitar"+wallet)
+            var users = new user({
+                wallet: uc.upperCase(wallet),  
+                email: "",
+                password: "",
+                username: "",   
+                active: true,
+                payAt: Date.now(),
+                checkpoint: 0,
+                reclamado: false,
+                balance: 0,
+                ingresado: 0,
+                retirado: 0,
+                deposit: [],
+                retiro: [],
+                txs: [],
+                pais: "null",
+                imagen: imgDefault,
+                wcscExchange: 0
+            });
+    
+            users.save().then(()=>{
+                console.log("Usuario creado exitodamente");
+                
+            })
+                
+            res.send("false");
+            
+        }
+
+    }else{
+        res.send("false");
+    }
+		
+    
+});
+
+
+app.post('/api/v1/copas/asignar/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet.toLowerCase();
+
+    var copas = parseInt(req.body.copas);
+
+    console.log("Copas: +"+copas+" wallet:"+wallet)
+    
+    if(req.body.token == TOKEN && web3.utils.isAddress(wallet)){
+
+        playerdatas.updateOne({ wallet: uc.upperCase(wallet) },[
+            {$set:{CupsWin: {$sum:["$CupsWin",copas]}}}
+        ]).then(()=>{
+            res.send("true");
+        })    
+    
+    }else{
+        
+        res.send("false");
+
+        
+    }
+
+		
+});
+
+app.post('/api/v1/copas/quitar/:wallet',async(req,res) => {
+
+    var wallet =  req.params.wallet.toLowerCase();
+
+    var copas = parseInt(req.body.copas);
+
+    console.log("Copas: -"+copas+" wallet:"+wallet)
+    
+    if(req.body.token == TOKEN && web3.utils.isAddress(wallet)){
+
+        playerdatas.updateOne({ wallet: uc.upperCase(wallet) },[
+            {$set:{CupsWin: {$subtract:["$CupsWin",copas]}}}
+        ]).then(()=>{
+            res.send("true");
+        })    
+     
+    
+    }else{
+        
+        res.send("false");
+
+        
+    }
+		
+    
 });
 
 
