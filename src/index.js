@@ -60,7 +60,7 @@ const explorador = process.env.APP_EXPLORER || "https://bscscan.com/tx/";
 
 const RED = process.env.APP_RED || "https://bsc-dataseed.binance.org/";
 const addressContract = process.env.APP_CONTRACT || "0xfF7009EF7eF85447F6A5b3f835C81ADd60a321C9";
-const addressContractToken = process.env.APP_CONTRACTTOKEN || "0xF0fB4a5ACf1B1126A991ee189408b112028D7A63";
+const addressContractToken = process.env.APP_CSC_TOKEN || "0xF0fB4a5ACf1B1126A991ee189408b112028D7A63";
 
 const imgDefault = "https://cryptosoccermarket.com/assets/img/default-user-csg.png";
 
